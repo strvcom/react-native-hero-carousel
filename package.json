@@ -1,0 +1,41 @@
+{
+  "name": "@strv/react-native-hero-carousel",
+  "version": "0.1.0",
+  "description": "A customizable hero carousel component for React Native",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "private": true,
+  "workspaces": [
+    "src",
+    "example"
+  ],
+  "scripts": {
+    "example": "cd example && pnpm start",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [
+    "react-native",
+    "carousel",
+    "hero",
+    "slider",
+    "reanimated"
+  ],
+  "author": "",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=17.0.0",
+    "react-native": ">=0.70.0",
+    "react-native-reanimated": ">=3.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-native": "^0.72.0",
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "src"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+} 
