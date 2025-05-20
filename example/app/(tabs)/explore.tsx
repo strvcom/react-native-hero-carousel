@@ -1,6 +1,6 @@
-import { ThemedView } from "@/components/ThemedView";
-import { Carousel } from "@strv/react-native-hero-carousel";
-import { SafeAreaView } from "react-native";
+import { ThemedView } from '@/components/ThemedView'
+import { Carousel } from '@strv/react-native-hero-carousel'
+import { SafeAreaView } from 'react-native'
 export default function TabTwoScreen() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -8,5 +8,5 @@ export default function TabTwoScreen() {
         <Carousel />
       </ThemedView>
     </SafeAreaView>
-  );
+  )
 }
