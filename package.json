@@ -12,7 +12,8 @@
     "format:check": "prettier --check '**/*.{ts,tsx,md,json}'",
     "format:fix": "prettier --write '**/*.{ts,tsx,md,json}'",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix ."
+    "lint:fix": "eslint --fix .",
+    "test": "jest --passWithNoTests"
   },
   "keywords": [
     "react-native",
@@ -38,6 +39,7 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-prettier": "^5.4.0",
     "husky": "^9.1.7",
+    "jest": "^29.7.0",
     "lint-staged": "^16.0.0",
     "prettier": "^3.5.3",
     "typescript": "^5.0.0"
