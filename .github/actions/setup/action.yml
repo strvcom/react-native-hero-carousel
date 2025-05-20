@@ -39,3 +39,6 @@ runs:
     - name: Install Dependencies
       run: pnpm install --frozen-lockfile
       shell: bash
+    - name: Install example dependencies
+      run: cd example && pnpm install --frozen-lockfile
+      shell: bash
