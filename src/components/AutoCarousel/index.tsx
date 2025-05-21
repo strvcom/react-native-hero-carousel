@@ -59,7 +59,7 @@ export const AutoCarouselWithoutProvider = ({
     [offset, slideWidth],
   )
 
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const handleAutoScroll = () => {
     const autoScroll = () => {
