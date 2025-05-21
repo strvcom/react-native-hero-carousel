@@ -1,1 +1,4 @@
 export * from './Carousel'
+export * from './AnimatedPagedScrollView'
+export * from './AutoCarousel'
+export * from './AutoCarouselSlide'
