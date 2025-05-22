@@ -11,7 +11,7 @@ import { DEFAULT_INTERVAL, ROUNDING_PRECISION, TRANSITION_DURATION } from './ind
 import { CarouselContextProvider, useCarouselContext } from '../../context/CarouselContext'
 import { AutoCarouselSlide } from '../AutoCarouselSlide'
 import { customRound } from '../../utils/round'
-import { AutoCarouselAdapter } from '../AnimatedPagedScrollView/Adapter'
+import { AutoCarouselAdapter } from '../AnimatedPagedView/Adapter'
 
 type AutoCarouselProps = {
   interval?: number

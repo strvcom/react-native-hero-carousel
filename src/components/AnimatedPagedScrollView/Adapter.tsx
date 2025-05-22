@@ -1,7 +1,6 @@
 import { AnimatedPagedScrollView } from './index'
 import Animated, {
   scrollTo,
-  SharedValue,
   useAnimatedReaction,
   useAnimatedRef,
   useAnimatedScrollHandler,
@@ -9,14 +8,9 @@ import Animated, {
 import { customRound } from '../../utils/round'
 import { ROUNDING_PRECISION } from '../../components/AutoCarousel/index.preset'
 import { useCarouselContext } from '../../context/CarouselContext'
+import { AutoCarouselAdapterProps } from '../../components/AutoCarousel/types'
 
-type Props = {
-  onScroll: (value: number) => void
-  children: React.ReactNode
-  offset: SharedValue<{ value: number }>
-}
-
-export const AutoCarouselAdapter = ({ onScroll, children, offset }: Props) => {
+export const AutoCarouselAdapter = ({ onScroll, children, offset }: AutoCarouselAdapterProps) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
   const { slideWidth, setUserInteracted } = useCarouselContext()
 

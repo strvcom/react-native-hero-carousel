@@ -1,17 +1,12 @@
-import { SharedValue, useAnimatedReaction } from 'react-native-reanimated'
+import { useAnimatedReaction } from 'react-native-reanimated'
 import { useRef } from 'react'
 import { AnimatedPagedScrollViewRef, AnimatedPagedView } from './index'
 import { customRound } from '../../utils/round'
 import { ROUNDING_PRECISION } from '../../components/AutoCarousel/index.preset'
 import { useCarouselContext } from '../../context/CarouselContext'
+import { AutoCarouselAdapterProps } from '../../components/AutoCarousel/types'
 
-type Props = {
-  onScroll: (value: number) => void
-  offset: SharedValue<{ value: number }>
-  children: React.ReactNode
-}
-
-export const AutoCarouselAdapter = ({ offset, onScroll, children }: Props) => {
+export const AutoCarouselAdapter = ({ offset, onScroll, children }: AutoCarouselAdapterProps) => {
   const scrollViewRef = useRef<AnimatedPagedScrollViewRef | null>(null)
   const { slideWidth, setUserInteracted } = useCarouselContext()
 

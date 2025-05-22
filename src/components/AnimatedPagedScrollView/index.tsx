@@ -21,8 +21,4 @@ export const AnimatedPagedScrollView = forwardRef(
   },
 )
 
-export type AnimatedPagedScrollViewRef = {
-  scrollTo: (value: number) => void
-}
-
 AnimatedPagedScrollView.displayName = 'AnimatedPagedScrollView'
