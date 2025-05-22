@@ -7,5 +7,5 @@ export const AutoCarouselSlide = ({
   children: React.ReactNode
   width: number
 }) => {
-  return <View style={{ flex: 1, width }}>{children}</View>
+  return <View style={{ flex: 1, width, minWidth: width }}>{children}</View>
 }
