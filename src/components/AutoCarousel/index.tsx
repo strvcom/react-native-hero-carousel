@@ -1,25 +1,17 @@
 import React, { useRef, useEffect, useCallback } from 'react'
-import { Platform } from 'react-native'
-import Animated, {
+import {
   runOnJS,
   useAnimatedScrollHandler,
   useSharedValue,
   withTiming,
   useAnimatedReaction,
-  scrollTo,
-  useAnimatedRef,
 } from 'react-native-reanimated'
 
-import {
-  ANDROID_FALLBACK_DURATION,
-  DEFAULT_INTERVAL,
-  ROUNDING_PRECISION,
-  TRANSITION_DURATION,
-} from './index.preset'
+import { DEFAULT_INTERVAL, ROUNDING_PRECISION, TRANSITION_DURATION } from './index.preset'
 import { CarouselContextProvider, useCarouselContext } from '../../context/CarouselContext'
-import { AnimatedPagedScrollView } from '../AnimatedPagedScrollView'
 import { AutoCarouselSlide } from '../AutoCarouselSlide'
 import { customRound } from '../../utils/round'
+import { AutoCarouselAdapter } from '../AnimatedPagedView/Adapter'
 
 type AutoCarouselProps = {
   interval?: number
@@ -30,8 +22,7 @@ export const AutoCarouselWithoutProvider = ({
   interval = DEFAULT_INTERVAL,
   children,
 }: AutoCarouselProps) => {
-  const { scrollValue, userInteracted, setUserInteracted, slideWidth } = useCarouselContext()
-  const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
+  const { scrollValue, userInteracted, slideWidth } = useCarouselContext()
   const offset = useSharedValue({ value: slideWidth })
 
   const childrenArray = React.Children.toArray(children)
@@ -102,13 +93,8 @@ export const AutoCarouselWithoutProvider = ({
       }
       // if we are at the first index we need to switch to the next to last one without animation
       // next to last one because the last one is a clone of the first one
-      if (activeIndex === 0) {
-        // weird issue when scrolling backwards on android we must set duration to a very small value
-        // otherwise with just 0 the list doesn't scroll
-        goToPage(
-          paddedChildrenArray.length - 2,
-          Platform.OS === 'android' ? ANDROID_FALLBACK_DURATION : 0,
-        )
+      if (activeIndex < 0.01 && activeIndex > -0.01) {
+        goToPage(paddedChildrenArray.length - 2, 0)
       }
     },
     [childrenArray.length, goToPage, paddedChildrenArray.length, slideWidth, scrollValue.value],
@@ -123,27 +109,20 @@ export const AutoCarouselWithoutProvider = ({
     [slideWidth, autoScrollEnabled],
   )
 
-  useAnimatedReaction(
-    () => offset.value.value,
-    (value) => {
-      scrollTo(scrollViewRef, value, 0, false)
-    },
-  )
-
   return (
-    <AnimatedPagedScrollView
-      ref={scrollViewRef}
-      onScrollBeginDrag={() => {
-        setUserInteracted(true)
+    <AutoCarouselAdapter
+      offset={offset}
+      onScroll={(activeIndex: number) => {
+        'worklet'
+        scrollValue.value = activeIndex
       }}
-      onScroll={scrollHandler}
     >
       {React.Children.map(paddedChildrenArray, (child, index) => (
         <AutoCarouselSlide width={slideWidth} key={index}>
           {child}
         </AutoCarouselSlide>
       ))}
-    </AnimatedPagedScrollView>
+    </AutoCarouselAdapter>
   )
 }
 

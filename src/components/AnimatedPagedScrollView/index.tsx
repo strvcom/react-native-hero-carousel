@@ -14,7 +14,6 @@ export const AnimatedPagedScrollView = forwardRef(
           pagingEnabled
           scrollToOverflowEnabled
           showsHorizontalScrollIndicator={false}
-          scrollEventThrottle={16}
           {...props}
         />
       </View>
