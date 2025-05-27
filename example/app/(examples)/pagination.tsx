@@ -1,7 +1,6 @@
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import {
-  AutoCarousel,
   interpolateLooped,
   useCarouselContext,
   useAutoCarouselSlideIndex,
@@ -12,6 +11,7 @@ import { SafeAreaView, StyleSheet, Dimensions, View } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
 import Animated, { useAnimatedStyle, interpolate, Extrapolation } from 'react-native-reanimated'
+import { Stack } from 'expo-router'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
@@ -21,25 +21,28 @@ const getRandomImageUrl = () => {
 
 const images = Array.from({ length: 5 }, getRandomImageUrl)
 
-const PaginationDot = ({ index, currentIndex }: { index: number; currentIndex: number }) => {
+const PaginationDot = ({ index }: { index: number }) => {
   const { scrollValue } = useCarouselContext()
 
   const animatedStyle = useAnimatedStyle(() => {
-    // const progress = 1 - Math.abs(input - index)
-    console.log('scrollValue.value', scrollValue.value)
+    const progress = interpolate(
+      scrollValue.value - 1,
+      [index - 1, index, index + 1],
+      [0, 1, 0],
+      Extrapolation.CLAMP,
+    )
+
     return {
-      width: interpolate(
-        scrollValue.value - 1,
-        [index - 1, index, index + 1],
-        [8, 24, 8],
-        Extrapolation.CLAMP,
-      ),
-      opacity: interpolate(
-        scrollValue.value - 1,
-        [index - 1, index, index + 1],
-        [0.5, 1, 0.5],
-        Extrapolation.CLAMP,
-      ),
+      width: interpolate(progress, [0, 1], [8, 24], Extrapolation.CLAMP),
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: 'white',
+      opacity: interpolate(progress, [0, 1], [0.5, 1], Extrapolation.CLAMP),
+      transform: [
+        {
+          scale: interpolate(progress, [0, 1], [0.8, 1], Extrapolation.CLAMP),
+        },
+      ],
     }
   })
 
@@ -47,12 +50,10 @@ const PaginationDot = ({ index, currentIndex }: { index: number; currentIndex: n
 }
 
 const Pagination = () => {
-  const { scrollValue } = useCarouselContext()
-
   return (
     <View style={styles.pagination}>
       {Array.from({ length: images.length }).map((_, index) => (
-        <PaginationDot key={index} index={index} currentIndex={scrollValue.value} />
+        <PaginationDot key={index} index={index} />
       ))}
     </View>
   )
@@ -70,7 +71,6 @@ const Slide = ({ image, title, index }: { image: string; title: string; index: n
       alignItems: 'center',
       justifyContent: 'center',
       transformOrigin: 'center',
-      // transform: [{ translateX: -100 }],
       transform: [
         {
           translateX: interpolateLooped(scrollValue.value, slideIndex, total, {
@@ -85,7 +85,7 @@ const Slide = ({ image, title, index }: { image: string; title: string; index: n
             incoming: 0,
             inside: -10,
             outgoing: 0,
-            offset: 0,
+            offset: 0.2,
           }),
         },
       ],
@@ -104,9 +104,10 @@ const Slide = ({ image, title, index }: { image: string; title: string; index: n
   )
 }
 
-export default function HomeScreen() {
+export default function PaginationExample() {
   return (
     <CarouselContextProvider>
+      <Stack.Screen options={{ title: 'Custom Pagination' }} />
       <SafeAreaView style={styles.container}>
         <ThemedView style={styles.container}>
           <AutoCarouselWithoutProvider>
