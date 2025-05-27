@@ -87,7 +87,6 @@ export const AutoCarouselWithoutProvider = ({
       }
       // if we are at the first index we need to switch to the next to last one without animation
       // next to last one because the last one is a clone of the first one
-      console.log('activeIndex', activeIndex)
       if (activeIndex < 0.01 && activeIndex > -0.01) {
         goToPage(paddedChildrenArray.length - 2, 0)
       }
