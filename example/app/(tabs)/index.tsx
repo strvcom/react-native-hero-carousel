@@ -5,11 +5,13 @@ import {
   interpolateLooped,
   useCarouselContext,
   useAutoCarouselSlideIndex,
+  AutoCarouselWithoutProvider,
+  CarouselContextProvider,
 } from '@strv/react-native-hero-carousel'
-import { SafeAreaView, StyleSheet, Dimensions } from 'react-native'
+import { SafeAreaView, StyleSheet, Dimensions, View } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
-import Animated, { useAnimatedStyle } from 'react-native-reanimated'
+import Animated, { useAnimatedStyle, interpolate, Extrapolation } from 'react-native-reanimated'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
@@ -18,6 +20,43 @@ const getRandomImageUrl = () => {
 }
 
 const images = Array.from({ length: 5 }, getRandomImageUrl)
+
+const PaginationDot = ({ index, currentIndex }: { index: number; currentIndex: number }) => {
+  const { scrollValue } = useCarouselContext()
+
+  const animatedStyle = useAnimatedStyle(() => {
+    // const progress = 1 - Math.abs(input - index)
+    console.log('scrollValue.value', scrollValue.value)
+    return {
+      width: interpolate(
+        scrollValue.value - 1,
+        [index - 1, index, index + 1],
+        [8, 24, 8],
+        Extrapolation.CLAMP,
+      ),
+      opacity: interpolate(
+        scrollValue.value - 1,
+        [index - 1, index, index + 1],
+        [0.5, 1, 0.5],
+        Extrapolation.CLAMP,
+      ),
+    }
+  })
+
+  return <Animated.View style={[styles.dot, animatedStyle]} />
+}
+
+const Pagination = () => {
+  const { scrollValue } = useCarouselContext()
+
+  return (
+    <View style={styles.pagination}>
+      {Array.from({ length: images.length }).map((_, index) => (
+        <PaginationDot key={index} index={index} currentIndex={scrollValue.value} />
+      ))}
+    </View>
+  )
+}
 
 const Slide = ({ image, title, index }: { image: string; title: string; index: number }) => {
   const { scrollValue } = useCarouselContext()
@@ -38,7 +77,7 @@ const Slide = ({ image, title, index }: { image: string; title: string; index: n
             incoming: 0,
             inside: -100,
             outgoing: 0,
-            offset: 0,
+            offset: 0.2,
           }),
         },
         {
@@ -67,15 +106,18 @@ const Slide = ({ image, title, index }: { image: string; title: string; index: n
 
 export default function HomeScreen() {
   return (
-    <SafeAreaView style={styles.container}>
-      <ThemedView style={styles.container}>
-        <AutoCarousel>
-          {images.map((image, index) => (
-            <Slide key={index} image={image} title={`Slide ${index + 1}`} index={index} />
-          ))}
-        </AutoCarousel>
-      </ThemedView>
-    </SafeAreaView>
+    <CarouselContextProvider>
+      <SafeAreaView style={styles.container}>
+        <ThemedView style={styles.container}>
+          <AutoCarouselWithoutProvider>
+            {images.map((image, index) => (
+              <Slide key={index} image={image} title={`Slide ${index + 1}`} index={index} />
+            ))}
+          </AutoCarouselWithoutProvider>
+          <Pagination />
+        </ThemedView>
+      </SafeAreaView>
+    </CarouselContextProvider>
   )
 }
 
@@ -85,9 +127,8 @@ const styles = StyleSheet.create({
   },
   slide: {
     flex: 1,
-    width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT * 0.7,
-    borderWidth: 1,
+    width: '100%',
+    height: '100%',
     overflow: 'hidden',
   },
   image: {
@@ -113,5 +154,20 @@ const styles = StyleSheet.create({
     lineHeight: 32,
     fontWeight: 'bold',
     color: 'white',
+  },
+  pagination: {
+    position: 'absolute',
+    bottom: 100,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 8,
+  },
+  dot: {
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: 'white',
   },
 })
