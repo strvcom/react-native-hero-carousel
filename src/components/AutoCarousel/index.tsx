@@ -1,11 +1,5 @@
 import React, { useRef, useEffect, useCallback } from 'react'
-import {
-  runOnJS,
-  useAnimatedScrollHandler,
-  useSharedValue,
-  withTiming,
-  useAnimatedReaction,
-} from 'react-native-reanimated'
+import { runOnJS, useSharedValue, withTiming, useAnimatedReaction } from 'react-native-reanimated'
 
 import { DEFAULT_INTERVAL, ROUNDING_PRECISION, TRANSITION_DURATION } from './index.preset'
 import { CarouselContextProvider, useCarouselContext } from '../../context/CarouselContext'
@@ -78,7 +72,7 @@ export const AutoCarouselWithoutProvider = ({
       if (!autoScrollEnabled) return
       runOnJS(handleAutoScroll)()
     },
-    [scrollValue.value, slideWidth, autoScrollEnabled],
+    [scrollValue, slideWidth, autoScrollEnabled],
   )
 
   // This handles the infinite scrolling
@@ -97,16 +91,7 @@ export const AutoCarouselWithoutProvider = ({
         goToPage(paddedChildrenArray.length - 2, 0)
       }
     },
-    [childrenArray.length, goToPage, paddedChildrenArray.length, slideWidth, scrollValue.value],
-  )
-
-  const scrollHandler = useAnimatedScrollHandler(
-    (event) => {
-      const activeIndex = customRound(event.contentOffset.x / slideWidth, ROUNDING_PRECISION)
-      if (event.contentOffset.x === 0) return
-      scrollValue.value = activeIndex
-    },
-    [slideWidth, autoScrollEnabled],
+    [childrenArray.length, goToPage, paddedChildrenArray.length, slideWidth, scrollValue],
   )
 
   return (

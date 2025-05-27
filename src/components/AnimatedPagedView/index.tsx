@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, type ForwardedRef } from 'react'
+import React, { forwardRef, useImperativeHandle, type ForwardedRef } from 'react'
 import { Dimensions } from 'react-native'
 import Animated, {
   useSharedValue,
@@ -17,15 +17,14 @@ export type AnimatedPagedScrollViewRef = {
   scrollTo: (value: number) => void
 }
 
-export const AnimatedPagedView = forwardRef(
-  (
-    props: {
-      onScroll: (value: number) => void
-      onScrollBeginDrag: () => void
-      children: React.ReactNode
-    },
-    ref: ForwardedRef<AnimatedPagedScrollViewRef>,
-  ) => {
+type AnimatedPagedViewProps = {
+  onScroll: (value: number) => void
+  onScrollBeginDrag: () => void
+  children: React.ReactNode
+}
+
+export const AnimatedPagedView = forwardRef<AnimatedPagedScrollViewRef, AnimatedPagedViewProps>(
+  (props, ref) => {
     const translateX = useSharedValue(0)
     const context = useSharedValue({ x: 0 })
 
@@ -61,14 +60,19 @@ export const AnimatedPagedView = forwardRef(
       (value) => {
         props.onScroll?.(value)
       },
+      [props.onScroll],
     )
 
-    useImperativeHandle(ref, () => ({
-      scrollTo: (value: number) => {
-        'worklet'
-        translateX.value = value
-      },
-    }))
+    useImperativeHandle(
+      ref,
+      () => ({
+        scrollTo: (value: number) => {
+          'worklet'
+          translateX.value = value
+        },
+      }),
+      [translateX],
+    )
 
     return (
       <GestureDetector gesture={gesture}>

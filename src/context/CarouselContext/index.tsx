@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useMemo, useState } from 'react'
 import { useSharedValue, type SharedValue } from 'react-native-reanimated'
 
 import { Dimensions } from 'react-native'
@@ -34,7 +34,10 @@ export const CarouselContextProvider = ({
 
   return (
     <CarouselContext.Provider
-      value={{ scrollValue, userInteracted, setUserInteracted, slideWidth }}
+      value={useMemo(
+        () => ({ scrollValue, userInteracted, setUserInteracted, slideWidth }),
+        [scrollValue, userInteracted, setUserInteracted, slideWidth],
+      )}
     >
       {children}
     </CarouselContext.Provider>

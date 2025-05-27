@@ -7,7 +7,7 @@ import { useCarouselContext } from '../../context/CarouselContext'
 import { AutoCarouselAdapterProps } from '../../components/AutoCarousel/types'
 
 export const AutoCarouselAdapter = ({ offset, onScroll, children }: AutoCarouselAdapterProps) => {
-  const scrollViewRef = useRef<AnimatedPagedScrollViewRef | null>(null)
+  const scrollViewRef = useRef<AnimatedPagedScrollViewRef>(null)
   const { slideWidth, setUserInteracted } = useCarouselContext()
 
   useAnimatedReaction(
