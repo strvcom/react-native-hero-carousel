@@ -103,7 +103,12 @@ export const AutoCarouselWithoutProvider = ({
       }}
     >
       {React.Children.map(paddedChildrenArray, (child, index) => (
-        <AutoCarouselSlide width={slideWidth} key={index}>
+        <AutoCarouselSlide
+          width={slideWidth}
+          key={index}
+          index={index}
+          total={paddedChildrenArray.length}
+        >
           {child}
         </AutoCarouselSlide>
       ))}
