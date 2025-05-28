@@ -1,7 +1,7 @@
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import {
-  interpolateLooped,
+  interpolateInsideCarousel,
   useCarouselContext,
   useAutoCarouselSlideIndex,
   AutoCarouselWithoutProvider,
@@ -26,10 +26,10 @@ const Slide = ({ image, title, index }: { image: string; title: string; index: n
   const { index: slideIndex, total } = useAutoCarouselSlideIndex()
 
   const rStyle = useAnimatedStyle(() => {
-    const progress = interpolateLooped(scrollValue.value, slideIndex, total, {
-      incoming: 0,
-      inside: 1,
-      outgoing: 0,
+    const progress = interpolateInsideCarousel(scrollValue, slideIndex, total, {
+      slideBefore: 0,
+      thisSlide: 1,
+      slideAfter: 0,
       offset: 0.2,
     })
 

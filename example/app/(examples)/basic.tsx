@@ -1,7 +1,7 @@
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import {
-  interpolateLooped,
+  interpolateInsideCarousel,
   useCarouselContext,
   useAutoCarouselSlideIndex,
   AutoCarouselWithoutProvider,
@@ -70,18 +70,18 @@ const Slide = ({ image, title, index }: { image: string; title: string; index: n
       transformOrigin: 'center',
       transform: [
         {
-          translateX: interpolateLooped(scrollValue.value, slideIndex, total, {
-            incoming: 0,
-            inside: -100,
-            outgoing: 0,
+          translateX: interpolateInsideCarousel(scrollValue, slideIndex, total, {
+            slideBefore: 0,
+            thisSlide: -100,
+            slideAfter: 0,
             offset: 0.2,
           }),
         },
         {
-          translateY: interpolateLooped(scrollValue.value, slideIndex, total, {
-            incoming: 0,
-            inside: -10,
-            outgoing: 0,
+          translateY: interpolateInsideCarousel(scrollValue, slideIndex, total, {
+            slideBefore: 0,
+            thisSlide: -10,
+            slideAfter: 0,
             offset: 0.2,
           }),
         },
