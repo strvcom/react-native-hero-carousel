@@ -7,14 +7,16 @@ import { AutoCarouselSlide } from '../AutoCarouselSlide'
 import { customRound } from '../../utils/round'
 import { AutoCarouselAdapter } from '../AnimatedPagedView/Adapter'
 
-type AutoCarouselProps = {
+export type AutoCarouselProps = {
   interval?: number
-  children: JSX.Element | JSX.Element[]
+  children: JSX.Element[]
+  footer?: React.ReactNode
 }
 
 export const AutoCarouselWithoutProvider = ({
   interval = DEFAULT_INTERVAL,
   children,
+  footer,
 }: AutoCarouselProps) => {
   const { scrollValue, userInteracted, slideWidth } = useCarouselContext()
   const offset = useSharedValue({ value: slideWidth })
@@ -95,31 +97,36 @@ export const AutoCarouselWithoutProvider = ({
   )
 
   return (
-    <AutoCarouselAdapter
-      offset={offset}
-      onScroll={(activeIndex: number) => {
-        'worklet'
-        scrollValue.value = activeIndex
-      }}
-    >
-      {React.Children.map(paddedChildrenArray, (child, index) => (
-        <AutoCarouselSlide
-          width={slideWidth}
-          key={index}
-          index={index}
-          total={paddedChildrenArray.length}
-        >
-          {child}
-        </AutoCarouselSlide>
-      ))}
-    </AutoCarouselAdapter>
+    <>
+      <AutoCarouselAdapter
+        offset={offset}
+        onScroll={(activeIndex: number) => {
+          'worklet'
+          scrollValue.value = activeIndex
+        }}
+      >
+        {React.Children.map(paddedChildrenArray, (child, index) => (
+          <AutoCarouselSlide
+            width={slideWidth}
+            key={index}
+            index={index}
+            total={paddedChildrenArray.length}
+          >
+            {child}
+          </AutoCarouselSlide>
+        ))}
+      </AutoCarouselAdapter>
+      {footer}
+    </>
   )
 }
 
-export const AutoCarousel = ({ interval, children }: AutoCarouselProps) => {
+export const AutoCarousel = ({ interval, children, footer }: AutoCarouselProps) => {
   return (
     <CarouselContextProvider>
-      <AutoCarouselWithoutProvider interval={interval}>{children}</AutoCarouselWithoutProvider>
+      <AutoCarouselWithoutProvider interval={interval} footer={footer}>
+        {children}
+      </AutoCarouselWithoutProvider>
     </CarouselContextProvider>
   )
 }
