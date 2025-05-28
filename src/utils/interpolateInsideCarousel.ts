@@ -1,7 +1,7 @@
-import { Extrapolation, interpolate, SharedValue } from 'react-native-reanimated'
+import { Extrapolation, interpolate } from 'react-native-reanimated'
 
 export const interpolateInsideCarousel = (
-  scrollValue: SharedValue<number>,
+  scrollValue: number,
   slideIndex: number,
   totalLength: number,
   values: {
@@ -35,5 +35,5 @@ export const interpolateInsideCarousel = (
 
   const outputValues = [inside, incoming, outgoing, inside, incoming, outgoing, inside]
 
-  return interpolate(scrollValue.value, inputRange, outputValues, Extrapolation.CLAMP)
+  return interpolate(scrollValue, inputRange, outputValues, Extrapolation.CLAMP)
 }

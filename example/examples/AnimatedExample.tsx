@@ -24,7 +24,7 @@ const Slide = ({ image, title, index }: { image: string; title: string; index: n
   const { index: slideIndex, total } = useAutoCarouselSlideIndex()
 
   const rStyle = useAnimatedStyle(() => {
-    const progress = interpolateInsideCarousel(scrollValue, slideIndex, total, {
+    const progress = interpolateInsideCarousel(scrollValue.value, slideIndex, total, {
       slideBefore: 0,
       thisSlide: 1,
       slideAfter: 0,
