@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useCallback } from 'react'
 import { runOnJS, useSharedValue, withTiming, useAnimatedReaction } from 'react-native-reanimated'
 
 import { DEFAULT_INTERVAL, ROUNDING_PRECISION, TRANSITION_DURATION } from './index.preset'
-import { CarouselContextProvider, useCarouselContext } from '../../context/CarouselContext'
+import { useCarouselContext } from '../../context/CarouselContext'
 import { AutoCarouselSlide } from '../AutoCarouselSlide'
 import { customRound } from '../../utils/round'
 import { AutoCarouselAdapter } from '../AnimatedPagedView/Adapter'
@@ -10,14 +10,9 @@ import { AutoCarouselAdapter } from '../AnimatedPagedView/Adapter'
 export type AutoCarouselProps = {
   interval?: number
   children: JSX.Element[]
-  footer?: React.ReactNode
 }
 
-export const AutoCarouselWithoutProvider = ({
-  interval = DEFAULT_INTERVAL,
-  children,
-  footer,
-}: AutoCarouselProps) => {
+export const AutoCarousel = ({ interval = DEFAULT_INTERVAL, children }: AutoCarouselProps) => {
   const { scrollValue, userInteracted, slideWidth } = useCarouselContext()
   const offset = useSharedValue({ value: slideWidth })
 
@@ -116,17 +111,6 @@ export const AutoCarouselWithoutProvider = ({
           </AutoCarouselSlide>
         ))}
       </AutoCarouselAdapter>
-      {footer}
     </>
-  )
-}
-
-export const AutoCarousel = ({ interval, children, footer }: AutoCarouselProps) => {
-  return (
-    <CarouselContextProvider>
-      <AutoCarouselWithoutProvider interval={interval} footer={footer}>
-        {children}
-      </AutoCarouselWithoutProvider>
-    </CarouselContextProvider>
   )
 }

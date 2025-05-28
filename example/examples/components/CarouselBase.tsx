@@ -1,6 +1,6 @@
 import {
+  AutoCarousel,
   AutoCarouselProps,
-  AutoCarouselWithoutProvider,
   CarouselContextProvider,
 } from '@strv/react-native-hero-carousel'
 import { SafeAreaView, StyleSheet, View } from 'react-native'
@@ -13,7 +13,7 @@ export function CarouselBase({ children }: { children: AutoCarouselProps['childr
       <Stack.Screen options={{ title: 'Animated Carousel' }} />
       <SafeAreaView style={styles.container}>
         <View style={styles.container}>
-          <AutoCarouselWithoutProvider>{children}</AutoCarouselWithoutProvider>
+          <AutoCarousel>{children}</AutoCarousel>
           <Pagination total={children.length} />
         </View>
       </SafeAreaView>

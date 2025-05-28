@@ -3,6 +3,7 @@ import {
   interpolateInsideCarousel,
   useCarouselContext,
   useAutoCarouselSlideIndex,
+  CarouselContextProvider,
 } from '@strv/react-native-hero-carousel'
 import { SafeAreaView, StyleSheet, View, Text, Dimensions } from 'react-native'
 import { Image } from 'expo-image'
@@ -63,15 +64,18 @@ const Slide = ({ image, title, index }: { image: string; title: string; index: n
 
 export default function AnimatedExample() {
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.container}>
-        <AutoCarousel footer={<Pagination total={images.length} />}>
-          {images.map((image, index) => (
-            <Slide key={index} image={image} title={`Slide ${index + 1}`} index={index} />
-          ))}
-        </AutoCarousel>
-      </View>
-    </SafeAreaView>
+    <CarouselContextProvider>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
+          <AutoCarousel>
+            {images.map((image, index) => (
+              <Slide key={index} image={image} title={`Slide ${index + 1}`} index={index} />
+            ))}
+          </AutoCarousel>
+          <Pagination total={images.length} />
+        </View>
+      </SafeAreaView>
+    </CarouselContextProvider>
   )
 }
 
