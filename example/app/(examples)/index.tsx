@@ -14,11 +14,6 @@ const examples = [
     description: 'Advanced animations with custom transitions',
     route: '/animated' as const,
   },
-  {
-    title: 'Custom Pagination',
-    description: 'Custom pagination with animated dots',
-    route: '/pagination' as const,
-  },
 ]
 
 export default function HomeScreen() {
