@@ -2,20 +2,17 @@ import React, { useRef, useEffect, useCallback } from 'react'
 import { runOnJS, useSharedValue, withTiming, useAnimatedReaction } from 'react-native-reanimated'
 
 import { DEFAULT_INTERVAL, ROUNDING_PRECISION, TRANSITION_DURATION } from './index.preset'
-import { CarouselContextProvider, useCarouselContext } from '../../context/CarouselContext'
+import { useCarouselContext } from '../../context/CarouselContext'
 import { AutoCarouselSlide } from '../AutoCarouselSlide'
 import { customRound } from '../../utils/round'
 import { AutoCarouselAdapter } from '../AnimatedPagedView/Adapter'
 
-type AutoCarouselProps = {
+export type AutoCarouselProps = {
   interval?: number
-  children: JSX.Element | JSX.Element[]
+  children: JSX.Element[]
 }
 
-export const AutoCarouselWithoutProvider = ({
-  interval = DEFAULT_INTERVAL,
-  children,
-}: AutoCarouselProps) => {
+export const AutoCarousel = ({ interval = DEFAULT_INTERVAL, children }: AutoCarouselProps) => {
   const { scrollValue, userInteracted, slideWidth } = useCarouselContext()
   const offset = useSharedValue({ value: slideWidth })
 
@@ -95,26 +92,25 @@ export const AutoCarouselWithoutProvider = ({
   )
 
   return (
-    <AutoCarouselAdapter
-      offset={offset}
-      onScroll={(activeIndex: number) => {
-        'worklet'
-        scrollValue.value = activeIndex
-      }}
-    >
-      {React.Children.map(paddedChildrenArray, (child, index) => (
-        <AutoCarouselSlide width={slideWidth} key={index}>
-          {child}
-        </AutoCarouselSlide>
-      ))}
-    </AutoCarouselAdapter>
-  )
-}
-
-export const AutoCarousel = ({ interval, children }: AutoCarouselProps) => {
-  return (
-    <CarouselContextProvider>
-      <AutoCarouselWithoutProvider interval={interval}>{children}</AutoCarouselWithoutProvider>
-    </CarouselContextProvider>
+    <>
+      <AutoCarouselAdapter
+        offset={offset}
+        onScroll={(activeIndex: number) => {
+          'worklet'
+          scrollValue.value = activeIndex
+        }}
+      >
+        {React.Children.map(paddedChildrenArray, (child, index) => (
+          <AutoCarouselSlide
+            width={slideWidth}
+            key={index}
+            index={index}
+            total={paddedChildrenArray.length}
+          >
+            {child}
+          </AutoCarouselSlide>
+        ))}
+      </AutoCarouselAdapter>
+    </>
   )
 }

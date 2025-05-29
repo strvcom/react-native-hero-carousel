@@ -6,11 +6,12 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "example",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.petrkonecny2.example"
+      "bundleIdentifier": "com.petrkonecny2.example",
+      "appleTeamId": "EAVQTDVRT7"
     },
     "android": {
       "adaptiveIcon": {
