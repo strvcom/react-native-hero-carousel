@@ -21,12 +21,6 @@ export default function ExamplesLayout() {
           title: 'Animated Carousel',
         }}
       />
-      <Stack.Screen
-        name="pagination"
-        options={{
-          title: 'Custom Pagination',
-        }}
-      />
     </Stack>
   )
 }
