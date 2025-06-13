@@ -13,6 +13,11 @@ export const interpolateInsideCarousel = (
 ) => {
   'worklet'
   const { offset, slideBefore: incoming, thisSlide: inside, slideAfter: outgoing } = values
+
+  if (slideIndex < 0 || slideIndex >= totalLength) {
+    throw new Error('Slide index out of bounds')
+  }
+
   let adjustedIndex = slideIndex
 
   if (slideIndex === 0) {
