@@ -5,6 +5,19 @@ import { interpolateInsideCarousel } from '../interpolateInsideCarousel'
 // 0 is copy of 3 4 is copy of 1
 // slide index and scroll value work in this boundary
 
+// offset can delay some animation to start at later point in the transition
+// with offset 0 interpolation starts on change from previous index, so for this params:
+// {
+//   slideBefore: 0,
+//   thisSlide: 100,
+//   slideAfter: 0
+//   offset: 0,
+// }
+// value on scrollValue 3 for index 3 is 0. For 4 is 100 and for 3.5 is 50.
+
+// on the other side going from slide 5 to 4 (or 4 to 5) with offset 0.2
+// interpolation starts at 4.8 and ends at 4.
+
 describe('interpolateInsideCarousel', () => {
   it('should correctly interpolate value for slide 1, 2 or 3', () => {
     const result = interpolateInsideCarousel(1, 1, 5, {
@@ -66,94 +79,29 @@ describe('interpolateInsideCarousel', () => {
     expect(result).toBe(0)
   })
 
-  // it('should interpolate values correctly for middle slides', () => {
-  //   const result = interpolateInsideCarousel(1.5, 1, 3, {
-  //     slideBefore: 0,
-  //     thisSlide: 1,
-  //     slideAfter: 0,
-  //     offset: 0.2,
-  //   })
-  //   expect(result).toBeGreaterThan(0)
-  //   expect(result).toBeLessThan(1)
-  // })
+  it('should handle transitions between slides', () => {
+    const result = interpolateInsideCarousel(2.5, 3, 5, {
+      slideBefore: 0,
+      thisSlide: 100,
+      slideAfter: 0,
+      offset: 0,
+    })
+    expect(result).toBe(50)
+  })
 
-  // it('should handle first slide correctly', () => {
-  //   const result = interpolateInsideCarousel(0, 0, 3, {
-  //     slideBefore: 0,
-  //     thisSlide: 1,
-  //     slideAfter: 0,
-  //     offset: 0.2,
-  //   })
-  //   expect(result).toBe(1) // Should be at thisSlide value
-  // })
-
-  // it('should handle last slide correctly', () => {
-  //   const result = interpolateInsideCarousel(2, 2, 3, {
-  //     slideBefore: 0,
-  //     thisSlide: 1,
-  //     slideAfter: 0,
-  //     offset: 0.2,
-  //   })
-  //   expect(result).toBe(1) // Should be at thisSlide value
-  // })
-
-  // it('should handle transition between slides', () => {
-  //   // Test transition from slide 0 to 1
-  //   const result1 = interpolateInsideCarousel(0.5, 0, 3, {
-  //     slideBefore: 0,
-  //     thisSlide: 1,
-  //     slideAfter: 0,
-  //     offset: 0.2,
-  //   })
-  //   expect(result1).toBeGreaterThan(0)
-  //   expect(result1).toBeLessThan(1)
-
-  //   // Test transition from slide 1 to 2
-  //   const result2 = interpolateInsideCarousel(1.5, 1, 3, {
-  //     slideBefore: 0,
-  //     thisSlide: 1,
-  //     slideAfter: 0,
-  //     offset: 0.2,
-  //   })
-  //   expect(result2).toBeGreaterThan(0)
-  //   expect(result2).toBeLessThan(1)
-  // })
-
-  // it('should handle different offset values', () => {
-  //   const result = interpolateInsideCarousel(1.5, 1, 3, {
-  //     slideBefore: 0,
-  //     thisSlide: 1,
-  //     slideAfter: 0,
-  //     offset: 0.5, // Larger offset
-  //   })
-  //   expect(result).toBeGreaterThan(0)
-  //   expect(result).toBeLessThan(1)
-  // })
-
-  // it('should handle edge cases with minimum slides', () => {
-  //   const result = interpolateInsideCarousel(0, 0, 1, {
-  //     slideBefore: 0,
-  //     thisSlide: 1,
-  //     slideAfter: 0,
-  //     offset: 0.2,
-  //   })
-  //   expect(result).toBe(1) // Should be at thisSlide value
-  // })
-
-  // it('should handle different interpolation values', () => {
-  //   const result = interpolateInsideCarousel(1.5, 1, 3, {
-  //     slideBefore: 0,
-  //     thisSlide: 100,
-  //     slideAfter: 0,
-  //     offset: 0.2,
-  //   })
-  //   expect(result).toBeGreaterThan(0)
-  //   expect(result).toBeLessThan(100)
-  // })
+  it('should handle edge cases with minimum slides', () => {
+    const result = interpolateInsideCarousel(0, 0, 1, {
+      slideBefore: 0,
+      thisSlide: 1,
+      slideAfter: 0,
+      offset: 0.2,
+    })
+    expect(result).toBe(1)
+  })
 
   it('should handle scroll values outside range', () => {
     // Test negative scroll value
-    expect(
+    expect(() =>
       interpolateInsideCarousel(-1, 1, 5, {
         slideBefore: 0,
         thisSlide: 1,
@@ -163,7 +111,7 @@ describe('interpolateInsideCarousel', () => {
     ).toThrow()
 
     // Test scroll value beyond total length
-    expect(
+    expect(() =>
       interpolateInsideCarousel(6, 1, 5, {
         slideBefore: 0,
         thisSlide: 1,
@@ -171,5 +119,76 @@ describe('interpolateInsideCarousel', () => {
         offset: 0,
       }),
     ).toThrow() // Should clamp to thisSlide value
+  })
+
+  it('should handle slide index out of bounds', () => {
+    expect(() =>
+      interpolateInsideCarousel(1, -1, 5, {
+        slideBefore: 0,
+        thisSlide: 1,
+        slideAfter: 0,
+        offset: 0,
+      }),
+    ).toThrow()
+
+    expect(() =>
+      interpolateInsideCarousel(1, 6, 5, {
+        slideBefore: 0,
+        thisSlide: 1,
+        slideAfter: 0,
+        offset: 0,
+      }),
+    ).toThrow()
+  })
+
+  // offset tests
+  it('should correctly interpolate value for slide 1 with offset', () => {
+    const result = interpolateInsideCarousel(1.2, 2, 5, {
+      slideBefore: 0,
+      thisSlide: 100,
+      slideAfter: 0,
+      offset: 0.2,
+    })
+    expect(result).toBe(0)
+    const result2 = interpolateInsideCarousel(1.6, 2, 5, {
+      slideBefore: 0,
+      thisSlide: 100,
+      slideAfter: 0,
+      offset: 0.2,
+    })
+    // for some reason it is actually 50.00000000000004, so we round it to 50
+    expect(Math.round(result2)).toBe(50)
+
+    const result3 = interpolateInsideCarousel(2, 2, 5, {
+      slideBefore: 0,
+      thisSlide: 100,
+      slideAfter: 0,
+      offset: 0.2,
+    })
+    expect(result3).toBe(100)
+  })
+
+  it('should correctly interpolate value from the other side', () => {
+    const result = interpolateInsideCarousel(3.8, 3, 5, {
+      slideBefore: 0,
+      thisSlide: 100,
+      slideAfter: 0,
+      offset: 0.2,
+    })
+    expect(result).toBe(0)
+    const result2 = interpolateInsideCarousel(3.4, 3, 5, {
+      slideBefore: 0,
+      thisSlide: 100,
+      slideAfter: 0,
+      offset: 0.2,
+    })
+    expect(Math.round(result2)).toBe(50)
+    const result3 = interpolateInsideCarousel(3, 3, 5, {
+      slideBefore: 0,
+      thisSlide: 100,
+      slideAfter: 0,
+      offset: 0.2,
+    })
+    expect(result3).toBe(100)
   })
 })
