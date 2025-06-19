@@ -24,7 +24,6 @@ describe('interpolateInsideCarousel', () => {
       slideBefore: 0,
       thisSlide: 1,
       slideAfter: 0,
-      offset: 0,
     })
     expect(result).toBe(1)
   })
@@ -34,7 +33,6 @@ describe('interpolateInsideCarousel', () => {
       slideBefore: 0,
       thisSlide: 1,
       slideAfter: 0,
-      offset: 0,
     })
     expect(result).toBe(1)
   })
@@ -44,7 +42,6 @@ describe('interpolateInsideCarousel', () => {
       slideBefore: 0,
       thisSlide: 1,
       slideAfter: 0,
-      offset: 0,
     })
     expect(result).toBe(1)
   })
@@ -54,7 +51,6 @@ describe('interpolateInsideCarousel', () => {
       slideBefore: 0,
       thisSlide: 1,
       slideAfter: 2,
-      offset: 0,
     })
     expect(result).toBe(2)
   })
@@ -64,7 +60,6 @@ describe('interpolateInsideCarousel', () => {
       slideBefore: 2,
       thisSlide: 1,
       slideAfter: 0,
-      offset: 0,
     })
     expect(result).toBe(2)
   })
@@ -74,7 +69,6 @@ describe('interpolateInsideCarousel', () => {
       slideBefore: 0,
       thisSlide: 1,
       slideAfter: 0,
-      offset: 0,
     })
     expect(result).toBe(0)
   })
@@ -84,7 +78,6 @@ describe('interpolateInsideCarousel', () => {
       slideBefore: 0,
       thisSlide: 100,
       slideAfter: 0,
-      offset: 0,
     })
     expect(result).toBe(50)
   })
@@ -94,7 +87,6 @@ describe('interpolateInsideCarousel', () => {
       slideBefore: 0,
       thisSlide: 1,
       slideAfter: 0,
-      offset: 0.2,
     })
     expect(result).toBe(1)
   })
@@ -106,7 +98,6 @@ describe('interpolateInsideCarousel', () => {
         slideBefore: 0,
         thisSlide: 1,
         slideAfter: 0,
-        offset: 0,
       }),
     ).toThrow()
 
@@ -116,7 +107,6 @@ describe('interpolateInsideCarousel', () => {
         slideBefore: 0,
         thisSlide: 1,
         slideAfter: 0,
-        offset: 0,
       }),
     ).toThrow() // Should clamp to thisSlide value
   })
@@ -127,7 +117,6 @@ describe('interpolateInsideCarousel', () => {
         slideBefore: 0,
         thisSlide: 1,
         slideAfter: 0,
-        offset: 0,
       }),
     ).toThrow()
 
@@ -136,7 +125,6 @@ describe('interpolateInsideCarousel', () => {
         slideBefore: 0,
         thisSlide: 1,
         slideAfter: 0,
-        offset: 0,
       }),
     ).toThrow()
   })
@@ -163,7 +151,6 @@ describe('interpolateInsideCarousel', () => {
       slideBefore: 0,
       thisSlide: 100,
       slideAfter: 0,
-      offset: 0.2,
     })
     expect(result3).toBe(100)
   })

@@ -1,5 +1,13 @@
 import { Extrapolation, interpolate } from 'react-native-reanimated'
 
+const offsetScrollValue = (scrollValue: number, slideIndex: number, offset: number) => {
+  return interpolate(
+    scrollValue,
+    [slideIndex - 1 + offset, slideIndex, slideIndex + 1 - offset],
+    [slideIndex - 1, slideIndex, slideIndex + 1],
+  )
+}
+
 export const interpolateInsideCarousel = (
   scrollValue: number,
   slideIndex: number,
@@ -8,11 +16,11 @@ export const interpolateInsideCarousel = (
     slideBefore: number
     thisSlide: number
     slideAfter: number
-    offset: number
+    offset?: number
   },
 ) => {
   'worklet'
-  const { offset, slideBefore: incoming, thisSlide: inside, slideAfter: outgoing } = values
+  const { slideBefore: incoming, thisSlide: inside, slideAfter: outgoing, offset = 0 } = values
 
   if (scrollValue < 0 || scrollValue >= totalLength) {
     throw new Error('scrollValue out of bounds')
@@ -38,15 +46,20 @@ export const interpolateInsideCarousel = (
 
   const inputRange = [
     0,
-    Math.min(1, adjustedIndex - 1) - offset,
-    adjustedIndex - 1 + offset,
+    Math.min(1, adjustedIndex - 1),
+    adjustedIndex - 1,
     adjustedIndex,
-    adjustedIndex + 1 - offset,
-    Math.max(totalLength - 2, adjustedIndex + 1) + offset,
+    adjustedIndex + 1,
+    Math.max(totalLength - 2, adjustedIndex + 1),
     totalLength - 1,
   ]
 
   const outputValues = [inside, incoming, outgoing, inside, incoming, outgoing, inside]
 
-  return interpolate(scrollValue, inputRange, outputValues, Extrapolation.CLAMP)
+  return interpolate(
+    offset ? offsetScrollValue(scrollValue, slideIndex, offset) : scrollValue,
+    inputRange,
+    outputValues,
+    Extrapolation.CLAMP,
+  )
 }
