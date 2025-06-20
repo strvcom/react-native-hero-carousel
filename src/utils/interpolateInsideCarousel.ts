@@ -1,10 +1,12 @@
 import { Extrapolation, interpolate } from 'react-native-reanimated'
 
 const offsetScrollValue = (scrollValue: number, slideIndex: number, offset: number) => {
+  'worklet'
   return interpolate(
     scrollValue,
     [slideIndex - 1 + offset, slideIndex, slideIndex + 1 - offset],
     [slideIndex - 1, slideIndex, slideIndex + 1],
+    Extrapolation.CLAMP,
   )
 }
 
