@@ -27,17 +27,17 @@ const animationFunction = (
   'worklet'
   return {
     opacity: interpolateInsideCarousel(scrollValue, slideIndex, total, {
-      slideBefore: 1,
-      thisSlide: 1,
-      slideAfter: 0,
+      valueBefore: 1,
+      thisValue: 1,
+      valueAfter: 0,
       offset,
     }),
     transform: [
       {
         translateX: interpolateInsideCarousel(scrollValue, slideIndex, total, {
-          slideBefore: 0,
-          thisSlide: 0,
-          slideAfter: 100,
+          valueBefore: 0,
+          thisValue: 0,
+          valueAfter: 100,
           offset,
         }),
       },

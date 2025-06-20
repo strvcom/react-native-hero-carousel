@@ -15,14 +15,14 @@ export const interpolateInsideCarousel = (
   slideIndex: number,
   totalLength: number,
   values: {
-    slideBefore: number
-    thisSlide: number
-    slideAfter: number
+    valueBefore: number
+    thisValue: number
+    valueAfter: number
     offset?: number
   },
 ) => {
   'worklet'
-  const { slideBefore: incoming, thisSlide: inside, slideAfter: outgoing, offset = 0 } = values
+  const { valueBefore, thisValue, valueAfter, offset = 0 } = values
 
   if (scrollValue < 0 || scrollValue >= totalLength) {
     throw new Error('scrollValue out of bounds')
@@ -33,7 +33,7 @@ export const interpolateInsideCarousel = (
   }
 
   if (totalLength === 1) {
-    return inside
+    return thisValue
   }
 
   let adjustedIndex = slideIndex
@@ -48,20 +48,28 @@ export const interpolateInsideCarousel = (
 
   const inputRange = [
     0,
-    Math.min(1, adjustedIndex - 1),
-    adjustedIndex - 1,
+    Math.min(1, adjustedIndex - 1) - offset,
+    adjustedIndex - 1 + offset,
     adjustedIndex,
-    adjustedIndex + 1,
-    Math.max(totalLength - 2, adjustedIndex + 1),
+    adjustedIndex + 1 - offset,
+    Math.max(totalLength - 2, adjustedIndex + 1) + offset,
     totalLength - 1,
   ]
 
-  const outputValues = [inside, incoming, outgoing, inside, incoming, outgoing, inside]
+  console.log('scrollValue', scrollValue)
+  console.log('inputRange', inputRange)
 
-  return interpolate(
-    offset ? offsetScrollValue(scrollValue, slideIndex, offset) : scrollValue,
-    inputRange,
-    outputValues,
-    Extrapolation.CLAMP,
-  )
+  const outputValues = [
+    thisValue,
+    valueBefore,
+    valueAfter,
+    thisValue,
+    valueBefore,
+    valueAfter,
+    thisValue,
+  ]
+
+  console.log('outputValues', outputValues)
+
+  return interpolate(scrollValue, inputRange, outputValues, Extrapolation.CLAMP)
 }
