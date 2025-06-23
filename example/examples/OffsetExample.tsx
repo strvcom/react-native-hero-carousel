@@ -41,6 +41,14 @@ const animationFunction = (
           offset,
         }),
       },
+      {
+        translateY: interpolateInsideCarousel(scrollValue, slideIndex, total, {
+          valueBefore: 0,
+          thisValue: 0,
+          valueAfter: 100,
+          offset,
+        }),
+      },
     ],
   }
 }

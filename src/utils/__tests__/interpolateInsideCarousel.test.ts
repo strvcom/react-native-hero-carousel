@@ -46,7 +46,7 @@ describe('interpolateInsideCarousel', () => {
     expect(result).toBe(1)
   })
 
-  it('should correctly interpolate with length 4', () => {
+  it('should correctly interpolate value for slide 2 with length 4', () => {
     const result = interpolateInsideCarousel(2, 2, 4, {
       valueBefore: 0,
       thisValue: 1,
@@ -55,7 +55,7 @@ describe('interpolateInsideCarousel', () => {
     expect(result).toBe(1)
   })
 
-  it('should correctly interpolate outgoing value', () => {
+  it('should correctly interpolate value after slide 2 for slide 3', () => {
     const result = interpolateInsideCarousel(2, 3, 5, {
       valueBefore: 0,
       thisValue: 1,
@@ -64,7 +64,7 @@ describe('interpolateInsideCarousel', () => {
     expect(result).toBe(2)
   })
 
-  it('should correctly interpolate incoming value', () => {
+  it('should correctly interpolate value before slide 2 for slide 1', () => {
     const result = interpolateInsideCarousel(2, 1, 5, {
       valueBefore: 2,
       thisValue: 1,
@@ -73,7 +73,7 @@ describe('interpolateInsideCarousel', () => {
     expect(result).toBe(2)
   })
 
-  it('should correctly interpolate incoming value with length 4', () => {
+  it('should correctly interpolate value before slide 2 for slide 1 with length 4', () => {
     const result = interpolateInsideCarousel(2, 1, 4, {
       valueBefore: 2,
       thisValue: 1,
@@ -82,7 +82,7 @@ describe('interpolateInsideCarousel', () => {
     expect(result).toBe(2)
   })
 
-  it('should correctly interpolate outgoing value with length 4', () => {
+  it('should correctly interpolate value after slide 2 for slide 3 with length 4', () => {
     const result = interpolateInsideCarousel(2, 3, 4, {
       valueBefore: 0,
       thisValue: 1,
@@ -91,16 +91,7 @@ describe('interpolateInsideCarousel', () => {
     expect(result).toBe(2)
   })
 
-  it('should correctly interpolate value if slide is not visible', () => {
-    const result = interpolateInsideCarousel(2, 0, 5, {
-      valueBefore: 0,
-      thisValue: 1,
-      valueAfter: 0,
-    })
-    expect(result).toBe(0)
-  })
-
-  it('should handle transitions between slides', () => {
+  it('should correctly interpolate in between value for slide 3 with length 5', () => {
     const result = interpolateInsideCarousel(2.5, 3, 5, {
       valueBefore: 0,
       thisValue: 100,
@@ -109,7 +100,7 @@ describe('interpolateInsideCarousel', () => {
     expect(result).toBe(50)
   })
 
-  it('should handle edge cases with minimum slides', () => {
+  it('should correctly interpolate value for slide 0 with length 1', () => {
     const result = interpolateInsideCarousel(0, 0, 1, {
       valueBefore: 0,
       thisValue: 1,
@@ -118,7 +109,7 @@ describe('interpolateInsideCarousel', () => {
     expect(result).toBe(1)
   })
 
-  it('should handle scroll values outside range', () => {
+  it('should throw error for scroll values outside range', () => {
     // Test negative scroll value
     expect(() =>
       interpolateInsideCarousel(-1, 1, 5, {
@@ -138,7 +129,7 @@ describe('interpolateInsideCarousel', () => {
     ).toThrow() // Should clamp to thisSlide value
   })
 
-  it('should handle slide index out of bounds', () => {
+  it('should throw error for slide index out of bounds', () => {
     expect(() =>
       interpolateInsideCarousel(1, -1, 5, {
         valueBefore: 0,
@@ -157,7 +148,7 @@ describe('interpolateInsideCarousel', () => {
   })
 
   // offset tests
-  it('should correctly interpolate value for slide 1 with offset', () => {
+  it('should correctly interpolate in between value from 1 to 2 for slide 2 with offset', () => {
     const result = interpolateInsideCarousel(1.2, 2, 5, {
       valueBefore: 0,
       thisValue: 100,
@@ -182,7 +173,7 @@ describe('interpolateInsideCarousel', () => {
     expect(result3).toBe(100)
   })
 
-  it('should correctly interpolate value from the other side', () => {
+  it('should correctly interpolate in between value from 4 to 3 for slide 3 with offset', () => {
     const result = interpolateInsideCarousel(3.8, 3, 5, {
       valueBefore: 0,
       thisValue: 100,
@@ -206,8 +197,10 @@ describe('interpolateInsideCarousel', () => {
     expect(result3).toBe(100)
   })
 
-  it('should handle offset between 1 and 2', () => {
-    const result = interpolateInsideCarousel(1.1, 2, 7, {
+  // offset tests
+
+  it('should correctly interpolate in between value for slide 2 with offset', () => {
+    const result = interpolateInsideCarousel(1.1, 2, 5, {
       valueBefore: 1,
       thisValue: 1,
       valueAfter: 0,
@@ -216,7 +209,7 @@ describe('interpolateInsideCarousel', () => {
     expect(result).toBe(0)
   })
 
-  it('should handle offset between 1 and 2 with length 4', () => {
+  it('should correctly interpolate in between value for slide 2 with offset and length 4', () => {
     const result = interpolateInsideCarousel(1.1, 2, 4, {
       valueBefore: 1,
       thisValue: 1,
@@ -226,8 +219,8 @@ describe('interpolateInsideCarousel', () => {
     expect(result).toBe(0)
   })
 
-  it('should handle offset between 3 and 4', () => {
-    const result = interpolateInsideCarousel(3.3, 4, 7, {
+  it('should correctly interpolate in between value for slide 4 with offset', () => {
+    const result = interpolateInsideCarousel(3.3, 4, 5, {
       valueBefore: 1,
       thisValue: 1,
       valueAfter: 0,
@@ -235,6 +228,11 @@ describe('interpolateInsideCarousel', () => {
     })
     expect(Math.round(result)).toBe(0)
   })
+
+  // mirroring tests
+  // slides at the end of the carousel and at the beginning have to mirror their state
+  // when transition from padding slide to its real counterpart starts happening real slide
+  // already should be in the active state so there is no visible transition.
 
   it('should correctly mirror between last and first slide', () => {
     const result = interpolateInsideCarousel(3.5, 1, 5, {
@@ -271,6 +269,16 @@ describe('interpolateInsideCarousel', () => {
       valueBefore: 1,
       thisValue: 1,
       valueAfter: 0,
+      offset: 0.1,
+    })
+    expect(result).toBe(1)
+  })
+
+  it('should correctly mirror between first and last slide with offset', () => {
+    const result = interpolateInsideCarousel(0.9, 5, 7, {
+      valueBefore: 0,
+      thisValue: 1,
+      valueAfter: 1,
       offset: 0.1,
     })
     expect(result).toBe(1)

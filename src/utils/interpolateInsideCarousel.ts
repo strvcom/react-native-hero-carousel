@@ -47,11 +47,5 @@ export const interpolateInsideCarousel = (
     return 0
   })
 
-  console.log('adjustedIndex', adjustedIndex)
-  console.log('slideIndex', slideIndex)
-  console.log('scrollValue', scrollValue)
-  console.log('inputRange', inputRange)
-  console.log('outputValues', outputValues)
-
   return interpolate(scrollValue, inputRange, outputValues, Extrapolation.CLAMP)
 }
