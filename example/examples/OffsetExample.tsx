@@ -60,7 +60,7 @@ const Slide = ({
   const { index: slideIndex, total } = useAutoCarouselSlideIndex()
 
   const rTitleStyle = useAnimatedStyle(() => {
-    return animationFunction(scrollValue.value, slideIndex, total, 0.5)
+    return animationFunction(scrollValue.value, slideIndex, total, 0.3)
   })
 
   const rSubtitleStyle = useAnimatedStyle(() => {

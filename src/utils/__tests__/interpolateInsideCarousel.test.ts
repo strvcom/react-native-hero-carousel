@@ -46,6 +46,15 @@ describe('interpolateInsideCarousel', () => {
     expect(result).toBe(1)
   })
 
+  it('should correctly interpolate with length 4', () => {
+    const result = interpolateInsideCarousel(2, 2, 4, {
+      valueBefore: 0,
+      thisValue: 1,
+      valueAfter: 0,
+    })
+    expect(result).toBe(1)
+  })
+
   it('should correctly interpolate outgoing value', () => {
     const result = interpolateInsideCarousel(2, 3, 5, {
       valueBefore: 0,
@@ -60,6 +69,24 @@ describe('interpolateInsideCarousel', () => {
       valueBefore: 2,
       thisValue: 1,
       valueAfter: 0,
+    })
+    expect(result).toBe(2)
+  })
+
+  it('should correctly interpolate incoming value with length 4', () => {
+    const result = interpolateInsideCarousel(2, 1, 4, {
+      valueBefore: 2,
+      thisValue: 1,
+      valueAfter: 0,
+    })
+    expect(result).toBe(2)
+  })
+
+  it('should correctly interpolate outgoing value with length 4', () => {
+    const result = interpolateInsideCarousel(2, 3, 4, {
+      valueBefore: 0,
+      thisValue: 1,
+      valueAfter: 2,
     })
     expect(result).toBe(2)
   })
@@ -179,23 +206,73 @@ describe('interpolateInsideCarousel', () => {
     expect(result3).toBe(100)
   })
 
-  fit('should handle offset between 1 and 2', () => {
-    const result = interpolateInsideCarousel(1.3, 2, 7, {
+  it('should handle offset between 1 and 2', () => {
+    const result = interpolateInsideCarousel(1.1, 2, 7, {
       valueBefore: 1,
       thisValue: 1,
       valueAfter: 0,
-      offset: 0.5,
+      offset: 0.3,
+    })
+    expect(result).toBe(0)
+  })
+
+  it('should handle offset between 1 and 2 with length 4', () => {
+    const result = interpolateInsideCarousel(1.1, 2, 4, {
+      valueBefore: 1,
+      thisValue: 1,
+      valueAfter: 0,
+      offset: 0.1,
     })
     expect(result).toBe(0)
   })
 
   it('should handle offset between 3 and 4', () => {
-    const result = interpolateInsideCarousel(3.5, 4, 7, {
+    const result = interpolateInsideCarousel(3.3, 4, 7, {
       valueBefore: 1,
       thisValue: 1,
       valueAfter: 0,
       offset: 0.5,
     })
-    expect(result).toBe(0)
+    expect(Math.round(result)).toBe(0)
+  })
+
+  it('should correctly mirror between last and first slide', () => {
+    const result = interpolateInsideCarousel(3.5, 1, 5, {
+      valueBefore: 1,
+      thisValue: 1,
+      valueAfter: 0,
+      offset: 0,
+    })
+    expect(result).toBe(1)
+  })
+
+  it('should correctly mirror between last and first with length 4', () => {
+    const result = interpolateInsideCarousel(3.5, 1, 4, {
+      valueBefore: 1,
+      thisValue: 1,
+      valueAfter: 0,
+      offset: 0,
+    })
+    expect(result).toBe(1)
+  })
+
+  it('should correctly mirror between first and last slide', () => {
+    const result = interpolateInsideCarousel(0.5, 5, 7, {
+      valueBefore: 0,
+      thisValue: 1,
+      valueAfter: 1,
+      offset: 0,
+    })
+    expect(result).toBe(1)
+  })
+
+  it('should correctly mirror between last and first slide with offset', () => {
+    const result = interpolateInsideCarousel(6, 1, 7, {
+      valueBefore: 1,
+      thisValue: 1,
+      valueAfter: 0,
+      offset: 0.1,
+    })
+    expect(result).toBe(1)
   })
 })

@@ -1,15 +1,5 @@
 import { Extrapolation, interpolate } from 'react-native-reanimated'
 
-const offsetScrollValue = (scrollValue: number, slideIndex: number, offset: number) => {
-  'worklet'
-  return interpolate(
-    scrollValue,
-    [slideIndex - 1 + offset, slideIndex, slideIndex + 1 - offset],
-    [slideIndex - 1, slideIndex, slideIndex + 1],
-    Extrapolation.CLAMP,
-  )
-}
-
 export const interpolateInsideCarousel = (
   scrollValue: number,
   slideIndex: number,
@@ -36,39 +26,31 @@ export const interpolateInsideCarousel = (
     return thisValue
   }
 
-  let adjustedIndex = slideIndex
-
-  if (slideIndex === 0) {
-    adjustedIndex = Math.max(totalLength - 2, 0)
+  const getAdjustedIndex = (slideIndex: number) => {
+    if (slideIndex === 0) return Math.max(totalLength - 2, 0)
+    if (slideIndex === totalLength - 1) return 1
+    return slideIndex
   }
 
-  if (slideIndex === totalLength - 1) {
-    adjustedIndex = 1
-  }
+  const adjustedIndex = getAdjustedIndex(slideIndex)
 
-  const inputRange = [
-    0,
-    Math.min(1, adjustedIndex - 1) - offset,
-    adjustedIndex - 1 + offset,
-    adjustedIndex,
-    adjustedIndex + 1 - offset,
-    Math.max(totalLength - 2, adjustedIndex + 1) + offset,
-    totalLength - 1,
-  ]
+  const inputRange = Array.from({ length: totalLength }).map((_, index) => {
+    if (index < slideIndex) return index + offset
+    if (index > slideIndex) return index - offset
+    return index
+  })
+  const outputValues = inputRange.map((_, index) => {
+    if (index === adjustedIndex) return thisValue
+    if (index === slideIndex) return thisValue
+    if (index < slideIndex) return valueAfter
+    if (index > slideIndex) return valueBefore
+    return 0
+  })
 
+  console.log('adjustedIndex', adjustedIndex)
+  console.log('slideIndex', slideIndex)
   console.log('scrollValue', scrollValue)
   console.log('inputRange', inputRange)
-
-  const outputValues = [
-    thisValue,
-    valueBefore,
-    valueAfter,
-    thisValue,
-    valueBefore,
-    valueAfter,
-    thisValue,
-  ]
-
   console.log('outputValues', outputValues)
 
   return interpolate(scrollValue, inputRange, outputValues, Extrapolation.CLAMP)
