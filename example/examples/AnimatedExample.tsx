@@ -10,6 +10,7 @@ import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
 import Animated, { useAnimatedStyle, interpolate, Extrapolation } from 'react-native-reanimated'
 import { Pagination } from './components/Pagination'
+import { useEffect } from 'react'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
@@ -63,6 +64,11 @@ const Slide = ({ image, title, index }: { image: string; title: string; index: n
 }
 
 export default function AnimatedExample() {
+  // Preload all images when component mounts
+  useEffect(() => {
+    Image.prefetch(images)
+  }, [])
+
   return (
     <CarouselContextProvider>
       <SafeAreaView style={styles.container}>

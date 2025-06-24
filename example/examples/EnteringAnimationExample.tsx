@@ -7,6 +7,7 @@ import { SafeAreaView, StyleSheet, View, Text, Dimensions } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
 import { FadeIn, SlideInDown, SlideInRight, ZoomIn, FlipInEasyX } from 'react-native-reanimated'
+import { useEffect } from 'react'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
@@ -32,7 +33,7 @@ const Slide = ({ image, title, index }: { image: string; title: string; index: n
 
   return (
     <View key={index} style={styles.slide}>
-      <Image key={image} source={{ uri: image }} style={styles.image} />
+      <Image key={image} source={{ uri: image }} style={styles.image} contentFit="cover" />
       <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.gradient}>
         <SlideAnimatedView {...animationConfig}>
           <Text style={styles.title}>{title}</Text>
@@ -46,6 +47,11 @@ const Slide = ({ image, title, index }: { image: string; title: string; index: n
 }
 
 export default function EnteringAnimationExample() {
+  // Preload all images when component mounts
+  useEffect(() => {
+    Image.prefetch(images)
+  }, [])
+
   return (
     <CarouselContextProvider>
       <SafeAreaView style={styles.container}>
