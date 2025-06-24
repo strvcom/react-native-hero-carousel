@@ -80,6 +80,7 @@ export const AutoCarousel = ({ interval = DEFAULT_INTERVAL, children }: AutoCaro
       if (slideWidth === 0) return
       if (offset % 1 !== 0) return
       if (!autoScrollEnabled) return
+      timeoutValue.value = 0
       runOnJS(handleAutoScroll)()
     },
     [scrollValue, slideWidth, autoScrollEnabled],

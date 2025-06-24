@@ -24,6 +24,11 @@ const examples = [
     description: 'Carousel with entering/exiting animations triggered by shared values',
     route: '/entering-animation' as const,
   },
+  {
+    title: 'Instagram Pagination',
+    description: 'Instagram-style pagination with auto-slide progress indicator',
+    route: '/instagram-pagination' as const,
+  },
 ]
 
 export default function HomeScreen() {
