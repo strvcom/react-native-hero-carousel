@@ -7,6 +7,7 @@ const windowWidth = Dimensions.get('window').width
 
 export const CarouselContext = createContext<{
   scrollValue: SharedValue<number>
+  timeoutValue: SharedValue<number>
   slideWidth: number
   userInteracted: boolean
   setUserInteracted: (interacted: boolean) => void
@@ -30,13 +31,14 @@ export const CarouselContextProvider = ({
   slideWidth?: number
 }) => {
   const scrollValue = useSharedValue(defaultScrollValue)
+  const timeoutValue = useSharedValue(0)
   const [userInteracted, setUserInteracted] = useState(false)
 
   return (
     <CarouselContext.Provider
       value={useMemo(
-        () => ({ scrollValue, userInteracted, setUserInteracted, slideWidth }),
-        [scrollValue, userInteracted, setUserInteracted, slideWidth],
+        () => ({ scrollValue, userInteracted, setUserInteracted, slideWidth, timeoutValue }),
+        [scrollValue, userInteracted, setUserInteracted, slideWidth, timeoutValue],
       )}
     >
       {children}

@@ -1,5 +1,11 @@
 import React, { useRef, useEffect, useCallback } from 'react'
-import { runOnJS, useSharedValue, withTiming, useAnimatedReaction } from 'react-native-reanimated'
+import {
+  runOnJS,
+  useSharedValue,
+  withTiming,
+  useAnimatedReaction,
+  Easing,
+} from 'react-native-reanimated'
 
 import { DEFAULT_INTERVAL, ROUNDING_PRECISION, TRANSITION_DURATION } from './index.preset'
 import { useCarouselContext } from '../../context/CarouselContext'
@@ -13,7 +19,7 @@ export type AutoCarouselProps = {
 }
 
 export const AutoCarousel = ({ interval = DEFAULT_INTERVAL, children }: AutoCarouselProps) => {
-  const { scrollValue, userInteracted, slideWidth } = useCarouselContext()
+  const { scrollValue, userInteracted, slideWidth, timeoutValue } = useCarouselContext()
   const offset = useSharedValue({ value: slideWidth })
 
   const childrenArray = React.Children.toArray(children)
@@ -43,23 +49,30 @@ export const AutoCarousel = ({ interval = DEFAULT_INTERVAL, children }: AutoCaro
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  const clearCarouselTimeout = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+      timeoutValue.value = 0
+    }
+  }, [timeoutValue])
+
   const handleAutoScroll = () => {
     const autoScroll = () => {
       const offset = scrollValue.value
       const nextIndex = offset + 1
       goToPage(nextIndex, TRANSITION_DURATION)
     }
-    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    clearCarouselTimeout()
+    timeoutValue.value = withTiming(1, { duration: interval, easing: Easing.linear })
     timeoutRef.current = setTimeout(autoScroll, interval)
   }
 
   useEffect(() => {
-    if (!autoScrollEnabled && timeoutRef.current) clearTimeout(timeoutRef.current)
+    if (!autoScrollEnabled) clearCarouselTimeout()
     return () => {
-      if (!timeoutRef.current) return
-      clearTimeout(timeoutRef.current)
+      clearCarouselTimeout()
     }
-  }, [autoScrollEnabled])
+  }, [autoScrollEnabled, clearCarouselTimeout])
 
   useAnimatedReaction(
     () => scrollValue.value,
