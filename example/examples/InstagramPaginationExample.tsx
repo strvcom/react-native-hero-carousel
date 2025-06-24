@@ -6,7 +6,7 @@ import {
 import { SafeAreaView, StyleSheet, View, Text, Dimensions } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
-import Animated, { useAnimatedStyle } from 'react-native-reanimated'
+import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { useEffect } from 'react'
 import { BlurView } from 'expo-blur'
 
@@ -20,25 +20,25 @@ const images = Array.from({ length: 5 }, getRandomImageUrl)
 
 // Individual pagination dot component
 const PaginationDot = ({ index, total }: { index: number; total: number }) => {
-  const { scrollValue, timeoutValue } = useCarouselContext()
+  const { scrollValue, timeoutValue, userInteracted } = useCarouselContext()
 
   const progressStyle = useAnimatedStyle(() => {
     const isActive = scrollValue.value - 1 >= index && scrollValue.value - 1 < index + 1
-    console.log(timeoutValue.value)
+    const wasActive = scrollValue.value - 1 > index
 
-    if (!isActive) {
+    if ((!isActive && !wasActive) || userInteracted) {
       return {
         width: 0,
       }
     }
     return {
-      width: `${timeoutValue.value * 100}%`,
+      width: `${wasActive ? 100 : timeoutValue.value * 100}%`,
     }
   })
 
   const dotStyle = useAnimatedStyle(() => {
     const isActive = Math.round(scrollValue.value - 1) === index
-    const opacity = isActive ? 1 : 0.5
+    const opacity = isActive ? withTiming(1) : withTiming(0.5)
     return {
       opacity,
     }

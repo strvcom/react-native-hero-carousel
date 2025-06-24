@@ -16,9 +16,14 @@ import { AutoCarouselAdapter } from '../AnimatedPagedView/Adapter'
 export type AutoCarouselProps = {
   interval?: number
   children: React.ReactNode[]
+  goToPageAnimation?: (to: number, duration: number) => number
 }
 
-export const AutoCarousel = ({ interval = DEFAULT_INTERVAL, children }: AutoCarouselProps) => {
+export const AutoCarousel = ({
+  interval = DEFAULT_INTERVAL,
+  children,
+  goToPageAnimation = (to, duration) => withTiming(to, { duration }),
+}: AutoCarouselProps) => {
   const { scrollValue, userInteracted, slideWidth, timeoutValue } = useCarouselContext()
   const offset = useSharedValue({ value: slideWidth })
 
@@ -39,12 +44,12 @@ export const AutoCarousel = ({ interval = DEFAULT_INTERVAL, children }: AutoCaro
       'worklet'
       const to = page * slideWidth
       if (duration) {
-        offset.value = withTiming<{ value: number }>({ value: to }, { duration })
+        offset.value = { value: goToPageAnimation(to, duration) }
       } else {
         offset.value = { value: to }
       }
     },
-    [offset, slideWidth],
+    [offset, slideWidth, goToPageAnimation],
   )
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
