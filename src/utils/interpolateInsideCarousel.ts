@@ -5,35 +5,47 @@ export const interpolateInsideCarousel = (
   slideIndex: number,
   totalLength: number,
   values: {
-    slideBefore: number
-    thisSlide: number
-    slideAfter: number
-    offset: number
+    valueBefore: number
+    thisValue: number
+    valueAfter: number
+    offset?: number
   },
 ) => {
   'worklet'
-  const { offset, slideBefore: incoming, thisSlide: inside, slideAfter: outgoing } = values
-  let adjustedIndex = slideIndex
+  const { valueBefore, thisValue, valueAfter, offset = 0 } = values
 
-  if (slideIndex === 0) {
-    adjustedIndex = Math.max(totalLength - 2, 0)
+  if (scrollValue < 0 || scrollValue >= totalLength) {
+    throw new Error('scrollValue out of bounds')
   }
 
-  if (slideIndex === totalLength - 1) {
-    adjustedIndex = 1
+  if (slideIndex < 0 || slideIndex >= totalLength) {
+    throw new Error('slideIndex out of bounds')
   }
 
-  const inputRange = [
-    0,
-    Math.min(1, adjustedIndex - 1) - offset,
-    adjustedIndex - 1 + offset,
-    adjustedIndex,
-    adjustedIndex + 1 - offset,
-    Math.max(totalLength - 2, adjustedIndex + 1) + offset,
-    totalLength - 1,
-  ]
+  if (totalLength === 1) {
+    return thisValue
+  }
 
-  const outputValues = [inside, incoming, outgoing, inside, incoming, outgoing, inside]
+  const getAdjustedIndex = (slideIndex: number) => {
+    if (slideIndex === 0) return Math.max(totalLength - 2, 0)
+    if (slideIndex === totalLength - 1) return 1
+    return slideIndex
+  }
+
+  const adjustedIndex = getAdjustedIndex(slideIndex)
+
+  const inputRange = Array.from({ length: totalLength }).map((_, index) => {
+    if (index < slideIndex) return index + offset
+    if (index > slideIndex) return index - offset
+    return index
+  })
+  const outputValues = inputRange.map((_, index) => {
+    if (index === adjustedIndex) return thisValue
+    if (index === slideIndex) return thisValue
+    if (index < slideIndex) return valueAfter
+    if (index > slideIndex) return valueBefore
+    return 0
+  })
 
   return interpolate(scrollValue, inputRange, outputValues, Extrapolation.CLAMP)
 }

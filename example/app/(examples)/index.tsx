@@ -14,6 +14,11 @@ const examples = [
     description: 'Advanced animations with custom transitions',
     route: '/animated' as const,
   },
+  {
+    title: 'Offset Carousel',
+    description: 'A carousel with offset animations',
+    route: '/offset' as const,
+  },
 ]
 
 export default function HomeScreen() {

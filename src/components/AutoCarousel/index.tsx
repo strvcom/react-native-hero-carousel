@@ -9,7 +9,7 @@ import { AutoCarouselAdapter } from '../AnimatedPagedView/Adapter'
 
 export type AutoCarouselProps = {
   interval?: number
-  children: JSX.Element[]
+  children: React.ReactNode[]
 }
 
 export const AutoCarousel = ({ interval = DEFAULT_INTERVAL, children }: AutoCarouselProps) => {
