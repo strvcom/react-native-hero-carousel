@@ -19,6 +19,11 @@ const examples = [
     description: 'A carousel with offset animations',
     route: '/offset' as const,
   },
+  {
+    title: 'Entering Animation Carousel',
+    description: 'Carousel with entering/exiting animations triggered by shared values',
+    route: '/entering-animation' as const,
+  },
 ]
 
 export default function HomeScreen() {

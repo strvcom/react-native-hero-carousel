@@ -9,6 +9,7 @@ import { SafeAreaView, StyleSheet, View, Dimensions } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
 import Animated, { useAnimatedStyle } from 'react-native-reanimated'
+import { useEffect } from 'react'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
@@ -89,7 +90,7 @@ const Slide = ({
 
   return (
     <View key={index} style={styles.slide}>
-      <Image key={image} source={{ uri: image }} style={styles.image} />
+      <Image key={image} source={{ uri: image }} style={styles.image} contentFit="cover" />
       <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.gradient}>
         <View style={styles.contentContainer}>
           <Animated.Text style={[styles.title, rTitleStyle]}>{title}</Animated.Text>
@@ -106,6 +107,11 @@ const Slide = ({
 }
 
 export default function OffsetExample() {
+  // Preload all images when component mounts
+  useEffect(() => {
+    Image.prefetch(images)
+  }, [])
+
   return (
     <CarouselContextProvider>
       <SafeAreaView style={styles.container}>
