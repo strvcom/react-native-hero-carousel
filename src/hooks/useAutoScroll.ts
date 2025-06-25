@@ -1,7 +1,6 @@
 import { useMemo, useRef, useEffect, useCallback } from 'react'
 import {
   runOnJS,
-  useSharedValue,
   withTiming,
   useAnimatedReaction,
   Easing,
@@ -17,6 +16,7 @@ export const useAutoScroll = ({
   interval,
   autoScrollEnabled,
   goToPage,
+  timeoutValue,
 }: {
   scrollValue: SharedValue<number>
   slideWidth: number
@@ -24,9 +24,8 @@ export const useAutoScroll = ({
   disableAutoScroll: boolean
   interval: number | ((index: number) => number)
   goToPage: (page: number, duration?: number) => void
+  timeoutValue: SharedValue<number>
 }) => {
-  const timeoutValue = useSharedValue(0)
-
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const clearCarouselTimeout = useCallback(() => {
@@ -36,16 +35,24 @@ export const useAutoScroll = ({
     }
   }, [timeoutValue])
 
-  const handleAutoScroll = (interval: number) => {
-    const offset = scrollValue.value
-    const nextIndex = offset + 1
-    const autoScroll = () => {
-      goToPage(nextIndex, TRANSITION_DURATION)
-    }
-    clearCarouselTimeout()
-    timeoutValue.value = withTiming(1, { duration: interval, easing: Easing.linear })
-    timeoutRef.current = setTimeout(autoScroll, interval)
-  }
+  const runAutoScroll = useCallback(
+    (
+      interval: number,
+      onComplete = (nextIndex: number) => {
+        goToPage(nextIndex, TRANSITION_DURATION)
+      },
+    ) => {
+      const offset = scrollValue.value
+      const nextIndex = offset + 1
+      const autoScroll = () => {
+        onComplete(nextIndex)
+      }
+      clearCarouselTimeout()
+      timeoutValue.value = withTiming(1, { duration: interval, easing: Easing.linear })
+      timeoutRef.current = setTimeout(autoScroll, interval)
+    },
+    [clearCarouselTimeout, goToPage, scrollValue, timeoutValue],
+  )
 
   useEffect(() => {
     if (!autoScrollEnabled) clearCarouselTimeout()
@@ -62,7 +69,7 @@ export const useAutoScroll = ({
       if (!autoScrollEnabled) return
       timeoutValue.value = 0
       if (disableAutoScroll) return
-      runOnJS(handleAutoScroll)(typeof interval === 'function' ? interval(offset) : interval)
+      runOnJS(runAutoScroll)(typeof interval === 'function' ? interval(offset) : interval)
     },
     [scrollValue, slideWidth, autoScrollEnabled],
   )
@@ -70,7 +77,8 @@ export const useAutoScroll = ({
   return useMemo(
     () => ({
       timeoutValue,
+      runAutoScroll,
     }),
-    [timeoutValue],
+    [timeoutValue, runAutoScroll],
   )
 }

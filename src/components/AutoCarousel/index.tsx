@@ -21,7 +21,7 @@ export const AutoCarousel = ({
   goToPageAnimation = (to, duration) => withTiming(to, { duration }),
   disableAutoScroll = false,
 }: AutoCarouselProps) => {
-  const { scrollValue, userInteracted, slideWidth } = useCarouselContext()
+  const { scrollValue, userInteracted, slideWidth, timeoutValue } = useCarouselContext()
 
   const { goToPage, paddedChildrenArray, offset } = useCore({
     children,
@@ -32,13 +32,14 @@ export const AutoCarousel = ({
 
   const autoScrollEnabled = !userInteracted
 
-  const { timeoutValue } = useAutoScroll({
+  const { runAutoScroll } = useAutoScroll({
     scrollValue,
     slideWidth,
     autoScrollEnabled,
     disableAutoScroll,
     interval,
     goToPage,
+    timeoutValue,
   })
 
   return (
@@ -56,6 +57,8 @@ export const AutoCarousel = ({
             key={index}
             index={index}
             total={paddedChildrenArray.length}
+            runAutoScroll={runAutoScroll}
+            goToPage={goToPage}
           >
             {child}
           </AutoCarouselSlide>
