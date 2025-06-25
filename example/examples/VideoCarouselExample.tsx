@@ -3,7 +3,7 @@ import {
   CarouselContextProvider,
   useAutoCarouselSlideIndex,
 } from '@strv/react-native-hero-carousel'
-import { SafeAreaView, StyleSheet, View, Text, Pressable } from 'react-native'
+import { SafeAreaView, StyleSheet, View, Text, Pressable, Dimensions, Platform } from 'react-native'
 import { useVideoPlayer, VideoView } from 'expo-video'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useActiveSlideEffect, useIsActiveSlide } from '@/hooks/useActiveSlideEffect'
@@ -11,21 +11,22 @@ import { useEffect, useRef, useState } from 'react'
 import { TimerPagination } from './components/TimerPagination'
 import { useEvent, useEventListener } from 'expo'
 
+const { width, height } = Dimensions.get('window')
 // Sample video URLs - these are publicly available videos that work well for testing
 const videos = [
-  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
   'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
   'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
   'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
 ]
 
 const videoTitles = [
-  'Big Buck Bunny',
-  'Elephants Dream',
   'For Bigger Blazes',
   'For Bigger Escapes',
   'For Bigger Fun',
+  'Big Buck Bunny',
+  'Elephants Dream',
 ]
 
 const Slide = ({ videoUri, title, index }: { videoUri: string; title: string; index: number }) => {
@@ -58,26 +59,33 @@ const Slide = ({ videoUri, title, index }: { videoUri: string; title: string; in
   }, [isActiveSlide, duration, runAutoScroll])
 
   return (
-    <Pressable
-      key={index}
-      style={styles.slide}
-      onPress={() => {
-        if (isPlaying) {
-          player.pause()
-          intervalRef.current?.pause()
-        } else {
-          player.play()
-          intervalRef.current?.resume()
-        }
-      }}
-    >
-      <VideoView player={player} style={styles.video} contentFit="cover" nativeControls={false} />
-      <LinearGradient colors={['rgba(0,0,0,0.8)', 'transparent']} style={styles.topGradient} />
-      <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.gradient}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.subtitle}>Swipe to navigate • Tap to play/pause</Text>
-      </LinearGradient>
-    </Pressable>
+    <View style={styles.slide}>
+      <Pressable
+        key={index}
+        style={styles.slide}
+        onPress={() => {
+          if (isPlaying) {
+            player.pause()
+            intervalRef.current?.pause()
+          } else {
+            player.play()
+            intervalRef.current?.resume()
+          }
+        }}
+      >
+        <VideoView
+          player={player}
+          style={styles.video}
+          contentFit={Platform.OS === 'android' ? 'fill' : 'cover'}
+          nativeControls={false}
+        />
+        <LinearGradient colors={['rgba(0,0,0,0.8)', 'transparent']} style={styles.topGradient} />
+        <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.gradient}>
+          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.subtitle}>Swipe to navigate • Tap to play/pause</Text>
+        </LinearGradient>
+      </Pressable>
+    </View>
   )
 }
 
@@ -110,8 +118,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   video: {
-    width: '100%',
-    height: '100%',
+    width: width,
+    height: height,
   },
   gradient: {
     position: 'absolute',
