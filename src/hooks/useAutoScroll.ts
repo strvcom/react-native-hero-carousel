@@ -9,6 +9,61 @@ import {
 
 import { TRANSITION_DURATION } from '../components/AutoCarousel/index.preset'
 
+export class IntervalTimer {
+  callbackStartTime: number = 0
+  remaining: number = 0
+  paused: boolean = false
+  timerId: NodeJS.Timeout | null = null
+  _callback: () => void
+  _delay: number
+
+  constructor(callback: () => void, delay: number) {
+    this._callback = callback
+    this._delay = delay
+  }
+
+  pause() {
+    if (!this.paused) {
+      this.clear()
+      this.remaining = new Date().getTime() - this.callbackStartTime
+      this.paused = true
+    }
+  }
+
+  resume() {
+    if (this.paused) {
+      if (this.remaining) {
+        setTimeout(() => {
+          this.run()
+          this.paused = false
+          this.start()
+        }, this.remaining)
+      } else {
+        this.paused = false
+        this.start()
+      }
+    }
+  }
+
+  clear() {
+    if (this.timerId) {
+      clearInterval(this.timerId)
+    }
+  }
+
+  start() {
+    this.clear()
+    this.timerId = setTimeout(() => {
+      this.run()
+    }, this._delay)
+  }
+
+  run() {
+    this.callbackStartTime = new Date().getTime()
+    this._callback()
+  }
+}
+
 export const useAutoScroll = ({
   scrollValue,
   slideWidth,
@@ -26,11 +81,11 @@ export const useAutoScroll = ({
   goToPage: (page: number, duration?: number) => void
   timeoutValue: SharedValue<number>
 }) => {
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const timeoutRef = useRef<IntervalTimer | null>(null)
 
   const clearCarouselTimeout = useCallback(() => {
     if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current)
+      timeoutRef.current.clear()
       timeoutValue.value = 0
     }
   }, [timeoutValue])
@@ -49,7 +104,8 @@ export const useAutoScroll = ({
       }
       clearCarouselTimeout()
       timeoutValue.value = withTiming(1, { duration: interval, easing: Easing.linear })
-      timeoutRef.current = setTimeout(autoScroll, interval)
+      timeoutRef.current = new IntervalTimer(autoScroll, interval)
+      return timeoutRef.current
     },
     [clearCarouselTimeout, goToPage, scrollValue, timeoutValue],
   )

@@ -2,14 +2,13 @@ import {
   AutoCarousel,
   CarouselContextProvider,
   useAutoCarouselSlideIndex,
-  useCarouselContext,
 } from '@strv/react-native-hero-carousel'
 import { SafeAreaView, StyleSheet, View, Text, Dimensions } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
-import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { useEffect } from 'react'
 import { BlurView } from 'expo-blur'
+import { TimerPagination } from './components/TimerPagination'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
@@ -18,51 +17,6 @@ const getRandomImageUrl = () => {
 }
 
 const images = Array.from({ length: 5 }, getRandomImageUrl)
-
-// Individual pagination dot component
-const PaginationDot = ({ index, total }: { index: number; total: number }) => {
-  const { scrollValue, timeoutValue, userInteracted } = useCarouselContext()
-
-  const progressStyle = useAnimatedStyle(() => {
-    const isActive = scrollValue.value - 1 >= index && scrollValue.value - 1 < index + 1
-    const wasActive = scrollValue.value - 1 > index
-
-    if ((!isActive && !wasActive) || userInteracted) {
-      return {
-        width: 0,
-      }
-    }
-    return {
-      width: `${wasActive ? 100 : timeoutValue.value * 100}%`,
-    }
-  })
-
-  const dotStyle = useAnimatedStyle(() => {
-    const isActive = Math.round(scrollValue.value - 1) === index
-    const opacity = isActive ? withTiming(1) : withTiming(0.5)
-    return {
-      opacity,
-    }
-  })
-
-  return (
-    <View style={styles.paginationDot}>
-      <Animated.View style={[styles.dotBackground, dotStyle]} />
-      <Animated.View style={[styles.dotProgress, progressStyle]} />
-    </View>
-  )
-}
-
-// Instagram-like pagination component
-const InstagramPagination = ({ total }: { total: number }) => {
-  return (
-    <BlurView style={styles.paginationContainer}>
-      {Array.from({ length: total }).map((_, index) => (
-        <PaginationDot key={index} index={index} total={total} />
-      ))}
-    </BlurView>
-  )
-}
 
 const Slide = ({
   image,
@@ -117,7 +71,7 @@ export default function InstagramPaginationExample() {
               />
             ))}
           </AutoCarousel>
-          <InstagramPagination total={images.length} />
+          <TimerPagination total={images.length} hideProgressOnInteraction />
         </View>
       </SafeAreaView>
     </CarouselContextProvider>

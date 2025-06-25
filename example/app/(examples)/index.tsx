@@ -29,6 +29,11 @@ const examples = [
     description: 'Instagram-style pagination with auto-slide progress indicator',
     route: '/instagram-pagination' as const,
   },
+  {
+    title: 'Video Carousel',
+    description: 'A carousel showcasing videos using expo-video',
+    route: '/video-carousel' as const,
+  },
 ]
 
 export default function HomeScreen() {
