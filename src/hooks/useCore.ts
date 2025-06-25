@@ -30,15 +30,14 @@ export const useCore = ({
     [offset, slideWidth, goToPageAnimation],
   )
 
-  const childrenArray = React.Children.toArray(children)
+  const childrenArray = useMemo(() => React.Children.toArray(children), [children])
 
   // need to clone first and last element to have infinite scrolling both ways
   // if it gets to the end we switch back to the start without animation and vice versa
-  const paddedChildrenArray = [
-    childrenArray[childrenArray.length - 1],
-    ...childrenArray,
-    childrenArray[0],
-  ]
+  const paddedChildrenArray = useMemo(
+    () => [childrenArray[childrenArray.length - 1], ...childrenArray, childrenArray[0]],
+    [childrenArray],
+  )
   // This handles the infinite scrolling
   useAnimatedReaction(
     () => scrollValue.value,
