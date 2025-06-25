@@ -45,7 +45,7 @@ const Slide = ({
   )
 }
 
-export default function InstagramPaginationExample() {
+export default function TimerPaginationExample() {
   // Preload all images when component mounts
   useEffect(() => {
     Image.prefetch(images)

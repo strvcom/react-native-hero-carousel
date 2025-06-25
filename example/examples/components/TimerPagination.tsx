@@ -44,7 +44,6 @@ const PaginationDot = ({
   )
 }
 
-// Instagram-like pagination component
 export const TimerPagination = ({
   total,
   hideProgressOnInteraction,

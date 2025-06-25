@@ -25,9 +25,9 @@ const examples = [
     route: '/entering-animation' as const,
   },
   {
-    title: 'Instagram Pagination',
-    description: 'Instagram-style pagination with auto-slide progress indicator',
-    route: '/instagram-pagination' as const,
+    title: 'Timer Pagination Carousel',
+    description: 'Timer-based pagination with auto-slide progress indicator',
+    route: '/timer-pagination' as const,
   },
   {
     title: 'Video Carousel',
