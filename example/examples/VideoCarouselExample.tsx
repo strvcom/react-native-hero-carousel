@@ -3,13 +3,13 @@ import {
   CarouselContextProvider,
   useAutoCarouselSlideIndex,
 } from '@strv/react-native-hero-carousel'
-import { SafeAreaView, StyleSheet, View, Text } from 'react-native'
+import { SafeAreaView, StyleSheet, View, Text, Pressable } from 'react-native'
 import { useVideoPlayer, VideoView } from 'expo-video'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useActiveSlideEffect, useIsActiveSlide } from '@/hooks/useActiveSlideEffect'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { TimerPagination } from './components/TimerPagination'
-import { useEventListener } from 'expo'
+import { useEvent, useEventListener } from 'expo'
 
 // Sample video URLs - these are publicly available videos that work well for testing
 const videos = [
@@ -41,28 +41,43 @@ const Slide = ({ videoUri, title, index }: { videoUri: string; title: string; in
     }
   })
 
+  const { isPlaying } = useEvent(player, 'playingChange', { isPlaying: player.playing })
+
   useEventListener(player, 'statusChange', ({ status }) => {
     if (status === 'readyToPlay') {
       setDuration(player.duration)
     }
   })
 
+  const intervalRef = useRef<ReturnType<typeof runAutoScroll> | null>(null)
+
   useEffect(() => {
     if (isActiveSlide && duration) {
-      console.log(duration)
-      runAutoScroll(duration * 1000)
+      intervalRef.current = runAutoScroll(duration * 1000)
     }
   }, [isActiveSlide, duration, runAutoScroll])
 
   return (
-    <View key={index} style={styles.slide}>
+    <Pressable
+      key={index}
+      style={styles.slide}
+      onPress={() => {
+        if (isPlaying) {
+          player.pause()
+          intervalRef.current?.pause()
+        } else {
+          player.play()
+          intervalRef.current?.resume()
+        }
+      }}
+    >
       <VideoView player={player} style={styles.video} contentFit="cover" nativeControls={false} />
       <LinearGradient colors={['rgba(0,0,0,0.8)', 'transparent']} style={styles.topGradient} />
       <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.gradient}>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.subtitle}>Swipe to navigate • Tap to play/pause</Text>
       </LinearGradient>
-    </View>
+    </Pressable>
   )
 }
 

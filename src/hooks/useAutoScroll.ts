@@ -14,12 +14,21 @@ export class IntervalTimer {
   remaining: number = 0
   paused: boolean = false
   timerId: NodeJS.Timeout | null = null
+  onPause?: (remaining: number) => void = () => {}
+  onResume?: (remaining: number) => void = () => {}
   _callback: () => void
   _delay: number
 
-  constructor(callback: () => void, delay: number) {
+  constructor(
+    callback: () => void,
+    delay: number,
+    onPause?: (remaining: number) => void,
+    onResume?: (remaining: number) => void,
+  ) {
     this._callback = callback
     this._delay = delay
+    this.onPause = onPause
+    this.onResume = onResume
   }
 
   pause() {
@@ -27,12 +36,14 @@ export class IntervalTimer {
       this.clear()
       this.remaining = new Date().getTime() - this.callbackStartTime
       this.paused = true
+      this.onPause?.(this.remaining)
     }
   }
 
   resume() {
     if (this.paused) {
       if (this.remaining) {
+        this.onResume?.(this.remaining)
         setTimeout(() => {
           this.run()
           this.paused = false
@@ -104,7 +115,19 @@ export const useAutoScroll = ({
       }
       clearCarouselTimeout()
       timeoutValue.value = withTiming(1, { duration: interval, easing: Easing.linear })
-      timeoutRef.current = new IntervalTimer(autoScroll, interval)
+      timeoutRef.current = new IntervalTimer(
+        autoScroll,
+        interval,
+        () => {
+          timeoutValue.value = timeoutValue.value
+        },
+        (remaining) => {
+          timeoutValue.value = withTiming(1, {
+            duration: remaining,
+            easing: Easing.linear,
+          })
+        },
+      )
       return timeoutRef.current
     },
     [clearCarouselTimeout, goToPage, scrollValue, timeoutValue],
