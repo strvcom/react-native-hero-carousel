@@ -34,7 +34,7 @@ export class IntervalTimer {
   pause() {
     if (!this.paused) {
       this.clear()
-      this.remaining = new Date().getTime() - this.callbackStartTime
+      this.remaining = this._delay - (new Date().getTime() - this.callbackStartTime)
       this.paused = true
       this.onPause?.(this.remaining)
     }
@@ -44,33 +44,30 @@ export class IntervalTimer {
     if (this.paused) {
       if (this.remaining) {
         this.onResume?.(this.remaining)
+        this.paused = false
+        this.callbackStartTime = new Date().getTime()
         setTimeout(() => {
           this.run()
-          this.paused = false
-          this.start()
         }, this.remaining)
-      } else {
-        this.paused = false
-        this.start()
       }
     }
   }
 
   clear() {
     if (this.timerId) {
-      clearInterval(this.timerId)
+      clearTimeout(this.timerId)
     }
   }
 
   start() {
     this.clear()
+    this.callbackStartTime = new Date().getTime()
     this.timerId = setTimeout(() => {
       this.run()
     }, this._delay)
   }
 
   run() {
-    this.callbackStartTime = new Date().getTime()
     this._callback()
   }
 }
@@ -128,6 +125,7 @@ export const useAutoScroll = ({
           })
         },
       )
+      timeoutRef.current.start()
       return timeoutRef.current
     },
     [clearCarouselTimeout, goToPage, scrollValue, timeoutValue],
