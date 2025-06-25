@@ -1,6 +1,7 @@
 import {
   AutoCarousel,
   CarouselContextProvider,
+  useAutoCarouselSlideIndex,
   useCarouselContext,
 } from '@strv/react-native-hero-carousel'
 import { SafeAreaView, StyleSheet, View, Text, Dimensions } from 'react-native'
@@ -63,15 +64,27 @@ const InstagramPagination = ({ total }: { total: number }) => {
   )
 }
 
-const Slide = ({ image, title, index }: { image: string; title: string; index: number }) => {
+const Slide = ({
+  image,
+  title,
+  getInterval,
+}: {
+  image: string
+  title: string
+  index: number
+  getInterval: (index: number) => number
+}) => {
+  const { index: currentIndex } = useAutoCarouselSlideIndex()
+  const interval = getInterval(currentIndex)
+
   return (
-    <View key={index} style={styles.slide}>
+    <View style={styles.slide}>
       <Image key={image} source={{ uri: image }} style={styles.image} contentFit="cover" />
       <LinearGradient colors={['rgba(0,0,0,0.8)', 'transparent']} style={styles.topGradient} />
       <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.gradient}>
         <BlurView style={styles.blurView}>
           <Text style={styles.title}>{title}</Text>
-          <Text style={styles.subtitle}>Instagram-style pagination with auto-slide progress</Text>
+          <Text style={styles.subtitle}>Slide change interval: {interval / 1000} s</Text>
         </BlurView>
       </LinearGradient>
     </View>
@@ -84,13 +97,23 @@ export default function InstagramPaginationExample() {
     Image.prefetch(images)
   }, [])
 
+  const getInterval = (index: number) => {
+    return index * 3000
+  }
+
   return (
     <CarouselContextProvider>
       <SafeAreaView style={styles.container}>
         <View style={styles.container}>
-          <AutoCarousel interval={3000}>
+          <AutoCarousel interval={getInterval}>
             {images.map((image, index) => (
-              <Slide key={index} image={image} title={`Slide ${index + 1}`} index={index} />
+              <Slide
+                key={index}
+                image={image}
+                title={`Slide ${index + 1}`}
+                index={index}
+                getInterval={getInterval}
+              />
             ))}
           </AutoCarousel>
           <InstagramPagination total={images.length} />
@@ -188,6 +211,7 @@ const styles = StyleSheet.create({
     padding: 20,
     margin: 8,
     borderRadius: 16,
+    gap: 8,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.05)',
     overflow: 'hidden',

@@ -14,15 +14,17 @@ import { customRound } from '../../utils/round'
 import { AutoCarouselAdapter } from '../AnimatedPagedView/Adapter'
 
 export type AutoCarouselProps = {
-  interval?: number
+  interval?: number | ((index: number) => number)
   children: React.ReactNode[]
   goToPageAnimation?: (to: number, duration: number) => number
+  disableAutoScroll?: boolean
 }
 
 export const AutoCarousel = ({
   interval = DEFAULT_INTERVAL,
   children,
   goToPageAnimation = (to, duration) => withTiming(to, { duration }),
+  disableAutoScroll = false,
 }: AutoCarouselProps) => {
   const { scrollValue, userInteracted, slideWidth, timeoutValue } = useCarouselContext()
   const offset = useSharedValue({ value: slideWidth })
@@ -61,10 +63,10 @@ export const AutoCarousel = ({
     }
   }, [timeoutValue])
 
-  const handleAutoScroll = () => {
+  const handleAutoScroll = (interval: number) => {
+    const offset = scrollValue.value
+    const nextIndex = offset + 1
     const autoScroll = () => {
-      const offset = scrollValue.value
-      const nextIndex = offset + 1
       goToPage(nextIndex, TRANSITION_DURATION)
     }
     clearCarouselTimeout()
@@ -86,7 +88,8 @@ export const AutoCarousel = ({
       if (offset % 1 !== 0) return
       if (!autoScrollEnabled) return
       timeoutValue.value = 0
-      runOnJS(handleAutoScroll)()
+      if (disableAutoScroll) return
+      runOnJS(handleAutoScroll)(typeof interval === 'function' ? interval(offset) : interval)
     },
     [scrollValue, slideWidth, autoScrollEnabled],
   )
