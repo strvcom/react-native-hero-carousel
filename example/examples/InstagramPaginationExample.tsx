@@ -98,6 +98,7 @@ export default function InstagramPaginationExample() {
   }, [])
 
   const getInterval = (index: number) => {
+    'worklet'
     return index * 3000
   }
 
