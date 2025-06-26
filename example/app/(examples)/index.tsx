@@ -24,6 +24,16 @@ const examples = [
     description: 'Carousel with entering/exiting animations triggered by shared values',
     route: '/entering-animation' as const,
   },
+  {
+    title: 'Timer Pagination Carousel',
+    description: 'Timer-based pagination with auto-slide progress indicator',
+    route: '/timer-pagination' as const,
+  },
+  {
+    title: 'Video Carousel',
+    description: 'A carousel showcasing videos using expo-video',
+    route: '/video-carousel' as const,
+  },
 ]
 
 export default function HomeScreen() {

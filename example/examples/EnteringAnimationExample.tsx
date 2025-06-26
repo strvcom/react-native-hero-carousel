@@ -33,9 +33,9 @@ const Slide = ({ image, title, index }: { image: string; title: string; index: n
 
   return (
     <View key={index} style={styles.slide}>
-      <Image key={image} source={{ uri: image }} style={styles.image} contentFit="cover" />
+      <Image source={{ uri: image }} style={styles.image} contentFit="cover" />
       <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.gradient}>
-        <SlideAnimatedView {...animationConfig}>
+        <SlideAnimatedView style={styles.textContainer} {...animationConfig}>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.subtitle}>
             Animation: {animationNames[index % animationNames.length]}
@@ -68,6 +68,9 @@ export default function EnteringAnimationExample() {
 }
 
 const styles = StyleSheet.create({
+  textContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
