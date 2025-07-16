@@ -7,7 +7,7 @@ import {
   SharedValue,
 } from 'react-native-reanimated'
 
-import { TRANSITION_DURATION } from '../components/AutoCarousel/index.preset'
+import { TRANSITION_DURATION } from '../components/HeroCarousel/index.preset'
 
 export class IntervalTimer {
   callbackStartTime: number = 0

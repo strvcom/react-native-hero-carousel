@@ -1,5 +1,5 @@
 import {
-  AutoCarousel,
+  HeroCarousel,
   CarouselContextProvider,
   useAutoCarouselSlideIndex,
 } from '@strv/react-native-hero-carousel'
@@ -60,7 +60,7 @@ export default function TimerPaginationExample() {
     <CarouselContextProvider>
       <SafeAreaView style={styles.container}>
         <View style={styles.container}>
-          <AutoCarousel interval={getInterval}>
+          <HeroCarousel interval={getInterval}>
             {images.map((image, index) => (
               <Slide
                 key={index}
@@ -70,7 +70,7 @@ export default function TimerPaginationExample() {
                 getInterval={getInterval}
               />
             ))}
-          </AutoCarousel>
+          </HeroCarousel>
           <TimerPagination total={images.length} hideProgressOnInteraction />
         </View>
       </SafeAreaView>

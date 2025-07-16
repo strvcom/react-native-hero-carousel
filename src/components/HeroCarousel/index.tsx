@@ -3,24 +3,24 @@ import { withTiming } from 'react-native-reanimated'
 
 import { DEFAULT_INTERVAL } from './index.preset'
 import { useCarouselContext } from '../../context/CarouselContext'
-import { AutoCarouselSlide } from '../AutoCarouselSlide'
-import { AutoCarouselAdapter } from '../AnimatedPagedView/Adapter'
+import { HeroCarouselSlide } from '../HeroCarouselSlide'
+import { HeroCarouselAdapter } from '../AnimatedPagedView/Adapter'
 import { useAutoScroll } from '../../hooks/useAutoScroll'
 import { useCore } from '../../hooks/useCore'
 
-export type AutoCarouselProps = {
+export type HeroCarouselProps = {
   interval?: number | ((index: number) => number)
   children: React.ReactNode[]
   goToPageAnimation?: (to: number, duration: number) => number
   disableAutoScroll?: boolean
 }
 
-export const AutoCarousel = ({
+export const HeroCarousel = ({
   interval = DEFAULT_INTERVAL,
   children,
   goToPageAnimation = (to, duration) => withTiming(to, { duration }),
   disableAutoScroll = false,
-}: AutoCarouselProps) => {
+}: HeroCarouselProps) => {
   const { scrollValue, userInteracted, slideWidth, timeoutValue } = useCarouselContext()
 
   const { goToPage, paddedChildrenArray, offset } = useCore({
@@ -44,7 +44,7 @@ export const AutoCarousel = ({
 
   return (
     <>
-      <AutoCarouselAdapter
+      <HeroCarouselAdapter
         offset={offset}
         onScroll={(activeIndex: number) => {
           'worklet'
@@ -52,7 +52,7 @@ export const AutoCarousel = ({
         }}
       >
         {React.Children.map(paddedChildrenArray, (child, index) => (
-          <AutoCarouselSlide
+          <HeroCarouselSlide
             width={slideWidth}
             key={index}
             index={index}
@@ -61,9 +61,9 @@ export const AutoCarousel = ({
             goToPage={goToPage}
           >
             {child}
-          </AutoCarouselSlide>
+          </HeroCarouselSlide>
         ))}
-      </AutoCarouselAdapter>
+      </HeroCarouselAdapter>
     </>
   )
 }

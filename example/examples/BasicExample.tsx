@@ -1,4 +1,4 @@
-import { AutoCarousel, CarouselContextProvider } from '@strv/react-native-hero-carousel'
+import { HeroCarousel, CarouselContextProvider } from '@strv/react-native-hero-carousel'
 import { SafeAreaView, StyleSheet, View, Text, Dimensions } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -33,11 +33,11 @@ export default function BasicExample() {
     <CarouselContextProvider>
       <SafeAreaView style={styles.container}>
         <View style={styles.container}>
-          <AutoCarousel>
+          <HeroCarousel>
             {images.map((image, index) => (
               <Slide key={index} image={image} title={`Slide ${index + 1}`} index={index} />
             ))}
-          </AutoCarousel>
+          </HeroCarousel>
         </View>
       </SafeAreaView>
     </CarouselContextProvider>

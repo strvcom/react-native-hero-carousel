@@ -1,5 +1,5 @@
 import {
-  AutoCarousel,
+  HeroCarousel,
   CarouselContextProvider,
   interpolateInsideCarousel,
   useAutoCarouselSlideIndex,
@@ -116,7 +116,7 @@ export default function OffsetExample() {
     <CarouselContextProvider>
       <SafeAreaView style={styles.container}>
         <View style={styles.container}>
-          <AutoCarousel>
+          <HeroCarousel>
             {images.map((image, index) => (
               <Slide
                 key={index}
@@ -126,7 +126,7 @@ export default function OffsetExample() {
                 index={index}
               />
             ))}
-          </AutoCarousel>
+          </HeroCarousel>
         </View>
       </SafeAreaView>
     </CarouselContextProvider>

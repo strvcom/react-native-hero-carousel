@@ -38,7 +38,7 @@ Make sure to follow the [React Native Reanimated installation guide](https://doc
 ```tsx
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
-import { AutoCarousel, CarouselContextProvider } from '@strv/react-native-hero-carousel'
+import { HeroCarousel, CarouselContextProvider } from '@strv/react-native-hero-carousel'
 
 const slides = [
   { id: 1, title: 'Slide 1', color: '#FF6B6B' },
@@ -57,11 +57,11 @@ export default function BasicCarousel() {
   return (
     <CarouselContextProvider>
       <View style={styles.container}>
-        <AutoCarousel>
+        <HeroCarousel>
           {slides.map((slide) => (
             <Slide key={slide.id} title={slide.title} color={slide.color} />
           ))}
-        </AutoCarousel>
+        </HeroCarousel>
       </View>
     </CarouselContextProvider>
   )
@@ -101,18 +101,18 @@ The context provider that must wrap your carousel components.
 </CarouselContextProvider>
 ```
 
-#### `AutoCarousel`
+#### `HeroCarousel`
 
 The main carousel component with auto-scrolling functionality.
 
 ```tsx
-<AutoCarousel
+<HeroCarousel
   interval={3000} // Auto-scroll interval in ms
   disableAutoScroll={false} // Disable auto-scrolling
   goToPageAnimation={(to, duration) => withTiming(to, { duration })} // Custom page transition animation
 >
   {children}
-</AutoCarousel>
+</HeroCarousel>
 ```
 
 **Props:**
@@ -121,7 +121,7 @@ The main carousel component with auto-scrolling functionality.
 | ------------------- | ------------------------------------------ | ------------ | ----------------------------------------------------------------------------------- |
 | `interval`          | `number \| ((index: number) => number)`    | `3000`       | Auto-scroll interval in milliseconds, or function returning interval for each slide |
 | `disableAutoScroll` | `boolean`                                  | `false`      | Disable automatic scrolling                                                         |
-| `goToPageAnimation` | `(to: number, duration: number) => number` | `withTiming` | Custom animation for page transitions                                               |
+| `goToPageAnimation` | `(to: number, duration: number) => number` | `withTiming` | Custom animation for auto scroll or programmatic page transitions                   |
 | `children`          | `React.ReactNode[]`                        | Required     | Array of slide components                                                           |
 
 ### Hooks
@@ -139,16 +139,16 @@ const { scrollValue, timeoutValue, slideWidth, userInteracted, setUserInteracted
 
 - `scrollValue`: Animated value representing current scroll position
 - `timeoutValue`: Animated value for timer progress (0-1)
-- `slideWidth`: Width of each slide
+- `slideWidth`: Width of slides
 - `userInteracted`: Boolean indicating if user has interacted with carousel
 - `setUserInteracted`: Function to update interaction state
 
-#### `useAutoCarouselSlideIndex()`
+#### `useHeroCarouselSlideIndex()`
 
 Get the current slide information and auto-scroll controls.
 
 ```tsx
-const { index, total, runAutoScroll } = useAutoCarouselSlideIndex()
+const { index, total, runAutoScroll, goToPage } = useAutoCarouselSlideIndex()
 ```
 
 **Returns:**
@@ -156,6 +156,7 @@ const { index, total, runAutoScroll } = useAutoCarouselSlideIndex()
 - `index`: Current slide index
 - `total`: Total number of slides
 - `runAutoScroll`: Function to manually trigger auto-scroll with custom interval
+- `goToPage`: Function to programmatically navigate to a specific slide from another slide
 
 ### Utilities
 
@@ -251,7 +252,7 @@ const CarouselWithControls = () => {
 
   return (
     <View>
-      <AutoCarousel disableAutoScroll>{/* Your slides */}</AutoCarousel>
+      <HeroCarousel disableAutoScroll>{/* Your slides */}</HeroCarousel>
 
       <View style={styles.controls}>
         <Button title="Previous" onPress={() => goToSlide(scrollValue.value - 1)} />

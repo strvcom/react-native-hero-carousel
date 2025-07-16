@@ -4,7 +4,7 @@ import { useAutoScroll } from '../../hooks/useAutoScroll'
 import { useCore } from '../../hooks/useCore'
 import { useMemo } from 'react'
 
-export const AutoCarouselSlide = ({
+export const HeroCarouselSlide = ({
   children,
   width,
   index,

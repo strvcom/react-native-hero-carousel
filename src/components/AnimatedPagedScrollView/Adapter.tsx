@@ -6,11 +6,11 @@ import Animated, {
   useAnimatedScrollHandler,
 } from 'react-native-reanimated'
 import { customRound } from '../../utils/round'
-import { ROUNDING_PRECISION } from '../../components/AutoCarousel/index.preset'
+import { ROUNDING_PRECISION } from '../HeroCarousel/index.preset'
 import { useCarouselContext } from '../../context/CarouselContext'
-import { AutoCarouselAdapterProps } from '../../components/AutoCarousel/types'
+import { HeroCarouselAdapterProps } from '../HeroCarousel/types'
 
-export const AutoCarouselAdapter = ({ onScroll, children, offset }: AutoCarouselAdapterProps) => {
+export const HeroCarouselAdapter = ({ onScroll, children, offset }: HeroCarouselAdapterProps) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
   const { slideWidth, setUserInteracted } = useCarouselContext()
 
@@ -19,6 +19,7 @@ export const AutoCarouselAdapter = ({ onScroll, children, offset }: AutoCarousel
     (value) => {
       scrollTo(scrollViewRef, value, 0, false)
     },
+    [],
   )
 
   const scrollHandler = useAnimatedScrollHandler(

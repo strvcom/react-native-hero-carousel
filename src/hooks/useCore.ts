@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react'
 import { useSharedValue, useAnimatedReaction, SharedValue } from 'react-native-reanimated'
 
 import { customRound } from '../utils/round'
-import { ROUNDING_PRECISION } from '../components/AutoCarousel/index.preset'
+import { ROUNDING_PRECISION } from '../components/HeroCarousel/index.preset'
 
 export const useCore = ({
   children,
@@ -29,6 +29,10 @@ export const useCore = ({
     },
     [offset, slideWidth, goToPageAnimation],
   )
+
+  const goToNextPage = useCallback(() => {
+    goToPage(offset.value.value + 1)
+  }, [goToPage, offset])
 
   const childrenArray = useMemo(() => React.Children.toArray(children), [children])
 
@@ -60,9 +64,10 @@ export const useCore = ({
   return useMemo(
     () => ({
       goToPage,
+      goToNextPage,
       paddedChildrenArray,
       offset,
     }),
-    [goToPage, paddedChildrenArray, offset],
+    [goToPage, goToNextPage, paddedChildrenArray, offset],
   )
 }
