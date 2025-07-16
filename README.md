@@ -215,47 +215,22 @@ Then scan the QR code with Expo Go or run on simulator. See the [example app REA
 - **Gesture Handling** with swipe navigation and user interaction detection
 - **Performance Optimization** with image preloading and memoization
 
+### 📍 Pagination Examples
+
+The library includes several pagination components and examples:
+
+- **Basic Pagination** - Simple dot indicators showing current slide ([`Pagination.tsx`](./example/examples/components/Pagination.tsx))
+- **Timer Pagination** - Animated progress bars with customizable intervals ([`TimerPagination.tsx`](./example/examples/components/TimerPagination.tsx))
+- **Custom Pagination** - Build your own pagination using `useCarouselContext()` hook for access to `scrollValue` and `timeoutValue`
+
+All pagination components automatically sync with the carousel state and support:
+
+- ✅ **Real-time updates** as slides change
+- ✅ **Timer progress visualization** with animated fill
+- ✅ **User interaction detection** (pause on touch)
+- ✅ **Custom styling** and animations
+
 ## Advanced Usage
-
-### Custom Slide Animations
-
-Create complex slide transitions using the `interpolateInsideCarousel` utility:
-
-```tsx
-const CustomSlide = ({ children, index }) => {
-  const { scrollValue } = useCarouselContext()
-  const { total } = useAutoCarouselSlideIndex()
-
-  const animatedStyle = useAnimatedStyle(() => {
-    // Parallax effect
-    const parallax = interpolateInsideCarousel(scrollValue.value, index, total, {
-      valueBefore: -50,
-      thisValue: 0,
-      valueAfter: 50,
-    })
-
-    // Scale and rotation
-    const scale = interpolateInsideCarousel(scrollValue.value, index, total, {
-      valueBefore: 0.7,
-      thisValue: 1,
-      valueAfter: 0.7,
-      offset: 0.2,
-    })
-
-    const rotation = interpolateInsideCarousel(scrollValue.value, index, total, {
-      valueBefore: -20,
-      thisValue: 0,
-      valueAfter: 20,
-    })
-
-    return {
-      transform: [{ translateX: parallax }, { scale }, { rotateZ: `${rotation}deg` }],
-    }
-  })
-
-  return <Animated.View style={animatedStyle}>{children}</Animated.View>
-}
-```
 
 ### Programmatic Navigation
 
