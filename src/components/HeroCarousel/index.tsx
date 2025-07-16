@@ -6,11 +6,12 @@ import { HeroCarouselSlide } from '../HeroCarouselSlide'
 import { HeroCarouselAdapter } from '../AnimatedPagedView/Adapter'
 import { useAutoScroll } from '../../hooks/useAutoScroll'
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
+import { DEFAULT_ANIMATION } from '../../hooks/useManualScroll'
 
 export type HeroCarouselProps = {
   interval?: number | ((index: number) => number)
   children: React.ReactNode[]
-  goToPageAnimation?: (to: number, duration: number) => number
+  autoScrollAnimation?: (to: number, duration: number) => number
   disableAutoScroll?: boolean
 }
 
@@ -18,6 +19,7 @@ export const HeroCarousel = ({
   interval = DEFAULT_INTERVAL,
   children,
   disableAutoScroll = false,
+  autoScrollAnimation = DEFAULT_ANIMATION,
 }: HeroCarouselProps) => {
   const { scrollValue, userInteracted, slideWidth, timeoutValue, goToPage, manualScrollValue } =
     useCarouselContext()
@@ -36,7 +38,9 @@ export const HeroCarousel = ({
     autoScrollEnabled,
     disableAutoScroll,
     interval,
-    goToPage,
+    goToPage: (page: number, duration?: number) => {
+      goToPage(page, duration, autoScrollAnimation)
+    },
     timeoutValue,
   })
 

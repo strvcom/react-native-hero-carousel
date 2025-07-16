@@ -1,7 +1,7 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useSharedValue, withTiming } from 'react-native-reanimated'
 
-const DEFAULT_ANIMATION = (to: number, duration: number) => withTiming(to, { duration })
+export const DEFAULT_ANIMATION = (to: number, duration: number) => withTiming(to, { duration })
 
 export const useManualScroll = ({
   slideWidth,
@@ -31,10 +31,13 @@ export const useManualScroll = ({
     goToPage(manualScrollValue.value.value + 1)
   }, [goToPage, manualScrollValue])
 
-  return {
-    manualScrollValue,
-    scrollValue,
-    goToPage,
-    goToNextPage,
-  }
+  return useMemo(
+    () => ({
+      manualScrollValue,
+      scrollValue,
+      goToPage,
+      goToNextPage,
+    }),
+    [manualScrollValue, scrollValue, goToPage, goToNextPage],
+  )
 }
