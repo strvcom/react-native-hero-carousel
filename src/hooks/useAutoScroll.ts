@@ -46,7 +46,7 @@ export class IntervalTimer {
         this.onResume?.(this.remaining)
         this.paused = false
         this.callbackStartTime = new Date().getTime()
-        setTimeout(() => {
+        this.timerId = setTimeout(() => {
           this.run()
         }, this.remaining)
       }

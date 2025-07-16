@@ -45,12 +45,12 @@ export const useCore = ({
       const activeIndex = customRound(offset, ROUNDING_PRECISION)
       // if we are at the last index we need to switch to the second one without animation
       // second one because the first one is a clone of the last one
-      if (activeIndex === paddedChildrenArray.length - 1) {
+      if (activeIndex >= paddedChildrenArray.length - 1) {
         goToPage(1)
       }
       // if we are at the first index we need to switch to the next to last one without animation
       // next to last one because the last one is a clone of the first one
-      if (activeIndex < 0.01 && activeIndex > -0.01) {
+      if (activeIndex <= 0.01) {
         goToPage(paddedChildrenArray.length - 2, 0)
       }
     },
