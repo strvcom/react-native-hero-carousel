@@ -12,7 +12,7 @@ export const HeroCarouselAdapter = ({
   children,
 }: HeroCarouselAdapterProps) => {
   const scrollViewRef = useRef<AnimatedPagedScrollViewRef>(null)
-  const { slideWidth, setUserInteracted } = useCarouselContext()
+  const { slideWidth = 0, setUserInteracted } = useCarouselContext()
 
   useAnimatedReaction(
     () => manualScrollValue.value.value,

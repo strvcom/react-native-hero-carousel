@@ -20,7 +20,7 @@ export const useAutoScroll = ({
   timeoutValue,
 }: {
   scrollValue: SharedValue<number>
-  slideWidth: number
+  slideWidth: number | undefined
   autoScrollEnabled: boolean
   disableAutoScroll: boolean
   interval: number | ((index: number) => number)

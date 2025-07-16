@@ -1,12 +1,11 @@
 import React from 'react'
-import { withTiming } from 'react-native-reanimated'
 
 import { DEFAULT_INTERVAL } from './index.preset'
 import { useCarouselContext } from '../../context/CarouselContext'
 import { HeroCarouselSlide } from '../HeroCarouselSlide'
 import { HeroCarouselAdapter } from '../AnimatedPagedView/Adapter'
 import { useAutoScroll } from '../../hooks/useAutoScroll'
-import { useCore } from '../../hooks/useCore'
+import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 
 export type HeroCarouselProps = {
   interval?: number | ((index: number) => number)
@@ -18,15 +17,14 @@ export type HeroCarouselProps = {
 export const HeroCarousel = ({
   interval = DEFAULT_INTERVAL,
   children,
-  goToPageAnimation = (to, duration) => withTiming(to, { duration }),
   disableAutoScroll = false,
 }: HeroCarouselProps) => {
-  const { scrollValue, userInteracted, slideWidth, timeoutValue } = useCarouselContext()
-
-  const { goToPage, paddedChildrenArray, manualScrollValue } = useCore({
+  const { scrollValue, userInteracted, slideWidth, timeoutValue, goToPage, manualScrollValue } =
+    useCarouselContext()
+  const { paddedChildrenArray } = useInfiniteScroll({
     children,
     slideWidth,
-    goToPageAnimation,
+    goToPage,
     scrollValue,
   })
 
@@ -53,7 +51,7 @@ export const HeroCarousel = ({
       >
         {React.Children.map(paddedChildrenArray, (child, index) => (
           <HeroCarouselSlide
-            width={slideWidth}
+            width={slideWidth ?? 0}
             key={index}
             index={index}
             total={paddedChildrenArray.length}

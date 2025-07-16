@@ -117,12 +117,11 @@ The main carousel component with auto-scrolling functionality.
 
 **Props:**
 
-| Prop                | Type                                       | Default      | Description                                                                         |
-| ------------------- | ------------------------------------------ | ------------ | ----------------------------------------------------------------------------------- |
-| `interval`          | `number \| ((index: number) => number)`    | `3000`       | Auto-scroll interval in milliseconds, or function returning interval for each slide |
-| `disableAutoScroll` | `boolean`                                  | `false`      | Disable automatic scrolling                                                         |
-| `goToPageAnimation` | `(to: number, duration: number) => number` | `withTiming` | Custom animation for auto scroll or programmatic page transitions                   |
-| `children`          | `React.ReactNode[]`                        | Required     | Array of slide components                                                           |
+| Prop                | Type                                    | Default  | Description                                                                         |
+| ------------------- | --------------------------------------- | -------- | ----------------------------------------------------------------------------------- | --- |
+| `interval`          | `number \| ((index: number) => number)` | `3000`   | Auto-scroll interval in milliseconds, or function returning interval for each slide |
+| `disableAutoScroll` | `boolean`                               | `false`  | Disable automatic scrolling                                                         |     |
+| `children`          | `React.ReactNode[]`                     | Required | Array of slide components                                                           |
 
 ### Hooks
 

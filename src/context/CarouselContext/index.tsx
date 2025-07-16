@@ -1,17 +1,17 @@
 import { createContext, useContext, useMemo, useState } from 'react'
-import { useSharedValue, type SharedValue } from 'react-native-reanimated'
+import { useSharedValue } from 'react-native-reanimated'
 
 import { Dimensions } from 'react-native'
+import { useManualScroll } from '../../hooks/useManualScroll'
 
 const windowWidth = Dimensions.get('window').width
 
-export const CarouselContext = createContext<{
-  scrollValue: SharedValue<number>
-  timeoutValue: SharedValue<number>
-  slideWidth: number
-  userInteracted: boolean
-  setUserInteracted: (interacted: boolean) => void
-} | null>(null)
+export const CarouselContext = createContext<
+  | (ReturnType<typeof useManualScroll> &
+      ReturnType<typeof useUserInteracted> &
+      Omit<ContextProps, 'children'>)
+  | null
+>(null)
 
 export const useCarouselContext = () => {
   const context = useContext(CarouselContext)
@@ -21,24 +21,41 @@ export const useCarouselContext = () => {
   return context
 }
 
+const useUserInteracted = () => {
+  const timeoutValue = useSharedValue(0)
+  const [userInteracted, setUserInteracted] = useState(false)
+  return useMemo(
+    () => ({ userInteracted, setUserInteracted, timeoutValue }),
+    [userInteracted, setUserInteracted, timeoutValue],
+  )
+}
+
+type ContextProps = {
+  children: React.ReactNode
+  defaultScrollValue?: number
+  slideWidth?: number
+}
+
 export const CarouselContextProvider = ({
   children,
   defaultScrollValue = 1,
   slideWidth = windowWidth,
-}: {
-  children: React.ReactNode
-  defaultScrollValue?: number
-  slideWidth?: number
-}) => {
-  const scrollValue = useSharedValue(defaultScrollValue)
-  const timeoutValue = useSharedValue(0)
-  const [userInteracted, setUserInteracted] = useState(false)
+}: ContextProps) => {
+  const userInteracted = useUserInteracted()
+  const manualScroll = useManualScroll({
+    slideWidth,
+    defaultScrollValue,
+  })
 
   return (
     <CarouselContext.Provider
       value={useMemo(
-        () => ({ scrollValue, userInteracted, setUserInteracted, slideWidth, timeoutValue }),
-        [scrollValue, userInteracted, setUserInteracted, slideWidth, timeoutValue],
+        () => ({
+          ...manualScroll,
+          ...userInteracted,
+          slideWidth,
+        }),
+        [manualScroll, userInteracted, slideWidth],
       )}
     >
       {children}

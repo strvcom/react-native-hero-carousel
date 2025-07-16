@@ -1,39 +1,21 @@
-import React, { useCallback, useMemo } from 'react'
-import { useSharedValue, useAnimatedReaction, SharedValue } from 'react-native-reanimated'
+import React, { useMemo } from 'react'
+import { useAnimatedReaction, SharedValue } from 'react-native-reanimated'
 
 import { customRound } from '../utils/round'
 import { ROUNDING_PRECISION } from '../components/HeroCarousel/index.preset'
+import { useManualScroll } from './useManualScroll'
 
-export const useCore = ({
+export const useInfiniteScroll = ({
   children,
   slideWidth,
-  goToPageAnimation,
+  goToPage,
   scrollValue,
 }: {
   children: React.ReactNode[]
-  slideWidth: number
-  goToPageAnimation: (to: number, duration: number) => number
+  slideWidth: number | undefined
   scrollValue: SharedValue<number>
+  goToPage: ReturnType<typeof useManualScroll>['goToPage']
 }) => {
-  const manualScrollValue = useSharedValue({ value: slideWidth })
-
-  const goToPage = useCallback(
-    (page: number, duration = 0) => {
-      'worklet'
-      const to = page * slideWidth
-      if (duration) {
-        manualScrollValue.value = { value: goToPageAnimation(to, duration) }
-      } else {
-        manualScrollValue.value = { value: to }
-      }
-    },
-    [manualScrollValue, slideWidth, goToPageAnimation],
-  )
-
-  const goToNextPage = useCallback(() => {
-    goToPage(manualScrollValue.value.value + 1)
-  }, [goToPage, manualScrollValue])
-
   const childrenArray = useMemo(() => React.Children.toArray(children), [children])
 
   // need to clone first and last element to have infinite scrolling both ways
@@ -63,11 +45,8 @@ export const useCore = ({
 
   return useMemo(
     () => ({
-      goToPage,
-      goToNextPage,
       paddedChildrenArray,
-      manualScrollValue,
     }),
-    [goToPage, goToNextPage, paddedChildrenArray, manualScrollValue],
+    [paddedChildrenArray],
   )
 }
