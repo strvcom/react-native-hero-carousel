@@ -10,12 +10,16 @@ import { ROUNDING_PRECISION } from '../HeroCarousel/index.preset'
 import { useCarouselContext } from '../../context/CarouselContext'
 import { HeroCarouselAdapterProps } from '../HeroCarousel/types'
 
-export const HeroCarouselAdapter = ({ onScroll, children, offset }: HeroCarouselAdapterProps) => {
+export const HeroCarouselAdapter = ({
+  manualScrollValue,
+  onScroll,
+  children,
+}: HeroCarouselAdapterProps) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
   const { slideWidth, setUserInteracted } = useCarouselContext()
 
   useAnimatedReaction(
-    () => offset.value.value,
+    () => manualScrollValue.value.value,
     (value) => {
       scrollTo(scrollViewRef, value, 0, false)
     },

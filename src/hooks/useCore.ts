@@ -15,24 +15,24 @@ export const useCore = ({
   goToPageAnimation: (to: number, duration: number) => number
   scrollValue: SharedValue<number>
 }) => {
-  const offset = useSharedValue({ value: slideWidth })
+  const manualScrollValue = useSharedValue({ value: slideWidth })
 
   const goToPage = useCallback(
     (page: number, duration = 0) => {
       'worklet'
       const to = page * slideWidth
       if (duration) {
-        offset.value = { value: goToPageAnimation(to, duration) }
+        manualScrollValue.value = { value: goToPageAnimation(to, duration) }
       } else {
-        offset.value = { value: to }
+        manualScrollValue.value = { value: to }
       }
     },
-    [offset, slideWidth, goToPageAnimation],
+    [manualScrollValue, slideWidth, goToPageAnimation],
   )
 
   const goToNextPage = useCallback(() => {
-    goToPage(offset.value.value + 1)
-  }, [goToPage, offset])
+    goToPage(manualScrollValue.value.value + 1)
+  }, [goToPage, manualScrollValue])
 
   const childrenArray = useMemo(() => React.Children.toArray(children), [children])
 
@@ -66,8 +66,8 @@ export const useCore = ({
       goToPage,
       goToNextPage,
       paddedChildrenArray,
-      offset,
+      manualScrollValue,
     }),
-    [goToPage, goToNextPage, paddedChildrenArray, offset],
+    [goToPage, goToNextPage, paddedChildrenArray, manualScrollValue],
   )
 }

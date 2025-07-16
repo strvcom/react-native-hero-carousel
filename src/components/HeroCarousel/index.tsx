@@ -23,7 +23,7 @@ export const HeroCarousel = ({
 }: HeroCarouselProps) => {
   const { scrollValue, userInteracted, slideWidth, timeoutValue } = useCarouselContext()
 
-  const { goToPage, paddedChildrenArray, offset } = useCore({
+  const { goToPage, paddedChildrenArray, manualScrollValue } = useCore({
     children,
     slideWidth,
     goToPageAnimation,
@@ -45,7 +45,7 @@ export const HeroCarousel = ({
   return (
     <>
       <HeroCarouselAdapter
-        offset={offset}
+        manualScrollValue={manualScrollValue}
         onScroll={(activeIndex: number) => {
           'worklet'
           scrollValue.value = activeIndex
