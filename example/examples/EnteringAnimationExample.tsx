@@ -86,7 +86,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     transformOrigin: 'center',
-    transform: [{ scale: 1.6 }],
   },
   gradient: {
     position: 'absolute',

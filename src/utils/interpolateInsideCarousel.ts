@@ -29,6 +29,7 @@ export const interpolateInsideCarousel = (
   const getAdjustedIndex = (slideIndex: number) => {
     if (slideIndex === 0) return Math.max(totalLength - 2, 0)
     if (slideIndex === totalLength - 1) return 1
+    if (slideIndex === 1) return totalLength - 1
     return slideIndex
   }
 
