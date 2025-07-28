@@ -91,10 +91,10 @@ const Slide = ({ videoUri, title, index }: { videoUri: string; title: string; in
 
 export default function VideoCarouselExample() {
   return (
-    <CarouselContextProvider>
+    <CarouselContextProvider disableAutoScroll={true}>
       <SafeAreaView style={styles.container}>
         <View style={styles.container}>
-          <HeroCarousel disableAutoScroll={true}>
+          <HeroCarousel>
             {videos.map((video, index) => (
               <Slide key={index} videoUri={video} title={videoTitles[index]} index={index} />
             ))}

@@ -2,7 +2,8 @@ import { createContext, useContext, useMemo, useState } from 'react'
 import { useSharedValue } from 'react-native-reanimated'
 
 import { Dimensions } from 'react-native'
-import { useManualScroll } from '../../hooks/useManualScroll'
+import { DEFAULT_ANIMATION, useManualScroll } from '../../hooks/useManualScroll'
+import { DEFAULT_INTERVAL } from '../../components/HeroCarousel/index.preset'
 
 const windowWidth = Dimensions.get('window').width
 
@@ -35,6 +36,9 @@ type ContextProps = {
   initialIndex?: number
   slideWidth?: number
   disableInfiniteScroll?: boolean
+  interval?: number | ((index: number) => number)
+  disableAutoScroll?: boolean
+  autoScrollAnimation?: (to: number, duration: number) => number
 }
 
 export const CarouselContextProvider = ({
@@ -42,6 +46,9 @@ export const CarouselContextProvider = ({
   initialIndex = 0,
   slideWidth = windowWidth,
   disableInfiniteScroll = false,
+  interval = DEFAULT_INTERVAL,
+  disableAutoScroll = false,
+  autoScrollAnimation = DEFAULT_ANIMATION,
 }: ContextProps) => {
   const userInteracted = useUserInteracted()
   const manualScroll = useManualScroll({
@@ -57,8 +64,19 @@ export const CarouselContextProvider = ({
           ...userInteracted,
           slideWidth,
           disableInfiniteScroll,
+          interval,
+          disableAutoScroll,
+          autoScrollAnimation,
         }),
-        [manualScroll, userInteracted, slideWidth, disableInfiniteScroll],
+        [
+          manualScroll,
+          userInteracted,
+          slideWidth,
+          disableInfiniteScroll,
+          interval,
+          disableAutoScroll,
+          autoScrollAnimation,
+        ],
       )}
     >
       {children}
