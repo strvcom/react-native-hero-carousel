@@ -264,6 +264,23 @@ describe('interpolateInsideCarousel', () => {
     expect(result).toBe(1)
   })
 
+  it('should correclty mirror between first and last slide', () => {
+    const result = interpolateInsideCarousel(6, 6, 7, {
+      valueBefore: 0,
+      thisValue: 1,
+      valueAfter: 0,
+      offset: 0,
+    })
+    expect(result).toBe(1)
+    const result2 = interpolateInsideCarousel(6, 1, 7, {
+      valueBefore: 0,
+      thisValue: 1,
+      valueAfter: 0,
+      offset: 0,
+    })
+    expect(result2).toBe(1)
+  })
+
   it('should correctly mirror between last and first slide with offset', () => {
     const result = interpolateInsideCarousel(6, 1, 7, {
       valueBefore: 1,

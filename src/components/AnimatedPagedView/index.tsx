@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle } from 'react'
+import React, { forwardRef, useCallback, useImperativeHandle } from 'react'
 import { Dimensions } from 'react-native'
 import Animated, {
   useSharedValue,
@@ -6,6 +6,7 @@ import Animated, {
   useAnimatedReaction,
   runOnJS,
   withTiming,
+  clamp,
 } from 'react-native-reanimated'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 
@@ -27,6 +28,15 @@ export const AnimatedPagedView = forwardRef<AnimatedPagedScrollViewRef, Animated
   (props, ref) => {
     const translateX = useSharedValue(0)
     const context = useSharedValue({ x: 0 })
+    const childrenArray = React.Children.toArray(props.children)
+
+    const clampValue = useCallback(
+      (value: number) => {
+        'worklet'
+        return clamp(value, 0, (childrenArray.length - 1) * SCREEN_WIDTH)
+      },
+      [childrenArray.length],
+    )
 
     const gesture = Gesture.Pan()
       .onStart(() => {
@@ -34,7 +44,7 @@ export const AnimatedPagedView = forwardRef<AnimatedPagedScrollViewRef, Animated
         runOnJS(props.onScrollBeginDrag)()
       })
       .onUpdate((event) => {
-        translateX.value = context.value.x - event.translationX
+        translateX.value = clampValue(context.value.x - event.translationX)
       })
       .onEnd((event) => {
         const velocity = event.velocityX
@@ -43,15 +53,16 @@ export const AnimatedPagedView = forwardRef<AnimatedPagedScrollViewRef, Animated
           velocity > 500 ? currentPage - 1 : velocity < -500 ? currentPage + 1 : currentPage
         // in case the gesture overshoots, snap to the nearest page
         if (Math.abs(context.value.x - translateX.value) > SCREEN_WIDTH / 2) {
-          translateX.value = withTiming(currentPage * SCREEN_WIDTH)
+          translateX.value = withTiming(clampValue(currentPage * SCREEN_WIDTH))
         } else {
-          translateX.value = withTiming(targetPage * SCREEN_WIDTH)
+          translateX.value = withTiming(clampValue(targetPage * SCREEN_WIDTH))
         }
       })
 
     const animatedStyle = useAnimatedStyle(() => {
+      const clampedTranslateX = clampValue(translateX.value)
       return {
-        transform: [{ translateX: -translateX.value }],
+        transform: [{ translateX: -clampedTranslateX }],
       }
     }, [])
 

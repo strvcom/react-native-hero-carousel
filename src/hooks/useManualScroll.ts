@@ -5,13 +5,13 @@ export const DEFAULT_ANIMATION = (to: number, duration: number) => withTiming(to
 
 export const useManualScroll = ({
   slideWidth,
-  defaultScrollValue,
+  initialIndex,
 }: {
   slideWidth: number
-  defaultScrollValue: number
+  initialIndex: number
 }) => {
-  const manualScrollValue = useSharedValue({ value: slideWidth })
-  const scrollValue = useSharedValue(defaultScrollValue)
+  const manualScrollValue = useSharedValue({ value: slideWidth * initialIndex })
+  const scrollValue = useSharedValue(initialIndex)
 
   const goToPage = useCallback(
     (page: number, duration = 0, animation = DEFAULT_ANIMATION) => {

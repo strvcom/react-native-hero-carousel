@@ -1,33 +1,35 @@
 import React from 'react'
 
-import { DEFAULT_INTERVAL } from './index.preset'
 import { useCarouselContext } from '../../context/CarouselContext'
 import { HeroCarouselSlide } from '../HeroCarouselSlide'
 import { HeroCarouselAdapter } from '../AnimatedPagedView/Adapter'
 import { useAutoScroll } from '../../hooks/useAutoScroll'
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
-import { DEFAULT_ANIMATION } from '../../hooks/useManualScroll'
+import { DEFAULT_INTERVAL } from './index.preset'
 
 export type HeroCarouselProps = {
-  interval?: number | ((index: number) => number)
   children: React.ReactNode[]
-  autoScrollAnimation?: (to: number, duration: number) => number
-  disableAutoScroll?: boolean
 }
 
-export const HeroCarousel = ({
-  interval = DEFAULT_INTERVAL,
-  children,
-  disableAutoScroll = false,
-  autoScrollAnimation = DEFAULT_ANIMATION,
-}: HeroCarouselProps) => {
-  const { scrollValue, userInteracted, slideWidth, timeoutValue, goToPage, manualScrollValue } =
-    useCarouselContext()
+export const HeroCarousel = ({ children }: HeroCarouselProps) => {
+  const {
+    scrollValue,
+    userInteracted,
+    slideWidth,
+    timeoutValue,
+    goToPage,
+    manualScrollValue,
+    disableInfiniteScroll,
+    interval,
+    disableAutoScroll,
+    autoScrollAnimation,
+  } = useCarouselContext()
   const { paddedChildrenArray } = useInfiniteScroll({
     children,
     slideWidth,
     goToPage,
     scrollValue,
+    disabled: disableInfiniteScroll,
   })
 
   const autoScrollEnabled = !userInteracted
@@ -36,12 +38,13 @@ export const HeroCarousel = ({
     scrollValue,
     slideWidth,
     autoScrollEnabled,
-    disableAutoScroll,
-    interval,
+    disableAutoScroll: disableAutoScroll ?? false,
+    interval: interval ?? DEFAULT_INTERVAL,
     goToPage: (page: number, duration?: number) => {
       goToPage(page, duration, autoScrollAnimation)
     },
     timeoutValue,
+    totalLength: paddedChildrenArray.length,
   })
 
   return (

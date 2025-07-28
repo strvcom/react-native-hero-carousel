@@ -2,6 +2,8 @@
 
 A highly customizable, performant carousel component for React Native with advanced animations, auto-scrolling capabilities, and infinite scrolling support. Built with React Native Reanimated for smooth, native-level performance.
 
+**✨ Context-Based Configuration** - All carousel settings are configured through the context provider for a clean, centralized API.
+
 ## Features
 
 ✨ **Auto-scrolling** with customizable intervals  
@@ -55,7 +57,7 @@ const Slide = ({ title, color }: { title: string; color: string }) => (
 
 export default function BasicCarousel() {
   return (
-    <CarouselContextProvider>
+    <CarouselContextProvider interval={4000} disableAutoScroll={false} initialIndex={0}>
       <View style={styles.container}>
         <HeroCarousel>
           {slides.map((slide) => (
@@ -90,38 +92,50 @@ const styles = StyleSheet.create({
 
 #### `CarouselContextProvider`
 
-The context provider that must wrap your carousel components.
+The context provider that must wrap your carousel components. **All carousel configuration is passed here.**
 
 ```tsx
 <CarouselContextProvider
-  defaultScrollValue={1} // Initial scroll position (default: 1)
+  initialIndex={0} // Initial slide index (default: 0)
   slideWidth={screenWidth} // Width of each slide (default: screen width)
+  interval={3000} // Auto-scroll interval in ms
+  disableAutoScroll={false} // Disable auto-scrolling
+  disableInfiniteScroll={false} // Disable infinite scrolling
+  autoScrollAnimation={(to, duration) => withTiming(to, { duration })} // Custom animation
 >
   {children}
 </CarouselContextProvider>
 ```
 
+**Props:**
+
+| Prop                    | Type                                       | Default      | Description                                                                         |
+| ----------------------- | ------------------------------------------ | ------------ | ----------------------------------------------------------------------------------- |
+| `initialIndex`          | `number`                                   | `0`          | Initial slide index to start from                                                   |
+| `slideWidth`            | `number`                                   | screen width | Width of each slide in pixels                                                       |
+| `interval`              | `number \| ((index: number) => number)`    | `3000`       | Auto-scroll interval in milliseconds, or function returning interval for each slide |
+| `disableAutoScroll`     | `boolean`                                  | `false`      | Disable automatic scrolling                                                         |
+| `disableInfiniteScroll` | `boolean`                                  | `false`      | Disable infinite scrolling (shows first/last slide boundaries)                      |
+| `autoScrollAnimation`   | `(to: number, duration: number) => number` | `withTiming` | Custom animation function for auto-scroll transitions                               |
+| `children`              | `React.ReactNode`                          | Required     | Carousel content (should contain HeroCarousel component)                            |
+
 #### `HeroCarousel`
 
-The main carousel component with auto-scrolling functionality.
+The main carousel component that renders slides. **Takes no configuration props** - all configuration is handled by the context.
 
 ```tsx
-<HeroCarousel
-  interval={3000} // Auto-scroll interval in ms
-  disableAutoScroll={false} // Disable auto-scrolling
-  goToPageAnimation={(to, duration) => withTiming(to, { duration })} // Custom page transition animation
->
-  {children}
+<HeroCarousel>
+  {slides.map((slide) => (
+    <YourSlideComponent key={slide.id} {...slide} />
+  ))}
 </HeroCarousel>
 ```
 
 **Props:**
 
-| Prop                | Type                                    | Default  | Description                                                                         |
-| ------------------- | --------------------------------------- | -------- | ----------------------------------------------------------------------------------- | --- |
-| `interval`          | `number \| ((index: number) => number)` | `3000`   | Auto-scroll interval in milliseconds, or function returning interval for each slide |
-| `disableAutoScroll` | `boolean`                               | `false`  | Disable automatic scrolling                                                         |     |
-| `children`          | `React.ReactNode[]`                     | Required | Array of slide components                                                           |
+| Prop       | Type                | Description               |
+| ---------- | ------------------- | ------------------------- |
+| `children` | `React.ReactNode[]` | Array of slide components |
 
 ### Hooks
 
@@ -147,7 +161,7 @@ const { scrollValue, timeoutValue, slideWidth, userInteracted, setUserInteracted
 Get the current slide information and auto-scroll controls.
 
 ```tsx
-const { index, total, runAutoScroll, goToPage } = useAutoCarouselSlideIndex()
+const { index, total, runAutoScroll, goToPage } = useHeroCarouselSlideIndex()
 ```
 
 **Returns:**
@@ -232,32 +246,68 @@ All pagination components automatically sync with the carousel state and support
 
 ## Advanced Usage
 
+### Configuration Examples
+
+Different carousel configurations using the context provider:
+
+```tsx
+// Basic auto-scrolling carousel
+<CarouselContextProvider interval={3000}>
+  <HeroCarousel>{slides}</HeroCarousel>
+</CarouselContextProvider>
+
+// Video carousel without auto-scroll
+<CarouselContextProvider disableAutoScroll>
+  <HeroCarousel>{videoSlides}</HeroCarousel>
+</CarouselContextProvider>
+
+// Carousel with custom intervals per slide
+<CarouselContextProvider interval={(index) => (index + 1) * 2000}>
+  <HeroCarousel>{slides}</HeroCarousel>
+</CarouselContextProvider>
+
+// Carousel starting from specific slide
+<CarouselContextProvider initialIndex={2} disableInfiniteScroll>
+  <HeroCarousel>{slides}</HeroCarousel>
+</CarouselContextProvider>
+
+// Custom slide width and animation
+<CarouselContextProvider
+  slideWidth={300}
+  autoScrollAnimation={(to, duration) => withSpring(to, { damping: 15 })}
+>
+  <HeroCarousel>{slides}</HeroCarousel>
+</CarouselContextProvider>
+```
+
 ### Programmatic Navigation
 
 Control the carousel programmatically using the context:
 
 ```tsx
 const CarouselWithControls = () => {
-  const { scrollValue } = useCarouselContext()
-  const { runAutoScroll } = useAutoCarouselSlideIndex()
+  const { scrollValue, goToPage } = useCarouselContext()
+  const { runAutoScroll } = useHeroCarouselSlideIndex()
 
   const goToNext = () => {
     runAutoScroll(0) // Immediate transition
   }
 
   const goToSlide = (slideIndex: number) => {
-    scrollValue.value = withTiming(slideIndex, { duration: 500 })
+    goToPage(slideIndex, 500) // Go to slide with 500ms animation
   }
 
   return (
-    <View>
-      <HeroCarousel disableAutoScroll>{/* Your slides */}</HeroCarousel>
+    <CarouselContextProvider disableAutoScroll>
+      <View>
+        <HeroCarousel>{/* Your slides */}</HeroCarousel>
 
-      <View style={styles.controls}>
-        <Button title="Previous" onPress={() => goToSlide(scrollValue.value - 1)} />
-        <Button title="Next" onPress={goToNext} />
+        <View style={styles.controls}>
+          <Button title="Previous" onPress={() => goToSlide(scrollValue.value - 1)} />
+          <Button title="Next" onPress={goToNext} />
+        </View>
       </View>
-    </View>
+    </CarouselContextProvider>
   )
 }
 ```
@@ -280,6 +330,18 @@ useEffect(() => {
   images.forEach((uri) => Image.prefetch(uri))
 }, [])
 ```
+
+## Architecture
+
+### Context-Based Configuration
+
+This library uses a **context-based architecture** where all carousel configuration is passed to the `CarouselContextProvider` rather than individual components. This design provides several benefits:
+
+✅ **Centralized Configuration** - All settings in one place  
+✅ **Cleaner Component API** - Components focus on rendering, not configuration  
+✅ **Easier Testing** - Mock context for isolated component testing
+
+That allows for components like pagination to not be attached to the carousel component.
 
 ## Troubleshooting
 

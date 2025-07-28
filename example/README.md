@@ -119,12 +119,12 @@ Example template:
 
 ```tsx
 // examples/YourExample.tsx
-import { AutoCarousel, CarouselContextProvider } from '@strv/react-native-hero-carousel'
+import { HeroCarousel, CarouselContextProvider } from '@strv/react-native-hero-carousel'
 
 export default function YourExample() {
   return (
-    <CarouselContextProvider>
-      <AutoCarousel>{/* Your slides */}</AutoCarousel>
+    <CarouselContextProvider interval={3000} disableAutoScroll={false} initialIndex={0}>
+      <HeroCarousel>{/* Your slides */}</HeroCarousel>
     </CarouselContextProvider>
   )
 }

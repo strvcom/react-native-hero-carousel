@@ -57,10 +57,10 @@ export default function TimerPaginationExample() {
   }
 
   return (
-    <CarouselContextProvider>
+    <CarouselContextProvider interval={getInterval}>
       <SafeAreaView style={styles.container}>
         <View style={styles.container}>
-          <HeroCarousel interval={getInterval}>
+          <HeroCarousel>
             {images.map((image, index) => (
               <Slide
                 key={index}
@@ -93,7 +93,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     transformOrigin: 'center',
-    transform: [{ scale: 1.6 }],
   },
   gradient: {
     position: 'absolute',
