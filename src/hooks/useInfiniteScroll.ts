@@ -10,11 +10,13 @@ export const useInfiniteScroll = ({
   slideWidth,
   goToPage,
   scrollValue,
+  disabled,
 }: {
   children: React.ReactNode[]
   slideWidth: number | undefined
   scrollValue: SharedValue<number>
   goToPage: ReturnType<typeof useManualScroll>['goToPage']
+  disabled?: boolean
 }) => {
   const childrenArray = useMemo(() => React.Children.toArray(children), [children])
 
@@ -28,6 +30,7 @@ export const useInfiniteScroll = ({
   useAnimatedReaction(
     () => scrollValue.value,
     (offset) => {
+      if (disabled) return
       const activeIndex = customRound(offset, ROUNDING_PRECISION)
       // if we are at the last index we need to switch to the second one without animation
       // second one because the first one is a clone of the last one
@@ -45,8 +48,8 @@ export const useInfiniteScroll = ({
 
   return useMemo(
     () => ({
-      paddedChildrenArray,
+      paddedChildrenArray: disabled ? childrenArray : paddedChildrenArray,
     }),
-    [paddedChildrenArray],
+    [paddedChildrenArray, disabled, childrenArray],
   )
 }

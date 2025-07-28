@@ -15,6 +15,7 @@ export const useAutoScroll = ({
   slideWidth,
   disableAutoScroll,
   interval,
+  totalLength,
   autoScrollEnabled,
   goToPage,
   timeoutValue,
@@ -24,6 +25,7 @@ export const useAutoScroll = ({
   autoScrollEnabled: boolean
   disableAutoScroll: boolean
   interval: number | ((index: number) => number)
+  totalLength: number
   goToPage: (page: number, duration?: number) => void
   timeoutValue: SharedValue<number>
 }) => {
@@ -45,6 +47,9 @@ export const useAutoScroll = ({
     ) => {
       const offset = scrollValue.value
       const nextIndex = offset + 1
+      if (nextIndex >= totalLength) {
+        return
+      }
       const autoScroll = () => {
         onComplete(nextIndex)
       }

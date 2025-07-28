@@ -21,13 +21,21 @@ export const HeroCarousel = ({
   disableAutoScroll = false,
   autoScrollAnimation = DEFAULT_ANIMATION,
 }: HeroCarouselProps) => {
-  const { scrollValue, userInteracted, slideWidth, timeoutValue, goToPage, manualScrollValue } =
-    useCarouselContext()
+  const {
+    scrollValue,
+    userInteracted,
+    slideWidth,
+    timeoutValue,
+    goToPage,
+    manualScrollValue,
+    disableInfiniteScroll,
+  } = useCarouselContext()
   const { paddedChildrenArray } = useInfiniteScroll({
     children,
     slideWidth,
     goToPage,
     scrollValue,
+    disabled: disableInfiniteScroll,
   })
 
   const autoScrollEnabled = !userInteracted
@@ -42,6 +50,7 @@ export const HeroCarousel = ({
       goToPage(page, duration, autoScrollAnimation)
     },
     timeoutValue,
+    totalLength: paddedChildrenArray.length,
   })
 
   return (

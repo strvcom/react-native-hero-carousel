@@ -30,7 +30,7 @@ export default function BasicExample() {
   }, [])
 
   return (
-    <CarouselContextProvider>
+    <CarouselContextProvider disableInfiniteScroll>
       <SafeAreaView style={styles.container}>
         <View style={styles.container}>
           <HeroCarousel>

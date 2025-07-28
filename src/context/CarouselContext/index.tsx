@@ -32,19 +32,21 @@ const useUserInteracted = () => {
 
 type ContextProps = {
   children: React.ReactNode
-  defaultScrollValue?: number
+  initialIndex?: number
   slideWidth?: number
+  disableInfiniteScroll?: boolean
 }
 
 export const CarouselContextProvider = ({
   children,
-  defaultScrollValue = 1,
+  initialIndex = 0,
   slideWidth = windowWidth,
+  disableInfiniteScroll = false,
 }: ContextProps) => {
   const userInteracted = useUserInteracted()
   const manualScroll = useManualScroll({
     slideWidth,
-    defaultScrollValue,
+    initialIndex: disableInfiniteScroll ? initialIndex : initialIndex + 1,
   })
 
   return (
@@ -54,8 +56,9 @@ export const CarouselContextProvider = ({
           ...manualScroll,
           ...userInteracted,
           slideWidth,
+          disableInfiniteScroll,
         }),
-        [manualScroll, userInteracted, slideWidth],
+        [manualScroll, userInteracted, slideWidth, disableInfiniteScroll],
       )}
     >
       {children}
