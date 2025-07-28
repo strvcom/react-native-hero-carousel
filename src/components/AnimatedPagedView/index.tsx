@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, type ForwardedRef } from 'react'
+import React, { forwardRef, useImperativeHandle } from 'react'
 import { Dimensions } from 'react-native'
 import Animated, {
   useSharedValue,

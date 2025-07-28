@@ -7,70 +7,8 @@ import {
   SharedValue,
 } from 'react-native-reanimated'
 
-import { TRANSITION_DURATION } from '../components/AutoCarousel/index.preset'
-
-export class IntervalTimer {
-  callbackStartTime: number = 0
-  remaining: number = 0
-  paused: boolean = false
-  timerId: NodeJS.Timeout | null = null
-  onPause?: (remaining: number) => void = () => {}
-  onResume?: (remaining: number) => void = () => {}
-  _callback: () => void
-  _delay: number
-
-  constructor(
-    callback: () => void,
-    delay: number,
-    onPause?: (remaining: number) => void,
-    onResume?: (remaining: number) => void,
-  ) {
-    this._callback = callback
-    this._delay = delay
-    this.onPause = onPause
-    this.onResume = onResume
-  }
-
-  pause() {
-    if (!this.paused) {
-      this.clear()
-      this.remaining = this._delay - (new Date().getTime() - this.callbackStartTime)
-      this.paused = true
-      this.onPause?.(this.remaining)
-    }
-  }
-
-  resume() {
-    if (this.paused) {
-      if (this.remaining) {
-        this.onResume?.(this.remaining)
-        this.paused = false
-        this.callbackStartTime = new Date().getTime()
-        this.timerId = setTimeout(() => {
-          this.run()
-        }, this.remaining)
-      }
-    }
-  }
-
-  clear() {
-    if (this.timerId) {
-      clearTimeout(this.timerId)
-    }
-  }
-
-  start() {
-    this.clear()
-    this.callbackStartTime = new Date().getTime()
-    this.timerId = setTimeout(() => {
-      this.run()
-    }, this._delay)
-  }
-
-  run() {
-    this._callback()
-  }
-}
+import { TRANSITION_DURATION } from '../components/HeroCarousel/index.preset'
+import { PausableTimeout, setPausableTimeout } from '../utils/PausableTimeout'
 
 export const useAutoScroll = ({
   scrollValue,
@@ -82,14 +20,14 @@ export const useAutoScroll = ({
   timeoutValue,
 }: {
   scrollValue: SharedValue<number>
-  slideWidth: number
+  slideWidth: number | undefined
   autoScrollEnabled: boolean
   disableAutoScroll: boolean
   interval: number | ((index: number) => number)
   goToPage: (page: number, duration?: number) => void
   timeoutValue: SharedValue<number>
 }) => {
-  const timeoutRef = useRef<IntervalTimer | null>(null)
+  const timeoutRef = useRef<PausableTimeout | null>(null)
 
   const clearCarouselTimeout = useCallback(() => {
     if (timeoutRef.current) {
@@ -112,20 +50,17 @@ export const useAutoScroll = ({
       }
       clearCarouselTimeout()
       timeoutValue.value = withTiming(1, { duration: interval, easing: Easing.linear })
-      timeoutRef.current = new IntervalTimer(
-        autoScroll,
-        interval,
-        () => {
+      timeoutRef.current = setPausableTimeout(autoScroll, interval, {
+        onPause: () => {
           timeoutValue.value = timeoutValue.value
         },
-        (remaining) => {
+        onResume: (remaining) => {
           timeoutValue.value = withTiming(1, {
             duration: remaining,
             easing: Easing.linear,
           })
         },
-      )
-      timeoutRef.current.start()
+      })
       return timeoutRef.current
     },
     [clearCarouselTimeout, goToPage, scrollValue, timeoutValue],
@@ -155,7 +90,8 @@ export const useAutoScroll = ({
     () => ({
       timeoutValue,
       runAutoScroll,
+      timeoutRef,
     }),
-    [timeoutValue, runAutoScroll],
+    [timeoutValue, runAutoScroll, timeoutRef],
   )
 }

@@ -1,10 +1,10 @@
 import { View } from 'react-native'
 import { AutoCarouselSlideContext } from '../../context/SlideContext'
 import { useAutoScroll } from '../../hooks/useAutoScroll'
-import { useCore } from '../../hooks/useCore'
 import { useMemo } from 'react'
+import { useManualScroll } from 'hooks/useManualScroll'
 
-export const AutoCarouselSlide = ({
+export const HeroCarouselSlide = ({
   children,
   width,
   index,
@@ -17,7 +17,7 @@ export const AutoCarouselSlide = ({
   index: number
   total: number
   runAutoScroll: ReturnType<typeof useAutoScroll>['runAutoScroll']
-  goToPage: ReturnType<typeof useCore>['goToPage']
+  goToPage: ReturnType<typeof useManualScroll>['goToPage']
 }) => {
   return (
     <View style={{ flex: 1, width, minWidth: width }}>

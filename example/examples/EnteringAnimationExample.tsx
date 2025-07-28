@@ -1,5 +1,5 @@
 import {
-  AutoCarousel,
+  HeroCarousel,
   CarouselContextProvider,
   SlideAnimatedView,
 } from '@strv/react-native-hero-carousel'
@@ -56,11 +56,11 @@ export default function EnteringAnimationExample() {
     <CarouselContextProvider>
       <SafeAreaView style={styles.container}>
         <View style={styles.container}>
-          <AutoCarousel>
+          <HeroCarousel>
             {images.map((image, index) => (
               <Slide key={index} image={image} title={`Slide ${index + 1}`} index={index} />
             ))}
-          </AutoCarousel>
+          </HeroCarousel>
         </View>
       </SafeAreaView>
     </CarouselContextProvider>

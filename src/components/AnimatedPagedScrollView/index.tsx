@@ -4,6 +4,8 @@ import Animated, { type AnimatedScrollViewProps } from 'react-native-reanimated'
 
 import { styles } from './styles'
 
+// currently not used scroll view, it is here in case custom scroll has issues
+
 export const AnimatedPagedScrollView = forwardRef(
   (props: AnimatedScrollViewProps, ref: ForwardedRef<Animated.ScrollView>) => {
     return (

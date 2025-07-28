@@ -2,19 +2,24 @@ import { useAnimatedReaction } from 'react-native-reanimated'
 import { useRef } from 'react'
 import { AnimatedPagedScrollViewRef, AnimatedPagedView } from './index'
 import { customRound } from '../../utils/round'
-import { ROUNDING_PRECISION } from '../../components/AutoCarousel/index.preset'
+import { ROUNDING_PRECISION } from '../HeroCarousel/index.preset'
 import { useCarouselContext } from '../../context/CarouselContext'
-import { AutoCarouselAdapterProps } from '../../components/AutoCarousel/types'
+import { HeroCarouselAdapterProps } from '../HeroCarousel/types'
 
-export const AutoCarouselAdapter = ({ offset, onScroll, children }: AutoCarouselAdapterProps) => {
+export const HeroCarouselAdapter = ({
+  manualScrollValue,
+  onScroll,
+  children,
+}: HeroCarouselAdapterProps) => {
   const scrollViewRef = useRef<AnimatedPagedScrollViewRef>(null)
-  const { slideWidth, setUserInteracted } = useCarouselContext()
+  const { slideWidth = 0, setUserInteracted } = useCarouselContext()
 
   useAnimatedReaction(
-    () => offset.value.value,
+    () => manualScrollValue.value.value,
     (value) => {
       scrollViewRef.current?.scrollTo(value)
     },
+    [],
   )
 
   const handleScroll = (value: number) => {

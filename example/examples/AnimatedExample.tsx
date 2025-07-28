@@ -1,5 +1,5 @@
 import {
-  AutoCarousel,
+  HeroCarousel,
   interpolateInsideCarousel,
   useCarouselContext,
   useAutoCarouselSlideIndex,
@@ -73,11 +73,11 @@ export default function AnimatedExample() {
     <CarouselContextProvider>
       <SafeAreaView style={styles.container}>
         <View style={styles.container}>
-          <AutoCarousel>
+          <HeroCarousel>
             {images.map((image, index) => (
               <Slide key={index} image={image} title={`Slide ${index + 1}`} index={index} />
             ))}
-          </AutoCarousel>
+          </HeroCarousel>
           <Pagination total={images.length} />
         </View>
       </SafeAreaView>

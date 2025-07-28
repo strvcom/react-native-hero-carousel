@@ -1,5 +1,5 @@
 import {
-  AutoCarousel,
+  HeroCarousel,
   CarouselContextProvider,
   useAutoCarouselSlideIndex,
 } from '@strv/react-native-hero-carousel'
@@ -94,11 +94,11 @@ export default function VideoCarouselExample() {
     <CarouselContextProvider>
       <SafeAreaView style={styles.container}>
         <View style={styles.container}>
-          <AutoCarousel disableAutoScroll={true}>
+          <HeroCarousel disableAutoScroll={true}>
             {videos.map((video, index) => (
               <Slide key={index} videoUri={video} title={videoTitles[index]} index={index} />
             ))}
-          </AutoCarousel>
+          </HeroCarousel>
           <TimerPagination total={videos.length} hideProgressOnInteraction={false} />
         </View>
       </SafeAreaView>

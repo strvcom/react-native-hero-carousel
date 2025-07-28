@@ -1,32 +1,32 @@
 import React from 'react'
-import { withTiming } from 'react-native-reanimated'
 
 import { DEFAULT_INTERVAL } from './index.preset'
 import { useCarouselContext } from '../../context/CarouselContext'
-import { AutoCarouselSlide } from '../AutoCarouselSlide'
-import { AutoCarouselAdapter } from '../AnimatedPagedView/Adapter'
+import { HeroCarouselSlide } from '../HeroCarouselSlide'
+import { HeroCarouselAdapter } from '../AnimatedPagedView/Adapter'
 import { useAutoScroll } from '../../hooks/useAutoScroll'
-import { useCore } from '../../hooks/useCore'
+import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
+import { DEFAULT_ANIMATION } from '../../hooks/useManualScroll'
 
-export type AutoCarouselProps = {
+export type HeroCarouselProps = {
   interval?: number | ((index: number) => number)
   children: React.ReactNode[]
-  goToPageAnimation?: (to: number, duration: number) => number
+  autoScrollAnimation?: (to: number, duration: number) => number
   disableAutoScroll?: boolean
 }
 
-export const AutoCarousel = ({
+export const HeroCarousel = ({
   interval = DEFAULT_INTERVAL,
   children,
-  goToPageAnimation = (to, duration) => withTiming(to, { duration }),
   disableAutoScroll = false,
-}: AutoCarouselProps) => {
-  const { scrollValue, userInteracted, slideWidth, timeoutValue } = useCarouselContext()
-
-  const { goToPage, paddedChildrenArray, offset } = useCore({
+  autoScrollAnimation = DEFAULT_ANIMATION,
+}: HeroCarouselProps) => {
+  const { scrollValue, userInteracted, slideWidth, timeoutValue, goToPage, manualScrollValue } =
+    useCarouselContext()
+  const { paddedChildrenArray } = useInfiniteScroll({
     children,
     slideWidth,
-    goToPageAnimation,
+    goToPage,
     scrollValue,
   })
 
@@ -38,22 +38,24 @@ export const AutoCarousel = ({
     autoScrollEnabled,
     disableAutoScroll,
     interval,
-    goToPage,
+    goToPage: (page: number, duration?: number) => {
+      goToPage(page, duration, autoScrollAnimation)
+    },
     timeoutValue,
   })
 
   return (
     <>
-      <AutoCarouselAdapter
-        offset={offset}
+      <HeroCarouselAdapter
+        manualScrollValue={manualScrollValue}
         onScroll={(activeIndex: number) => {
           'worklet'
           scrollValue.value = activeIndex
         }}
       >
         {React.Children.map(paddedChildrenArray, (child, index) => (
-          <AutoCarouselSlide
-            width={slideWidth}
+          <HeroCarouselSlide
+            width={slideWidth ?? 0}
             key={index}
             index={index}
             total={paddedChildrenArray.length}
@@ -61,9 +63,9 @@ export const AutoCarousel = ({
             goToPage={goToPage}
           >
             {child}
-          </AutoCarouselSlide>
+          </HeroCarouselSlide>
         ))}
-      </AutoCarouselAdapter>
+      </HeroCarouselAdapter>
     </>
   )
 }

@@ -1,5 +1,2 @@
-export * from './Carousel'
-export * from './AnimatedPagedScrollView'
-export * from './AutoCarousel'
-export * from './AutoCarouselSlide'
+export * from './HeroCarousel'
 export * from './SlideAnimatedView'
