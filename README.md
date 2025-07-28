@@ -341,6 +341,8 @@ This library uses a **context-based architecture** where all carousel configurat
 ✅ **Cleaner Component API** - Components focus on rendering, not configuration  
 ✅ **Easier Testing** - Mock context for isolated component testing
 
+That allows for components like pagination to not be attached to the carousel component.
+
 ## Troubleshooting
 
 ### Common Issues
