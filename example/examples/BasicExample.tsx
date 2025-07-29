@@ -15,7 +15,13 @@ const images = Array.from({ length: 5 }, getRandomImageUrl)
 const Slide = ({ image, title, index }: { image: string; title: string; index: number }) => {
   return (
     <View key={index} style={styles.slide}>
-      <Image key={image} source={{ uri: image }} style={styles.image} contentFit="cover" />
+      <Image
+        key={image}
+        source={{ uri: image }}
+        style={styles.image}
+        contentFit="cover"
+        transition={200}
+      />
       <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.gradient}>
         <Text style={styles.title}>{title}</Text>
       </LinearGradient>
@@ -77,5 +83,6 @@ const styles = StyleSheet.create({
     lineHeight: 32,
     fontWeight: 'bold',
     color: 'white',
+    opacity: 0.5,
   },
 })

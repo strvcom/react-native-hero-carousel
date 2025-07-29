@@ -33,14 +33,21 @@ const Slide = ({ image, title, index }: { image: string; title: string; index: n
 
   return (
     <View key={index} style={styles.slide}>
-      <Image source={{ uri: image }} style={styles.image} contentFit="cover" />
+      <Image source={{ uri: image }} style={styles.image} contentFit="cover" transition={200} />
       <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.gradient}>
-        <SlideAnimatedView style={styles.textContainer} {...animationConfig}>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.subtitle}>
-            Animation: {animationNames[index % animationNames.length]}
-          </Text>
-        </SlideAnimatedView>
+        <View style={styles.text}>
+          <SlideAnimatedView style={styles.textContainer} {...animationConfig}>
+            <Text style={styles.title}>{title}</Text>
+          </SlideAnimatedView>
+          <SlideAnimatedView
+            style={styles.textContainer}
+            entering={FadeIn.duration(400).delay(200)}
+          >
+            <Text style={styles.subtitle}>
+              Animation: {animationNames[index % animationNames.length]}
+            </Text>
+          </SlideAnimatedView>
+        </View>
       </LinearGradient>
     </View>
   )
@@ -96,23 +103,23 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     padding: 20,
   },
-  title: {
-    fontSize: 32,
+  text: {
+    flex: 1,
     bottom: 100,
     left: 20,
     position: 'absolute',
+    gap: 16,
+  },
+  title: {
+    fontSize: 32,
     lineHeight: 32,
     fontWeight: 'bold',
     color: 'white',
   },
   subtitle: {
     fontSize: 16,
-    bottom: 70,
-    left: 20,
-    position: 'absolute',
     lineHeight: 16,
     fontWeight: '500',
     color: 'white',
-    opacity: 0.8,
   },
 })

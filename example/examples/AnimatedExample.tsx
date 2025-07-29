@@ -11,11 +11,14 @@ import { LinearGradient } from 'expo-linear-gradient'
 import Animated, { useAnimatedStyle, interpolate, Extrapolation } from 'react-native-reanimated'
 import { Pagination } from './components/Pagination'
 import { useEffect } from 'react'
+import { BlurView } from 'expo-blur'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
 const getRandomImageUrl = () => {
-  return `https://picsum.photos/${SCREEN_WIDTH}/${SCREEN_HEIGHT}?random=${Math.floor(Math.random() * 1000)}`
+  return `https://picsum.photos/${SCREEN_WIDTH * 3}/${SCREEN_HEIGHT * 3}?random=${Math.floor(
+    Math.random() * 1000,
+  )}`
 }
 
 const images = Array.from({ length: 5 }, getRandomImageUrl)
@@ -54,10 +57,12 @@ const Slide = ({ image, title, index }: { image: string; title: string; index: n
   return (
     <View key={index} style={styles.slide}>
       <Animated.View style={rStyle}>
-        <Image source={{ uri: image }} style={styles.image} contentFit="cover" />
+        <Image source={{ uri: image }} style={styles.image} contentFit="cover" transition={200} />
       </Animated.View>
       <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.gradient}>
-        <Text style={styles.title}>{title}</Text>
+        <BlurView style={styles.blurView} experimentalBlurMethod="dimezisBlurView">
+          <Text style={styles.title}>{title}</Text>
+        </BlurView>
       </LinearGradient>
     </View>
   )
@@ -72,12 +77,14 @@ export default function AnimatedExample() {
   return (
     <CarouselContextProvider>
       <SafeAreaView style={styles.container}>
-        <View style={styles.container}>
+        <View style={styles.carouselContainer}>
           <HeroCarousel>
             {images.map((image, index) => (
               <Slide key={index} image={image} title={`Slide ${index + 1}`} index={index} />
             ))}
           </HeroCarousel>
+        </View>
+        <View style={styles.paginationContainer}>
           <Pagination total={images.length} />
         </View>
       </SafeAreaView>
@@ -88,7 +95,26 @@ export default function AnimatedExample() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'black',
+  },
+  carouselContainer: {
+    flex: 0.8,
+    borderRadius: 16,
+    overflow: 'hidden',
+    marginTop: 64,
+  },
+  paginationContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 0.2,
+  },
+  blurView: {
+    bottom: 40,
+    left: 20,
+    position: 'absolute',
+    borderRadius: 16,
+    padding: 20,
+    overflow: 'hidden',
   },
   slide: {
     flex: 1,
@@ -100,7 +126,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     transformOrigin: 'center',
-    transform: [{ scale: 1.6 }],
+    transform: [{ scale: 1.3 }],
+    backgroundColor: 'gray',
   },
   gradient: {
     position: 'absolute',
@@ -113,9 +140,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-    bottom: 100,
-    left: 20,
-    position: 'absolute',
     lineHeight: 32,
     fontWeight: 'bold',
     color: 'white',
