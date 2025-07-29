@@ -33,7 +33,13 @@ const Slide = ({
 
   return (
     <View style={styles.slide}>
-      <Image key={image} source={{ uri: image }} style={styles.image} contentFit="cover" />
+      <Image
+        key={image}
+        source={{ uri: image }}
+        style={styles.image}
+        contentFit="cover"
+        transition={200}
+      />
       <LinearGradient colors={['rgba(0,0,0,0.8)', 'transparent']} style={styles.topGradient} />
       <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.gradient}>
         <BlurView style={styles.blurView}>

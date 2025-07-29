@@ -68,7 +68,7 @@ export const useAutoScroll = ({
       })
       return timeoutRef.current
     },
-    [clearCarouselTimeout, goToPage, scrollValue, timeoutValue],
+    [clearCarouselTimeout, goToPage, scrollValue, timeoutValue, totalLength],
   )
 
   useEffect(() => {
