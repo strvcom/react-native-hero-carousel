@@ -7,7 +7,9 @@ import { useEffect } from 'react'
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
 const getRandomImageUrl = () => {
-  return `https://picsum.photos/${SCREEN_WIDTH}/${SCREEN_HEIGHT}?random=${Math.floor(Math.random() * 1000)}`
+  return `https://picsum.photos/${SCREEN_WIDTH * 3}/${SCREEN_HEIGHT * 3}?random=${Math.floor(
+    Math.random() * 1000,
+  )}`
 }
 
 const images = Array.from({ length: 5 }, getRandomImageUrl)
