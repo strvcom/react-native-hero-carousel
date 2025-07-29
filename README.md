@@ -1,5 +1,7 @@
 # React Native Hero Carousel
 
+<img src="docs/assets/carousel-demo.webp" alt="Carousel Demo" width="200">
+
 A highly customizable, performant carousel component for React Native with advanced animations, auto-scrolling capabilities, and infinite scrolling support. Built with React Native Reanimated for smooth, native-level performance.
 
 **✨ Context-Based Configuration** - All carousel settings are configured through the context provider for a clean, centralized API.
