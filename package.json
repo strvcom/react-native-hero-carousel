@@ -22,7 +22,7 @@
     "slider",
     "reanimated"
   ],
-  "author": "",
+  "author": "strvcom <strvcom@strv.com>",
   "license": "MIT",
   "peerDependencies": {
     "react": ">=17.0.0",
@@ -68,5 +68,6 @@
   ],
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "repository": "strvcom/react-native-hero-carousel"
 }
