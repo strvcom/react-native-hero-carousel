@@ -1,7 +1,18 @@
 {
   "name": "@strv/react-native-hero-carousel",
   "version": "0.1.0",
+  "homepage": "https://github.com/strvcom/react-native-hero-carousel",
   "description": "A customizable hero carousel component for React Native",
+  "bugs": {
+    "url": "https://github.com/strvcom/react-native-hero-carousel/issues"
+  },
+  "keywords": [
+    "react-native",
+    "carousel",
+    "hero",
+    "slider",
+    "reanimated"
+  ],
   "main": "src/index.ts",
   "types": "src/index.ts",
   "private": true,
@@ -15,13 +26,6 @@
     "lint:fix": "eslint --fix .",
     "test": "jest --passWithNoTests"
   },
-  "keywords": [
-    "react-native",
-    "carousel",
-    "hero",
-    "slider",
-    "reanimated"
-  ],
   "author": "strvcom <strvcom@strv.com>",
   "license": "MIT",
   "peerDependencies": {
