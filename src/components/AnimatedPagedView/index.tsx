@@ -1,5 +1,4 @@
 import React, { forwardRef, useCallback, useImperativeHandle } from 'react'
-import { Dimensions } from 'react-native'
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -11,8 +10,7 @@ import Animated, {
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 
 import { styles } from './styles'
-
-const { width: SCREEN_WIDTH } = Dimensions.get('window')
+import { useCarouselContext } from '../../context/CarouselContext'
 
 export type AnimatedPagedScrollViewRef = {
   scrollTo: (value: number) => void
@@ -28,14 +26,15 @@ export const AnimatedPagedView = forwardRef<AnimatedPagedScrollViewRef, Animated
   (props, ref) => {
     const translateX = useSharedValue(0)
     const context = useSharedValue({ x: 0 })
+    const { slideWidth } = useCarouselContext()
     const childrenArray = React.Children.toArray(props.children)
 
     const clampValue = useCallback(
       (value: number) => {
         'worklet'
-        return clamp(value, 0, (childrenArray.length - 1) * SCREEN_WIDTH)
+        return clamp(value, 0, (childrenArray.length - 1) * slideWidth)
       },
-      [childrenArray.length],
+      [childrenArray.length, slideWidth],
     )
 
     const gesture = Gesture.Pan()
@@ -48,14 +47,14 @@ export const AnimatedPagedView = forwardRef<AnimatedPagedScrollViewRef, Animated
       })
       .onEnd((event) => {
         const velocity = event.velocityX
-        const currentPage = Math.round(translateX.value / SCREEN_WIDTH)
+        const currentPage = Math.round(translateX.value / slideWidth)
         const targetPage =
           velocity > 500 ? currentPage - 1 : velocity < -500 ? currentPage + 1 : currentPage
         // in case the gesture overshoots, snap to the nearest page
-        if (Math.abs(context.value.x - translateX.value) > SCREEN_WIDTH / 2) {
-          translateX.value = withTiming(clampValue(currentPage * SCREEN_WIDTH))
+        if (Math.abs(context.value.x - translateX.value) > slideWidth / 2) {
+          translateX.value = withTiming(clampValue(currentPage * slideWidth))
         } else {
-          translateX.value = withTiming(clampValue(targetPage * SCREEN_WIDTH))
+          translateX.value = withTiming(clampValue(targetPage * slideWidth))
         }
       })
 
