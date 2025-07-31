@@ -12,13 +12,13 @@ jobs:
       - uses: ./.github/actions/setup
 
       - name: Run ESLint
-        run: pnpm lint
+        run: yarn lint
 
       - name: Run Prettier
-        run: pnpm format:check
+        run: yarn format:check
 
       - name: Run TypeScript
-        run: pnpm type:check
+        run: yarn type:check
 
       - name: Run Tests
-        run: pnpm test
+        run: yarn test

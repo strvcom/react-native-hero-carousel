@@ -208,8 +208,8 @@ We provide a comprehensive example app showcasing all the carousel features. You
 
 ```bash
 cd example
-pnpm install
-pnpm start
+yarn install
+yarn start
 ```
 
 Then scan the QR code with Expo Go or run on simulator. See the [example app README](./example/README.md) for detailed setup instructions.
