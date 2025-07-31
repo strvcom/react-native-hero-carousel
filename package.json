@@ -22,7 +22,7 @@
     "type:check": "tsc --noEmit",
     "format:check": "prettier --check '**/*.{ts,tsx,md,json}'",
     "format:fix": "prettier --write '**/*.{ts,tsx,md,json}'",
-    "lint": "eslint .",
+    "lint": "eslint ./src",
     "lint:fix": "eslint --fix .",
     "test": "jest --passWithNoTests"
   },
