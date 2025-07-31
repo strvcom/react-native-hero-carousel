@@ -25,7 +25,7 @@ jobs:
       deployments: write
     environment:
       name: npm
-      url: https://www.npmjs.com/package/expo-alternate-app-icons
+      url: https://www.npmjs.com/package/@strv/react-native-hero-carousel
     steps:
       - uses: actions/checkout@v4
         with:
