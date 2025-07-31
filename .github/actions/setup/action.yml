@@ -1,5 +1,5 @@
 name: Setup Environment
-description: 'Set up Node.js, pnpm, Expo CLI'
+description: 'Set up Node.js, yarn, Expo CLI'
 inputs:
   EXPO_TOKEN:
     required: true
@@ -11,34 +11,25 @@ runs:
     - uses: actions/setup-node@v4
       with:
         node-version: 20
-
-    - name: Install pnpm
-      uses: pnpm/action-setup@v4
-      with:
-        version: 9
-    - name: Get pnpm store directory
-      id: pnpm-cache
-      shell: bash
-      run: |
-        echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+        cache: 'yarn'
 
     - uses: actions/cache@v4
-      name: Setup pnpm cache
+      name: Setup yarn cache
       with:
-        path: ${{ env.STORE_PATH }}
-        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        path: ~/.yarn/cache
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
         restore-keys: |
-          ${{ runner.os }}-pnpm-store-
+          ${{ runner.os }}-yarn-
 
     - uses: expo/expo-github-action@v8
       with:
         eas-version: latest
         token: ${{ inputs.EXPO_TOKEN }}
-        packager: pnpm
+        packager: yarn
 
     - name: Install Dependencies
-      run: pnpm install --frozen-lockfile
+      run: yarn install --frozen-lockfile
       shell: bash
     - name: Install example dependencies
-      run: cd example && pnpm install --frozen-lockfile
+      run: cd example && yarn install --frozen-lockfile
       shell: bash

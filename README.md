@@ -27,7 +27,7 @@ npm install @strv/react-native-hero-carousel
 # or
 yarn add @strv/react-native-hero-carousel
 # or
-pnpm add @strv/react-native-hero-carousel
+yarn add @strv/react-native-hero-carousel
 ```
 
 ### Peer Dependencies

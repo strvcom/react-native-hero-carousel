@@ -7,7 +7,7 @@ This example app demonstrates all the features and capabilities of the `@strv/re
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/) (v18 or higher)
-- [pnpm](https://pnpm.io/) (recommended) or npm/yarn
+- [yarn](https://yarnpkg.com/) (recommended) or npm/pnpm
 - [Expo CLI](https://docs.expo.dev/get-started/installation/)
 - iOS Simulator (macOS) or Android Emulator
 
