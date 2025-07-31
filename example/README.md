@@ -7,7 +7,7 @@ This example app demonstrates all the features and capabilities of the `@strv/re
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/) (v18 or higher)
-- [pnpm](https://pnpm.io/) (recommended) or npm/yarn
+- [yarn](https://yarnpkg.com/) (recommended) or npm/pnpm
 - [Expo CLI](https://docs.expo.dev/get-started/installation/)
 - iOS Simulator (macOS) or Android Emulator
 
@@ -16,17 +16,16 @@ This example app demonstrates all the features and capabilities of the `@strv/re
 1. **Install dependencies**
 
    ```bash
-   pnpm install
+   yarn install
    ```
 
 2. **Start the development server**
 
    ```bash
-   pnpm start
+   yarn start
    ```
 
 3. **Run on your preferred platform**
-
    - **iOS Simulator**: Press `i` in the terminal or scan QR with Expo Go
    - **Android Emulator**: Press `a` in the terminal or scan QR with Expo Go
    - **Physical Device**: Install [Expo Go](https://expo.dev/go) and scan the QR code
@@ -163,7 +162,7 @@ The example app includes custom hooks that you can reference:
 **Metro bundler issues:**
 
 ```bash
-pnpm start --clear-cache
+yarn start --clear-cache
 ```
 
 **iOS build issues:**
@@ -175,7 +174,7 @@ cd ios && pod install && cd ..
 **Android build issues:**
 
 ```bash
-pnpm android --clear
+yarn android --clear
 ```
 
 **Video not playing:**

@@ -10,8 +10,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
-      - run: npm ci
+          cache: 'yarn'
+      - run: yarn install
       - run: yarn lint
 
   publish:
@@ -25,7 +25,7 @@ jobs:
       deployments: write
     environment:
       name: npm
-      url: https://www.npmjs.com/package/expo-alternate-app-icons
+      url: https://www.npmjs.com/package/@strv/react-native-hero-carousel
     steps:
       - uses: actions/checkout@v4
         with:
@@ -34,9 +34,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
-      - run: npm ci
+          cache: 'yarn'
+      - run: yarn install
       - env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx auto shipit

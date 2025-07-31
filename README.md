@@ -27,7 +27,7 @@ npm install @strv/react-native-hero-carousel
 # or
 yarn add @strv/react-native-hero-carousel
 # or
-pnpm add @strv/react-native-hero-carousel
+yarn add @strv/react-native-hero-carousel
 ```
 
 ### Peer Dependencies
@@ -208,8 +208,8 @@ We provide a comprehensive example app showcasing all the carousel features. You
 
 ```bash
 cd example
-pnpm install
-pnpm start
+yarn install
+yarn start
 ```
 
 Then scan the QR code with Expo Go or run on simulator. See the [example app README](./example/README.md) for detailed setup instructions.
