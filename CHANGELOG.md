@@ -1,3 +1,15 @@
+# 0.1.3 (Mon Aug 04 2025)
+
+#### 🐛 Bug Fix
+
+- fix: wrong index file name [#19](https://github.com/strvcom/react-native-hero-carousel/pull/19) (petr.konecny@strv.com)
+
+#### Authors: 1
+
+- Petr Konecny ([@petrkonecny2](https://github.com/petrkonecny2))
+
+---
+
 # 0.1.2 (Mon Aug 04 2025)
 
 #### 🐛 Bug Fix
