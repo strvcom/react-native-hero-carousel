@@ -1,3 +1,15 @@
+# 0.1.4 (Mon Aug 04 2025)
+
+#### 🐛 Bug Fix
+
+- fix: updated import paths for useManualScroll hook [#21](https://github.com/strvcom/react-native-hero-carousel/pull/21) (petr.konecny@strv.com)
+
+#### Authors: 1
+
+- Petr Konecny ([@petrkonecny2](https://github.com/petrkonecny2))
+
+---
+
 # 0.1.3 (Mon Aug 04 2025)
 
 #### 🐛 Bug Fix
