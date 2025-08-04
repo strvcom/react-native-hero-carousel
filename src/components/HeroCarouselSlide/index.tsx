@@ -2,7 +2,7 @@ import { View } from 'react-native'
 import { AutoCarouselSlideContext } from '../../context/SlideContext'
 import { useAutoScroll } from '../../hooks/useAutoScroll'
 import { useMemo } from 'react'
-import { useManualScroll } from 'hooks/useManualScroll'
+import { useManualScroll } from '../../hooks/useManualScroll'
 
 export const HeroCarouselSlide = ({
   children,

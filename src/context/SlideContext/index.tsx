@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 import { useAutoScroll } from '../../hooks/useAutoScroll'
-import { useManualScroll } from 'hooks/useManualScroll'
+import { useManualScroll } from '../../hooks/useManualScroll'
 
 export const AutoCarouselSlideContext = createContext<{
   index: number
