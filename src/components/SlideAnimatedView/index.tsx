@@ -17,6 +17,7 @@ type SlideAnimatedViewProps = {
   enteringThreshold?: number
   exitingThreshold?: number
   style?: AnimatedProps<ViewProps>['style']
+  keepVisibleAfterExiting?: boolean
 }
 
 export const SlideAnimatedView = ({
@@ -26,6 +27,7 @@ export const SlideAnimatedView = ({
   layout,
   enteringThreshold = 0.99,
   exitingThreshold = 0.01,
+  keepVisibleAfterExiting = false,
   style,
 }: SlideAnimatedViewProps) => {
   const { index, total } = useAutoCarouselSlideIndex()
@@ -56,6 +58,9 @@ export const SlideAnimatedView = ({
         currentValue <= exitingThreshold &&
         (previousValue === null || previousValue > exitingThreshold)
       ) {
+        if (keepVisibleAfterExiting) {
+          return
+        }
         runOnJS(setShouldShow)(false)
       }
     },
