@@ -7,7 +7,8 @@
 </div>
 A highly customizable, performant carousel component for React Native with advanced animations, auto-scrolling capabilities, and infinite scrolling support. Built with React Native Reanimated for smooth, native-level performance.
 
-**✨ Context-Based Configuration** - All carousel settings are configured through the context provider for a clean, centralized API.
+**✨ Compound Pattern** - Clean, intuitive API with `HeroCarousel.Provider`, `HeroCarousel.Item`, and `HeroCarousel.AnimatedView`  
+**✨ Context-Based Configuration** - All carousel settings are configured through the provider for a clean, centralized API.
 
 ## Features
 
@@ -45,7 +46,7 @@ Make sure to follow the [React Native Reanimated installation guide](https://doc
 ```tsx
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
-import { HeroCarousel, CarouselContextProvider } from '@strv/react-native-hero-carousel'
+import { HeroCarousel } from '@strv/react-native-hero-carousel'
 
 const slides = [
   { id: 1, title: 'Slide 1', color: '#FF6B6B' },
@@ -62,7 +63,7 @@ const Slide = ({ title, color }: { title: string; color: string }) => (
 
 export default function BasicCarousel() {
   return (
-    <CarouselContextProvider interval={4000} disableAutoScroll={false} initialIndex={0}>
+    <HeroCarousel.Provider interval={4000} disableAutoScroll={false} initialIndex={0}>
       <View style={styles.container}>
         <HeroCarousel>
           {slides.map((slide) => (
@@ -70,7 +71,7 @@ export default function BasicCarousel() {
           ))}
         </HeroCarousel>
       </View>
-    </CarouselContextProvider>
+    </HeroCarousel.Provider>
   )
 }
 
@@ -95,12 +96,22 @@ const styles = StyleSheet.create({
 
 ### Components
 
-#### `CarouselContextProvider`
+The `HeroCarousel` component uses a **compound pattern** that provides a clean, intuitive API:
+
+```tsx
+<HeroCarousel.Provider>
+  <HeroCarousel>
+    <HeroCarousel.Item>{/* Your slide content */}</HeroCarousel.Item>
+  </HeroCarousel>
+</HeroCarousel.Provider>
+```
+
+#### `HeroCarousel.Provider`
 
 The context provider that must wrap your carousel components. **All carousel configuration is passed here.**
 
 ```tsx
-<CarouselContextProvider
+<HeroCarousel.Provider
   initialIndex={0} // Initial slide index (default: 0)
   slideWidth={screenWidth} // Width of each slide (default: screen width)
   interval={3000} // Auto-scroll interval in ms
@@ -109,7 +120,7 @@ The context provider that must wrap your carousel components. **All carousel con
   autoScrollAnimation={(to, duration) => withTiming(to, { duration })} // Custom animation
 >
   {children}
-</CarouselContextProvider>
+</HeroCarousel.Provider>
 ```
 
 **Props:**
@@ -126,7 +137,7 @@ The context provider that must wrap your carousel components. **All carousel con
 
 #### `HeroCarousel`
 
-The main carousel component that renders slides. **Takes no configuration props** - all configuration is handled by the context.
+The main carousel component that renders slides. **Takes no configuration props** - all configuration is handled by the context provider.
 
 ```tsx
 <HeroCarousel>
@@ -141,6 +152,42 @@ The main carousel component that renders slides. **Takes no configuration props*
 | Prop       | Type                | Description               |
 | ---------- | ------------------- | ------------------------- |
 | `children` | `React.ReactNode[]` | Array of slide components |
+
+#### `HeroCarousel.Item`
+
+A wrapper component for individual slides. Provides slide context to child components. **Note:** This is automatically used internally when you pass children to `HeroCarousel`, but you can use it directly for more control.
+
+```tsx
+<HeroCarousel.Item>{/* Your slide content */}</HeroCarousel.Item>
+```
+
+#### `HeroCarousel.AnimatedView`
+
+A specialized animated view component that automatically handles entering/exiting animations based on carousel scroll position. Perfect for creating slide-specific animations.
+
+```tsx
+import { FadeIn, FadeOut } from 'react-native-reanimated'
+;<HeroCarousel.AnimatedView
+  entering={FadeIn.duration(400)}
+  exiting={FadeOut.duration(300)}
+  style={styles.animatedContent}
+>
+  <Text>This animates when the slide becomes active</Text>
+</HeroCarousel.AnimatedView>
+```
+
+**Props:**
+
+| Prop                      | Type                                   | Default  | Description                                              |
+| ------------------------- | -------------------------------------- | -------- | -------------------------------------------------------- |
+| `children`                | `React.ReactNode`                      | Required | Content to animate                                       |
+| `entering`                | `AnimatedProps<ViewProps>['entering']` | -        | Entering animation (from react-native-reanimated)        |
+| `exiting`                 | `AnimatedProps<ViewProps>['exiting']`  | -        | Exiting animation (from react-native-reanimated)         |
+| `layout`                  | `AnimatedProps<ViewProps>['layout']`   | -        | Layout animation (from react-native-reanimated)          |
+| `enteringThreshold`       | `number`                               | `0.99`   | Threshold (0-1) when entering animation should trigger   |
+| `exitingThreshold`        | `number`                               | `0.01`   | Threshold (0-1) when exiting animation should trigger    |
+| `keepVisibleAfterExiting` | `boolean`                              | `false`  | Keep component visible after exiting animation completes |
+| `style`                   | `AnimatedProps<ViewProps>['style']`    | -        | Additional styles                                        |
 
 ### Hooks
 
@@ -161,12 +208,12 @@ const { scrollValue, timeoutValue, slideWidth, userInteracted, setUserInteracted
 - `userInteracted`: Boolean indicating if user has interacted with carousel
 - `setUserInteracted`: Function to update interaction state
 
-#### `useHeroCarouselSlideIndex()`
+#### `useAutoCarouselSlideIndex()`
 
-Get the current slide information and auto-scroll controls.
+Get the current slide information and auto-scroll controls. Must be used within a slide component (inside `HeroCarousel`).
 
 ```tsx
-const { index, total, runAutoScroll, goToPage } = useHeroCarouselSlideIndex()
+const { index, total, runAutoScroll, goToPage } = useAutoCarouselSlideIndex()
 ```
 
 **Returns:**
@@ -216,23 +263,25 @@ Then scan the QR code with Expo Go or run on simulator. See the [example app REA
 
 ### 📱 Available Examples
 
-| Example                | Description                                         | Source Code                                                                       |
-| ---------------------- | --------------------------------------------------- | --------------------------------------------------------------------------------- |
-| **Basic Carousel**     | Simple auto-scrolling image carousel                | [`BasicExample.tsx`](./example/examples/BasicExample.tsx)                         |
-| **Animated Carousel**  | Custom animations with scale, rotation, and opacity | [`AnimatedExample.tsx`](./example/examples/AnimatedExample.tsx)                   |
-| **Video Carousel**     | Video playback with play/pause controls             | [`VideoCarouselExample.tsx`](./example/examples/VideoCarouselExample.tsx)         |
-| **Timer Pagination**   | Visual progress indicators with custom intervals    | [`TimerPaginationExample.tsx`](./example/examples/TimerPaginationExample.tsx)     |
-| **Entering Animation** | Advanced slide entrance animations                  | [`EnteringAnimationExample.tsx`](./example/examples/EnteringAnimationExample.tsx) |
-| **Offset Example**     | Custom slide positioning and spacing                | [`OffsetExample.tsx`](./example/examples/OffsetExample.tsx)                       |
+| Example                | Description                                                          | Source Code                                                                       |
+| ---------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| **Basic Carousel**     | Simple auto-scrolling image carousel                                 | [`BasicExample.tsx`](./example/examples/BasicExample.tsx)                         |
+| **Animated Carousel**  | Custom animations with scale, rotation, and opacity                  | [`AnimatedExample.tsx`](./example/examples/AnimatedExample.tsx)                   |
+| **Video Carousel**     | Video playback with play/pause controls                              | [`VideoCarouselExample.tsx`](./example/examples/VideoCarouselExample.tsx)         |
+| **Timer Pagination**   | Visual progress indicators with custom intervals                     | [`TimerPaginationExample.tsx`](./example/examples/TimerPaginationExample.tsx)     |
+| **Entering Animation** | Advanced slide entrance animations using `HeroCarousel.AnimatedView` | [`EnteringAnimationExample.tsx`](./example/examples/EnteringAnimationExample.tsx) |
+| **Offset Example**     | Custom slide positioning and spacing                                 | [`OffsetExample.tsx`](./example/examples/OffsetExample.tsx)                       |
 
 ### 🎯 Key Example Features
 
 - **Image Carousels** with smooth transitions and auto-scrolling
 - **Video Integration** with `expo-video` and playback controls
 - **Custom Animations** using `interpolateInsideCarousel` utility
+- **Entering/Exiting Animations** using `HeroCarousel.AnimatedView` component
 - **Timer-based Pagination** with visual progress bars
 - **Gesture Handling** with swipe navigation and user interaction detection
 - **Performance Optimization** with image preloading and memoization
+- **Compound Pattern** - All examples use `HeroCarousel.Provider` for configuration
 
 ### 📍 Pagination Examples
 
@@ -253,37 +302,86 @@ All pagination components automatically sync with the carousel state and support
 
 ### Configuration Examples
 
-Different carousel configurations using the context provider:
+Different carousel configurations using the compound pattern:
 
 ```tsx
 // Basic auto-scrolling carousel
-<CarouselContextProvider interval={3000}>
+<HeroCarousel.Provider interval={3000}>
   <HeroCarousel>{slides}</HeroCarousel>
-</CarouselContextProvider>
+</HeroCarousel.Provider>
 
 // Video carousel without auto-scroll
-<CarouselContextProvider disableAutoScroll>
+<HeroCarousel.Provider disableAutoScroll>
   <HeroCarousel>{videoSlides}</HeroCarousel>
-</CarouselContextProvider>
+</HeroCarousel.Provider>
 
 // Carousel with custom intervals per slide
-<CarouselContextProvider interval={(index) => (index + 1) * 2000}>
+<HeroCarousel.Provider interval={(index) => (index + 1) * 2000}>
   <HeroCarousel>{slides}</HeroCarousel>
-</CarouselContextProvider>
+</HeroCarousel.Provider>
 
 // Carousel starting from specific slide
-<CarouselContextProvider initialIndex={2} disableInfiniteScroll>
+<HeroCarousel.Provider initialIndex={2} disableInfiniteScroll>
   <HeroCarousel>{slides}</HeroCarousel>
-</CarouselContextProvider>
+</HeroCarousel.Provider>
 
 // Custom slide width and animation
-<CarouselContextProvider
+<HeroCarousel.Provider
   slideWidth={300}
   autoScrollAnimation={(to, duration) => withSpring(to, { damping: 15 })}
 >
   <HeroCarousel>{slides}</HeroCarousel>
-</CarouselContextProvider>
+</HeroCarousel.Provider>
 ```
+
+### Using HeroCarousel.AnimatedView
+
+The `HeroCarousel.AnimatedView` component automatically handles entering/exiting animations based on carousel scroll position. Perfect for creating slide-specific animations:
+
+```tsx
+import { HeroCarousel } from '@strv/react-native-hero-carousel'
+import { FadeIn, FadeOut, SlideInDown } from 'react-native-reanimated'
+
+const Slide = ({ title, image }: { title: string; image: string }) => (
+  <View style={styles.slide}>
+    <Image source={{ uri: image }} style={styles.image} />
+
+    {/* Content that animates when slide becomes active */}
+    <HeroCarousel.AnimatedView
+      entering={FadeIn.duration(400)}
+      exiting={FadeOut.duration(300)}
+      style={styles.content}
+    >
+      <Text style={styles.title}>{title}</Text>
+    </HeroCarousel.AnimatedView>
+
+    {/* Multiple animated views with different timings */}
+    <HeroCarousel.AnimatedView
+      entering={SlideInDown.duration(500).delay(200)}
+      style={styles.subtitle}
+    >
+      <Text>Subtitle with delay</Text>
+    </HeroCarousel.AnimatedView>
+  </View>
+)
+
+// Usage
+<HeroCarousel.Provider>
+  <HeroCarousel>
+    {slides.map((slide) => (
+      <Slide key={slide.id} {...slide} />
+    ))}
+  </HeroCarousel>
+</HeroCarousel.Provider>
+```
+
+**Key Features:**
+
+- Automatically triggers entering animation when slide becomes active
+- Triggers exiting animation when slide leaves view
+- Supports all Reanimated entering/exiting animations
+- Configurable thresholds for animation timing
+- Can keep content visible after exiting animation
 
 ### Programmatic Navigation
 
@@ -292,7 +390,7 @@ Control the carousel programmatically using the context:
 ```tsx
 const CarouselWithControls = () => {
   const { scrollValue, goToPage } = useCarouselContext()
-  const { runAutoScroll } = useHeroCarouselSlideIndex()
+  const { runAutoScroll } = useAutoCarouselSlideIndex()
 
   const goToNext = () => {
     runAutoScroll(0) // Immediate transition
@@ -303,7 +401,7 @@ const CarouselWithControls = () => {
   }
 
   return (
-    <CarouselContextProvider disableAutoScroll>
+    <HeroCarousel.Provider disableAutoScroll>
       <View>
         <HeroCarousel>{/* Your slides */}</HeroCarousel>
 
@@ -312,7 +410,7 @@ const CarouselWithControls = () => {
           <Button title="Next" onPress={goToNext} />
         </View>
       </View>
-    </CarouselContextProvider>
+    </HeroCarousel.Provider>
   )
 }
 ```
@@ -338,15 +436,34 @@ useEffect(() => {
 
 ## Architecture
 
+### Compound Pattern
+
+This library uses a **compound component pattern** that provides a clean, intuitive API:
+
+```tsx
+<HeroCarousel.Provider>
+  <HeroCarousel>
+    <HeroCarousel.Item>
+      <HeroCarousel.AnimatedView>{/* Your content */}</HeroCarousel.AnimatedView>
+    </HeroCarousel.Item>
+  </HeroCarousel>
+</HeroCarousel.Provider>
+```
+
 ### Context-Based Configuration
 
-This library uses a **context-based architecture** where all carousel configuration is passed to the `CarouselContextProvider` rather than individual components. This design provides several benefits:
+All carousel configuration is passed to the `HeroCarousel.Provider` rather than individual components. This design provides several benefits:
 
 ✅ **Centralized Configuration** - All settings in one place  
 ✅ **Cleaner Component API** - Components focus on rendering, not configuration  
-✅ **Easier Testing** - Mock context for isolated component testing
+✅ **Easier Testing** - Mock context for isolated component testing  
+✅ **Flexible Composition** - Components like pagination can be placed anywhere within the provider
 
-That allows for components like pagination to not be attached to the carousel component.
+The compound pattern allows for:
+
+- **Intuitive API** - Related components are grouped under `HeroCarousel.*`
+- **Better Discoverability** - All carousel-related components are accessible via autocomplete
+- **Flexible Usage** - Use `HeroCarousel.Item` and `HeroCarousel.AnimatedView` when needed, or pass children directly to `HeroCarousel`
 
 ## Troubleshooting
 
@@ -354,7 +471,7 @@ That allows for components like pagination to not be attached to the carousel co
 
 **Carousel not auto-scrolling:**
 
-- Ensure `CarouselContextProvider` wraps your carousel
+- Ensure `HeroCarousel.Provider` wraps your carousel
 - Check if `disableAutoScroll` is set to `false`
 - Verify React Native Reanimated is properly installed
 
