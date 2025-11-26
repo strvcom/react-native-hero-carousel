@@ -1,3 +1,27 @@
+# 0.1.6 (Wed Nov 26 2025)
+
+#### 🐛 Bug Fix
+
+- feat: add keepVisibleAfterExiting prop to SlideAnimatedVIew [#24](https://github.com/strvcom/react-native-hero-carousel/pull/24) (petr.konecny@strv.com)
+
+#### Authors: 1
+
+- Petr Konecny ([@petrkonecny2](https://github.com/petrkonecny2))
+
+---
+
+# 0.1.5 (Wed Nov 26 2025)
+
+#### 🐛 Bug Fix
+
+- fix: fixed crash when manually scrolling [#23](https://github.com/strvcom/react-native-hero-carousel/pull/23) (petr.konecny@strv.com)
+
+#### Authors: 1
+
+- Petr Konecny ([@petrkonecny2](https://github.com/petrkonecny2))
+
+---
+
 # 0.1.4 (Mon Aug 04 2025)
 
 #### 🐛 Bug Fix

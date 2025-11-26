@@ -14,11 +14,13 @@ export const useManualScroll = ({
   const scrollValue = useSharedValue(initialIndex)
 
   const goToPage = useCallback(
-    (page: number, duration = 0, animation = DEFAULT_ANIMATION) => {
+    (page: number, duration = 0, animation?: typeof DEFAULT_ANIMATION) => {
       'worklet'
       const to = page * slideWidth
       if (duration) {
-        manualScrollValue.value = { value: animation(to, duration) }
+        manualScrollValue.value = {
+          value: animation ? animation(to, duration) : withTiming(to, { duration }),
+        }
       } else {
         manualScrollValue.value = { value: to }
       }
