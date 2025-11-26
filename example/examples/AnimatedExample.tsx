@@ -1,9 +1,4 @@
-import {
-  HeroCarousel,
-  interpolateInsideCarousel,
-  useCarouselContext,
-  useAutoCarouselSlideIndex,
-} from '@strv/react-native-hero-carousel'
+import { HeroCarousel, useInterpolateInsideCarousel } from '@strv/react-native-hero-carousel'
 import { SafeAreaView, StyleSheet, View, Text, Dimensions } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -23,17 +18,14 @@ const getRandomImageUrl = () => {
 const images = Array.from({ length: 5 }, getRandomImageUrl)
 
 const Slide = ({ image, title, index }: { image: string; title: string; index: number }) => {
-  const { scrollValue } = useCarouselContext()
-  const { index: slideIndex, total } = useAutoCarouselSlideIndex()
+  const progress = useInterpolateInsideCarousel({
+    valueBefore: 0,
+    thisValue: 1,
+    valueAfter: 0,
+    offset: 0.2,
+  })
 
   const rStyle = useAnimatedStyle(() => {
-    const progress = interpolateInsideCarousel(scrollValue.value, slideIndex, total, {
-      valueBefore: 0,
-      thisValue: 1,
-      valueAfter: 0,
-      offset: 0.2,
-    })
-
     return {
       flex: 1,
       width: '100%',
@@ -43,13 +35,13 @@ const Slide = ({ image, title, index }: { image: string; title: string; index: n
       transformOrigin: 'center',
       transform: [
         {
-          scale: interpolate(progress, [0, 1], [0.8, 1], Extrapolation.CLAMP),
+          scale: interpolate(progress.value, [0, 1], [0.8, 1], Extrapolation.CLAMP),
         },
         {
-          rotate: `${interpolate(progress, [0, 1], [-15, 0], Extrapolation.CLAMP)}deg`,
+          rotate: `${interpolate(progress.value, [0, 1], [-15, 0], Extrapolation.CLAMP)}deg`,
         },
       ],
-      opacity: progress,
+      opacity: progress.value,
     }
   })
 

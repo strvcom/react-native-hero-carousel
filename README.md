@@ -223,29 +223,51 @@ const { index, total, runAutoScroll, goToPage } = useAutoCarouselSlideIndex()
 - `runAutoScroll`: Function to manually trigger auto-scroll with custom interval
 - `goToPage`: Function to programmatically navigate to a specific slide from another slide
 
-### Utilities
+#### `useInterpolateInsideCarousel()`
 
-#### `interpolateInsideCarousel()`
-
-Advanced interpolation utility for creating custom slide animations.
+Hook for creating custom slide animations with automatic interpolation based on carousel scroll position. Must be used within a slide component (inside `HeroCarousel`). Returns a `SharedValue` that you can use in animated styles.
 
 ```tsx
-import { interpolateInsideCarousel } from '@strv/react-native-hero-carousel'
+import { useInterpolateInsideCarousel } from '@strv/react-native-hero-carousel'
+import Animated, { useAnimatedStyle, interpolate, Extrapolation } from 'react-native-reanimated'
 
-const animatedStyle = useAnimatedStyle(() => {
-  const progress = interpolateInsideCarousel(scrollValue.value, slideIndex, total, {
+const Slide = () => {
+  const progress = useInterpolateInsideCarousel({
     valueBefore: 0, // Value for slides before current
     thisValue: 1, // Value for current slide
     valueAfter: 0, // Value for slides after current
     offset: 0.2, // Animation offset (optional)
   })
 
-  return {
-    opacity: progress,
-    transform: [{ scale: progress }],
-  }
-})
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: progress.value,
+      transform: [
+        {
+          scale: interpolate(progress.value, [0, 1], [0.8, 1], Extrapolation.CLAMP),
+        },
+      ],
+    }
+  })
+
+  return <Animated.View style={animatedStyle}>{/* Your content */}</Animated.View>
+}
 ```
+
+**Returns:**
+
+A `SharedValue` (from `useDerivedValue`) representing the interpolated progress value (0-1) based on the current slide's position in the carousel. Access the value using `.value` in animated styles or worklet functions.
+
+**Parameters:**
+
+| Parameter     | Type     | Default  | Description                                                      |
+| ------------- | -------- | -------- | ---------------------------------------------------------------- |
+| `valueBefore` | `number` | Required | Value to use for slides before the current slide                 |
+| `thisValue`   | `number` | Required | Value to use for the current slide                               |
+| `valueAfter`  | `number` | Required | Value to use for slides after the current slide                  |
+| `offset`      | `number` | `0`      | Animation offset (0-1) to control when the animation starts/ends |
+
+**Note:** The `interpolateInsideCarousel` utility function is now internal-only. Use this hook instead for all custom animations. The hook automatically handles the slide context (index, total, scrollValue) internally.
 
 ## Examples
 
@@ -276,7 +298,7 @@ Then scan the QR code with Expo Go or run on simulator. See the [example app REA
 
 - **Image Carousels** with smooth transitions and auto-scrolling
 - **Video Integration** with `expo-video` and playback controls
-- **Custom Animations** using `interpolateInsideCarousel` utility
+- **Custom Animations** using `useInterpolateInsideCarousel` hook
 - **Entering/Exiting Animations** using `HeroCarousel.AnimatedView` component
 - **Timer-based Pagination** with visual progress bars
 - **Gesture Handling** with swipe navigation and user interaction detection

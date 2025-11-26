@@ -1,8 +1,12 @@
-import { HeroCarousel, useAutoCarouselSlideIndex } from '@strv/react-native-hero-carousel'
+import {
+  HeroCarousel,
+  useAutoCarouselSlideIndex,
+  useActiveItemEffect,
+  useIsActiveItem,
+} from '@strv/react-native-hero-carousel'
 import { SafeAreaView, StyleSheet, View, Text, Pressable, Dimensions, Platform } from 'react-native'
 import { useVideoPlayer, VideoView } from 'expo-video'
 import { LinearGradient } from 'expo-linear-gradient'
-import { useActiveSlideEffect, useIsActiveSlide } from '@/hooks/useActiveSlideEffect'
 import { useEffect, useRef, useState } from 'react'
 import { TimerPagination } from './components/TimerPagination'
 import { useEvent, useEventListener } from 'expo'
@@ -26,9 +30,9 @@ const videoTitles = [
 const Slide = ({ videoUri, title, index }: { videoUri: string; title: string; index: number }) => {
   const player = useVideoPlayer(videoUri)
   const { runAutoScroll } = useAutoCarouselSlideIndex()
-  const isActiveSlide = useIsActiveSlide()
+  const isActiveSlide = useIsActiveItem()
   const [duration, setDuration] = useState(0)
-  useActiveSlideEffect(() => {
+  useActiveItemEffect(() => {
     player.currentTime = 0
     player.play()
     return () => {

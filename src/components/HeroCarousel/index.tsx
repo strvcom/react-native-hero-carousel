@@ -6,7 +6,7 @@ import { HeroCarouselAdapter } from '../AnimatedPagedView/Adapter'
 import { useAutoScroll } from '../../hooks/useAutoScroll'
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 import { DEFAULT_INTERVAL } from './index.preset'
-import { SlideAnimatedView } from 'components/SlideAnimatedView'
+import { SlideAnimatedView } from '../SlideAnimatedView'
 
 export type HeroCarouselProps = {
   children: React.ReactNode[]

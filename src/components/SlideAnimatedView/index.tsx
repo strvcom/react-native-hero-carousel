@@ -1,13 +1,12 @@
-import { useAutoCarouselSlideIndex, useCarouselContext } from '../../context'
 import Animated, {
   useDerivedValue,
   useAnimatedReaction,
   runOnJS,
   AnimatedProps,
 } from 'react-native-reanimated'
-import { interpolateInsideCarousel } from '../../utils'
 import { useState } from 'react'
 import { ViewProps } from 'react-native'
+import { useInterpolateInsideCarousel } from '../../hooks/useInterpolateInsideCarousel'
 
 type SlideAnimatedViewProps = {
   children: React.ReactNode
@@ -30,17 +29,16 @@ export const SlideAnimatedView = ({
   keepVisibleAfterExiting = false,
   style,
 }: SlideAnimatedViewProps) => {
-  const { index, total } = useAutoCarouselSlideIndex()
-  const { scrollValue } = useCarouselContext()
+  const progress = useInterpolateInsideCarousel({
+    valueBefore: 0,
+    thisValue: 1,
+    valueAfter: 0,
+  })
   const [shouldShow, setShouldShow] = useState(false)
 
   const value = useDerivedValue(() => {
-    return interpolateInsideCarousel(scrollValue.value, index, total, {
-      valueBefore: 0,
-      thisValue: 1,
-      valueAfter: 0,
-    })
-  }, [index, total, scrollValue])
+    return progress.value
+  }, [progress])
 
   // Track when value becomes 1 to trigger entering animation
   useAnimatedReaction(
