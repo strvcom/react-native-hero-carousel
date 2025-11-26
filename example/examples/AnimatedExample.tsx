@@ -3,7 +3,6 @@ import {
   interpolateInsideCarousel,
   useCarouselContext,
   useAutoCarouselSlideIndex,
-  CarouselContextProvider,
 } from '@strv/react-native-hero-carousel'
 import { SafeAreaView, StyleSheet, View, Text, Dimensions } from 'react-native'
 import { Image } from 'expo-image'
@@ -75,7 +74,7 @@ export default function AnimatedExample() {
   }, [])
 
   return (
-    <CarouselContextProvider>
+    <HeroCarousel.Provider>
       <SafeAreaView style={styles.container}>
         <View style={styles.carouselContainer}>
           <HeroCarousel>
@@ -88,7 +87,7 @@ export default function AnimatedExample() {
           <Pagination total={images.length} />
         </View>
       </SafeAreaView>
-    </CarouselContextProvider>
+    </HeroCarousel.Provider>
   )
 }
 

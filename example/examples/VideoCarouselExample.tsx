@@ -1,8 +1,4 @@
-import {
-  HeroCarousel,
-  CarouselContextProvider,
-  useAutoCarouselSlideIndex,
-} from '@strv/react-native-hero-carousel'
+import { HeroCarousel, useAutoCarouselSlideIndex } from '@strv/react-native-hero-carousel'
 import { SafeAreaView, StyleSheet, View, Text, Pressable, Dimensions, Platform } from 'react-native'
 import { useVideoPlayer, VideoView } from 'expo-video'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -89,7 +85,7 @@ const Slide = ({ videoUri, title, index }: { videoUri: string; title: string; in
 
 export default function VideoCarouselExample() {
   return (
-    <CarouselContextProvider disableAutoScroll={true}>
+    <HeroCarousel.Provider disableAutoScroll={true}>
       <SafeAreaView style={styles.container}>
         <View style={styles.container}>
           <HeroCarousel>
@@ -100,7 +96,7 @@ export default function VideoCarouselExample() {
           <TimerPagination total={videos.length} hideProgressOnInteraction={false} />
         </View>
       </SafeAreaView>
-    </CarouselContextProvider>
+    </HeroCarousel.Provider>
   )
 }
 

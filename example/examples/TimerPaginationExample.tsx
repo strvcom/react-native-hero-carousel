@@ -1,8 +1,4 @@
-import {
-  HeroCarousel,
-  CarouselContextProvider,
-  useAutoCarouselSlideIndex,
-} from '@strv/react-native-hero-carousel'
+import { HeroCarousel, useAutoCarouselSlideIndex } from '@strv/react-native-hero-carousel'
 import { SafeAreaView, StyleSheet, View, Text, Dimensions } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -63,7 +59,7 @@ export default function TimerPaginationExample() {
   }
 
   return (
-    <CarouselContextProvider interval={getInterval}>
+    <HeroCarousel.Provider interval={getInterval}>
       <SafeAreaView style={styles.container}>
         <View style={styles.container}>
           <HeroCarousel>
@@ -80,7 +76,7 @@ export default function TimerPaginationExample() {
           <TimerPagination total={images.length} hideProgressOnInteraction />
         </View>
       </SafeAreaView>
-    </CarouselContextProvider>
+    </HeroCarousel.Provider>
   )
 }
 

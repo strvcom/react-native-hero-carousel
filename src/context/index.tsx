@@ -1,2 +1,2 @@
-export * from './CarouselContext'
+export { useCarouselContext } from './CarouselContext'
 export * from './SlideContext'
