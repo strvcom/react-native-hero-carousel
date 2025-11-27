@@ -1,6 +1,6 @@
 {
   "name": "@strv/react-native-hero-carousel",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "homepage": "https://github.com/strvcom/react-native-hero-carousel",
   "description": "A customizable hero carousel component for React Native",
   "bugs": {
