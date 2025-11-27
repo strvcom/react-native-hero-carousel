@@ -1,5 +1,5 @@
 import { View } from 'react-native'
-import { AutoCarouselSlideContext } from '../../context/SlideContext'
+import { ItemContext } from '../../context/ItemContext'
 import { useAutoScroll } from '../../hooks/useAutoScroll'
 import { useMemo } from 'react'
 import { useManualScroll } from '../../hooks/useManualScroll'
@@ -21,14 +21,14 @@ export const HeroCarouselSlide = ({
 }) => {
   return (
     <View style={{ flex: 1, width, minWidth: width }}>
-      <AutoCarouselSlideContext.Provider
+      <ItemContext.Provider
         value={useMemo(
           () => ({ index, total, runAutoScroll, goToPage }),
           [index, total, runAutoScroll, goToPage],
         )}
       >
         {children}
-      </AutoCarouselSlideContext.Provider>
+      </ItemContext.Provider>
     </View>
   )
 }

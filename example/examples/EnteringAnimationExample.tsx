@@ -1,8 +1,4 @@
-import {
-  HeroCarousel,
-  CarouselContextProvider,
-  SlideAnimatedView,
-} from '@strv/react-native-hero-carousel'
+import { HeroCarousel } from '@strv/react-native-hero-carousel'
 import { SafeAreaView, StyleSheet, View, Text, Dimensions } from 'react-native'
 import { Image } from 'expo-image'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -36,17 +32,17 @@ const Slide = ({ image, title, index }: { image: string; title: string; index: n
       <Image source={{ uri: image }} style={styles.image} contentFit="cover" transition={200} />
       <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.gradient}>
         <View style={styles.text}>
-          <SlideAnimatedView style={styles.textContainer} {...animationConfig}>
+          <HeroCarousel.AnimatedView style={styles.textContainer} {...animationConfig}>
             <Text style={styles.title}>{title}</Text>
-          </SlideAnimatedView>
-          <SlideAnimatedView
+          </HeroCarousel.AnimatedView>
+          <HeroCarousel.AnimatedView
             style={styles.textContainer}
             entering={FadeIn.duration(400).delay(200)}
           >
             <Text style={styles.subtitle}>
               Animation: {animationNames[index % animationNames.length]}
             </Text>
-          </SlideAnimatedView>
+          </HeroCarousel.AnimatedView>
         </View>
       </LinearGradient>
     </View>
@@ -60,7 +56,7 @@ export default function EnteringAnimationExample() {
   }, [])
 
   return (
-    <CarouselContextProvider>
+    <HeroCarousel.Provider>
       <SafeAreaView style={styles.container}>
         <View style={styles.container}>
           <HeroCarousel>
@@ -70,7 +66,7 @@ export default function EnteringAnimationExample() {
           </HeroCarousel>
         </View>
       </SafeAreaView>
-    </CarouselContextProvider>
+    </HeroCarousel.Provider>
   )
 }
 

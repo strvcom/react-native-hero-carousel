@@ -20,7 +20,7 @@ export class PausableTimeout {
   callbackStartTime: number = 0
   remaining: number = 0
   paused: boolean = false
-  timerId: NodeJS.Timeout | null = null
+  timerId: ReturnType<typeof setTimeout> | null = null
   onPause?: (remaining: number) => void = () => {}
   onResume?: (remaining: number) => void = () => {}
   _callback: () => void

@@ -1,2 +1,1 @@
-export * from './HeroCarousel'
-export * from './SlideAnimatedView'
+export { HeroCarousel, HeroCarouselProps } from './HeroCarousel'

@@ -1,17 +1,18 @@
 import React from 'react'
 
-import { useCarouselContext } from '../../context/CarouselContext'
+import { CarouselContextProvider, useCarouselContext } from '../../context/CarouselContext'
 import { HeroCarouselSlide } from '../HeroCarouselSlide'
 import { HeroCarouselAdapter } from '../AnimatedPagedView/Adapter'
 import { useAutoScroll } from '../../hooks/useAutoScroll'
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 import { DEFAULT_INTERVAL } from './index.preset'
+import { ItemAnimatedView } from '../ItemAnimatedView'
 
 export type HeroCarouselProps = {
   children: React.ReactNode[]
 }
 
-export const HeroCarousel = ({ children }: HeroCarouselProps) => {
+const HeroCarousel = ({ children }: HeroCarouselProps) => {
   const {
     scrollValue,
     userInteracted,
@@ -72,3 +73,9 @@ export const HeroCarousel = ({ children }: HeroCarouselProps) => {
     </>
   )
 }
+
+HeroCarousel.AnimatedView = ItemAnimatedView
+HeroCarousel.Provider = CarouselContextProvider
+HeroCarousel.Item = HeroCarouselSlide
+
+export { HeroCarousel }
