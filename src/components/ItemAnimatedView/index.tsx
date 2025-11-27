@@ -8,7 +8,7 @@ import { useState } from 'react'
 import { ViewProps } from 'react-native'
 import { useInterpolateInsideCarousel } from '../../hooks/useInterpolateInsideCarousel'
 
-type SlideAnimatedViewProps = {
+type ItemAnimatedViewProps = {
   children: React.ReactNode
   entering?: AnimatedProps<ViewProps>['entering']
   exiting?: AnimatedProps<ViewProps>['exiting']
@@ -19,7 +19,7 @@ type SlideAnimatedViewProps = {
   keepVisibleAfterExiting?: boolean
 }
 
-export const SlideAnimatedView = ({
+export const ItemAnimatedView = ({
   children,
   entering,
   exiting,
@@ -28,7 +28,7 @@ export const SlideAnimatedView = ({
   exitingThreshold = 0.01,
   keepVisibleAfterExiting = false,
   style,
-}: SlideAnimatedViewProps) => {
+}: ItemAnimatedViewProps) => {
   const progress = useInterpolateInsideCarousel({
     valueBefore: 0,
     thisValue: 1,

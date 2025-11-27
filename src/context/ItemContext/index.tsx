@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react'
 import { useAutoScroll } from '../../hooks/useAutoScroll'
 import { useManualScroll } from '../../hooks/useManualScroll'
 
-export const HeroCarouselSlideContext = createContext<{
+export const ItemContext = createContext<{
   index: number
   total: number
   runAutoScroll: ReturnType<typeof useAutoScroll>['runAutoScroll']
@@ -10,7 +10,7 @@ export const HeroCarouselSlideContext = createContext<{
 } | null>(null)
 
 export const useAutoCarouselSlideIndex = () => {
-  const context = useContext(HeroCarouselSlideContext)
+  const context = useContext(ItemContext)
   if (!context) {
     throw new Error('useAutoCarouselSlideIndex must be used within a AutoCarouselSlide')
   }
