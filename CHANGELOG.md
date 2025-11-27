@@ -1,3 +1,15 @@
+# 0.1.8 (Thu Nov 27 2025)
+
+#### 🐛 Bug Fix
+
+- chore: introduce compound pattern for components [#25](https://github.com/strvcom/react-native-hero-carousel/pull/25) (petr.konecny@strv.com)
+
+#### Authors: 1
+
+- Petr Konecny ([@petrkonecny2](https://github.com/petrkonecny2))
+
+---
+
 # 0.1.7 (Wed Nov 26 2025)
 
 #### 🐛 Bug Fix
