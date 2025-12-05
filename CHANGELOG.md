@@ -1,3 +1,15 @@
+# 0.1.9 (Fri Dec 05 2025)
+
+#### 🐛 Bug Fix
+
+- fix: useActiveItemEffect param type [#26](https://github.com/strvcom/react-native-hero-carousel/pull/26) (petr.konecny@strv.com)
+
+#### Authors: 1
+
+- Petr Konecny ([@petrkonecny2](https://github.com/petrkonecny2))
+
+---
+
 # 0.1.8 (Thu Nov 27 2025)
 
 #### 🐛 Bug Fix
