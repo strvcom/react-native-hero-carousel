@@ -23,7 +23,7 @@ export const useIsActiveItem = () => {
   return isActive
 }
 
-export const useActiveItemEffect = (effectFunc: () => () => void | undefined, deps: any[] = []) => {
+export const useActiveItemEffect = (effectFunc: () => void | undefined, deps: any[] = []) => {
   const progress = useInterpolateInsideCarousel({
     valueBefore: 0,
     thisValue: 1,
