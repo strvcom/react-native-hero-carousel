@@ -16,7 +16,7 @@ export const useManualScroll = ({
   const goToPage = useCallback(
     (page: number, duration = 0, animation?: typeof DEFAULT_ANIMATION) => {
       'worklet'
-      const to = page * slideWidth
+      const to = Math.round(page) * slideWidth
       if (duration) {
         manualScrollValue.value = {
           value: animation ? animation(to, duration) : withTiming(to, { duration }),
