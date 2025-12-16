@@ -22,6 +22,9 @@ type AnimatedPagedViewProps = {
   children: React.ReactNode
 }
 
+// easiest way to allow other gestures to work, for example the scroll view
+const MIN_DISTANCE_THRESHOLD = 30
+
 export const AnimatedPagedView = forwardRef<AnimatedPagedScrollViewRef, AnimatedPagedViewProps>(
   (props, ref) => {
     const translateX = useSharedValue(0)
@@ -38,6 +41,7 @@ export const AnimatedPagedView = forwardRef<AnimatedPagedScrollViewRef, Animated
     )
 
     const gesture = Gesture.Pan()
+      .minDistance(MIN_DISTANCE_THRESHOLD)
       .onStart(() => {
         context.value = { x: translateX.value }
         runOnJS(props.onScrollBeginDrag)()
