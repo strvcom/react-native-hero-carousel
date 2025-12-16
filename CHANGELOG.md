@@ -1,3 +1,15 @@
+# 0.1.10 (Tue Dec 16 2025)
+
+#### 🐛 Bug Fix
+
+- fix: round value on go to and scroll view interaction [#27](https://github.com/strvcom/react-native-hero-carousel/pull/27) (petr.konecny@strv.com)
+
+#### Authors: 1
+
+- Petr Konecny ([@petrkonecny2](https://github.com/petrkonecny2))
+
+---
+
 # 0.1.9 (Fri Dec 05 2025)
 
 #### 🐛 Bug Fix
