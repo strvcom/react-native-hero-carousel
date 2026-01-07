@@ -1,3 +1,17 @@
+# 0.1.11 (Wed Jan 07 2026)
+
+#### 🐛 Bug Fix
+
+- chore: manual sync version and remove prepush [#30](https://github.com/strvcom/react-native-hero-carousel/pull/30) (petr.konecny@strv.com)
+- chore: manual sync version [#29](https://github.com/strvcom/react-native-hero-carousel/pull/29) (petr.konecny@strv.com)
+- chore: switch to trusted publishing [#28](https://github.com/strvcom/react-native-hero-carousel/pull/28) (petr.konecny@strv.com)
+
+#### Authors: 1
+
+- Petr Konecny ([@petrkonecny2](https://github.com/petrkonecny2))
+
+---
+
 # 0.1.10 (Tue Dec 16 2025)
 
 #### 🐛 Bug Fix
