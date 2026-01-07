@@ -23,6 +23,7 @@ jobs:
       pull-requests: write
       contents: write
       deployments: write
+      id-token: write
     environment:
       name: npm
       url: https://www.npmjs.com/package/@strv/react-native-hero-carousel
@@ -33,10 +34,10 @@ jobs:
           ssh-key: ${{ secrets.SSH_KEY }}
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: 'yarn'
+          registry-url: 'https://registry.npmjs.org'
       - run: yarn install
       - env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx auto shipit
+        run: unset NODE_AUTH_TOKEN && npx auto shipit
