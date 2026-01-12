@@ -90,7 +90,7 @@ export const AnimatedPagedView = forwardRef<AnimatedPagedScrollViewRef, Animated
 
     return (
       <GestureDetector gesture={gesture}>
-        <Animated.View style={[styles.container]}>
+        <Animated.View style={styles.container}>
           <Animated.View style={[styles.contentContainer, animatedStyle]}>
             {props.children}
           </Animated.View>

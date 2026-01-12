@@ -4,7 +4,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    overflow: 'hidden',
+    overflow: 'visible',
   },
   contentContainer: {
     flexDirection: 'row',
