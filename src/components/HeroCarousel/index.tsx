@@ -7,6 +7,7 @@ import { useAutoScroll } from '../../hooks/useAutoScroll'
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 import { DEFAULT_INTERVAL } from './index.preset'
 import { ItemAnimatedView } from '../ItemAnimatedView'
+import { useWindowDimensions, View } from 'react-native'
 
 export type HeroCarouselProps = {
   children: React.ReactNode[]
@@ -32,6 +33,7 @@ const HeroCarousel = ({ children }: HeroCarouselProps) => {
     scrollValue,
     disabled: disableInfiniteScroll,
   })
+  const { width: windowWidth } = useWindowDimensions()
 
   const autoScrollEnabled = !userInteracted
 
@@ -49,7 +51,7 @@ const HeroCarousel = ({ children }: HeroCarouselProps) => {
   })
 
   return (
-    <>
+    <View style={{ flex: 1, marginLeft: (windowWidth - slideWidth) / 2 }}>
       <HeroCarouselAdapter
         manualScrollValue={manualScrollValue}
         onScroll={(activeIndex: number) => {
@@ -70,7 +72,7 @@ const HeroCarousel = ({ children }: HeroCarouselProps) => {
           </HeroCarouselSlide>
         ))}
       </HeroCarouselAdapter>
-    </>
+    </View>
   )
 }
 

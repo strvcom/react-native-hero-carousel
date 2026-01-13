@@ -1,1 +1,1 @@
-export { HeroCarousel, HeroCarouselProps } from './HeroCarousel'
+export { HeroCarousel, type HeroCarouselProps } from './HeroCarousel'
