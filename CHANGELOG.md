@@ -1,3 +1,15 @@
+# 0.1.15 (Sat Oct 10 2026)
+
+#### 🐛 Bug Fix
+
+- fix: support reanimated 4 and add renderWindow for long carousels [#32](https://github.com/strvcom/react-native-hero-carousel/pull/32) (petr.konecny@strv.com)
+
+#### Authors: 1
+
+- Petr Konecny ([@petrkonecny2](https://github.com/petrkonecny2))
+
+---
+
 # 0.1.14 (Sat Oct 10 2026)
 
 #### 🐛 Bug Fix
