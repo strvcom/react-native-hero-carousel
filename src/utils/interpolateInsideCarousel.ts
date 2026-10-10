@@ -39,17 +39,27 @@ export const interpolateInsideCarousel = (
 
   const adjustedIndex = getAdjustedIndex(slideIndex)
 
-  const inputRange = Array.from({ length: totalLength }).map((_, index) => {
+  // Only the points around the slide and around its clone change the result. Every other point
+  // sits on a flat stretch between two of these, so leaving it out gives the same value, and the
+  // work no longer grows with the number of slides.
+  const indexes: number[] = []
+  for (const center of [slideIndex, adjustedIndex]) {
+    for (let index = center - 1; index <= center + 1; index++) {
+      if (index >= 0 && index < totalLength && !indexes.includes(index)) indexes.push(index)
+    }
+  }
+  indexes.sort((a, b) => a - b)
+
+  const inputRange = indexes.map((index) => {
     if (index < slideIndex) return index + offset
     if (index > slideIndex) return index - offset
     return index
   })
-  const outputValues = inputRange.map((_, index) => {
+  const outputValues = indexes.map((index) => {
     if (index === adjustedIndex) return thisValue
     if (index === slideIndex) return thisValue
     if (index < slideIndex) return valueAfter
-    if (index > slideIndex) return valueBefore
-    return 0
+    return valueBefore
   })
 
   return interpolate(scrollValue, inputRange, outputValues, Extrapolation.CLAMP)

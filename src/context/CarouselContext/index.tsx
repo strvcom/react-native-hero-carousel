@@ -39,8 +39,6 @@ type ContextProps = {
   interval?: number | ((index: number) => number)
   disableAutoScroll?: boolean
   autoScrollAnimation?: (to: number, duration: number) => number
-  /** Slides kept mounted on each side of the current one. Mounts every slide when omitted. */
-  renderWindow?: number
   /** Centres the current slide when `slideWidth` is narrower than the carousel, so its neighbours peek in on both sides. */
   centerSlide?: boolean
 }
@@ -52,7 +50,6 @@ export const CarouselContextProvider = ({
   interval = DEFAULT_INTERVAL,
   disableAutoScroll = false,
   autoScrollAnimation = DEFAULT_ANIMATION,
-  renderWindow,
   centerSlide = false,
   ...rest
 }: ContextProps) => {
@@ -75,7 +72,6 @@ export const CarouselContextProvider = ({
           interval,
           disableAutoScroll,
           autoScrollAnimation,
-          renderWindow,
           centerSlide,
         }),
         [
@@ -86,7 +82,6 @@ export const CarouselContextProvider = ({
           interval,
           disableAutoScroll,
           autoScrollAnimation,
-          renderWindow,
           centerSlide,
         ],
       )}

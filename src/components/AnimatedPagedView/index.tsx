@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useImperativeHandle } from 'react'
+import React, { forwardRef, useCallback, useImperativeHandle, useMemo } from 'react'
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -22,8 +22,10 @@ type AnimatedPagedViewProps = {
   children: React.ReactNode
 }
 
-// easiest way to allow other gestures to work, for example the scroll view
-const MIN_DISTANCE_THRESHOLD = 30
+// The pan starts only after this much horizontal movement, and gives way to a vertical scroll after
+// this much vertical movement, so a parent scroll view keeps its gestures.
+const ACTIVE_OFFSET_X = 10
+const FAIL_OFFSET_Y = 10
 
 export const AnimatedPagedView = forwardRef<AnimatedPagedScrollViewRef, AnimatedPagedViewProps>(
   (props, ref) => {
@@ -46,27 +48,36 @@ export const AnimatedPagedView = forwardRef<AnimatedPagedScrollViewRef, Animated
       [slideCount, slideWidth],
     )
 
-    const gesture = Gesture.Pan()
-      .minDistance(MIN_DISTANCE_THRESHOLD)
-      .onStart(() => {
-        context.value = { x: translateX.value }
-        runOnJS(onScrollBeginDrag)()
-      })
-      .onUpdate((event) => {
-        translateX.value = clampValue(context.value.x - event.translationX)
-      })
-      .onEnd((event) => {
-        const velocity = event.velocityX
-        const currentPage = Math.round(translateX.value / slideWidth)
-        const targetPage =
-          velocity > 500 ? currentPage - 1 : velocity < -500 ? currentPage + 1 : currentPage
-        // in case the gesture overshoots, snap to the nearest page
-        if (Math.abs(context.value.x - translateX.value) > slideWidth / 2) {
-          translateX.value = withTiming(clampValue(currentPage * slideWidth))
-        } else {
-          translateX.value = withTiming(clampValue(targetPage * slideWidth))
-        }
-      })
+    // Memoized, because a gesture rebuilt mid-drag (the carousel re-renders while it's dragged)
+    // can disturb the drag in progress.
+    const gesture = useMemo(
+      () =>
+        Gesture.Pan()
+          .activeOffsetX([-ACTIVE_OFFSET_X, ACTIVE_OFFSET_X])
+          .failOffsetY([-FAIL_OFFSET_Y, FAIL_OFFSET_Y])
+          .onStart((event) => {
+            // The finger has already moved by the time the pan starts. Counting that movement in
+            // keeps the row where it is, instead of jumping to catch up with the finger.
+            context.value = { x: translateX.value + event.translationX }
+            runOnJS(onScrollBeginDrag)()
+          })
+          .onUpdate((event) => {
+            translateX.value = clampValue(context.value.x - event.translationX)
+          })
+          .onEnd((event) => {
+            const velocity = event.velocityX
+            const currentPage = Math.round(translateX.value / slideWidth)
+            const targetPage =
+              velocity > 500 ? currentPage - 1 : velocity < -500 ? currentPage + 1 : currentPage
+            // in case the gesture overshoots, snap to the nearest page
+            if (Math.abs(context.value.x - translateX.value) > slideWidth / 2) {
+              translateX.value = withTiming(clampValue(currentPage * slideWidth))
+            } else {
+              translateX.value = withTiming(clampValue(targetPage * slideWidth))
+            }
+          }),
+      [clampValue, context, onScrollBeginDrag, slideWidth, translateX],
+    )
 
     const animatedStyle = useAnimatedStyle(() => {
       const clampedTranslateX = clampValue(translateX.value)
