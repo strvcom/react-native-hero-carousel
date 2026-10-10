@@ -26,6 +26,8 @@ export const useInfiniteScroll = ({
     () => [childrenArray[childrenArray.length - 1], ...childrenArray, childrenArray[0]],
     [childrenArray],
   )
+  // Worklets must not capture the array of React elements, only its length.
+  const paddedLength = paddedChildrenArray.length
   // This handles the infinite scrolling
   useAnimatedReaction(
     () => scrollValue.value,
@@ -34,16 +36,16 @@ export const useInfiniteScroll = ({
       const activeIndex = customRound(offset, ROUNDING_PRECISION)
       // if we are at the last index we need to switch to the second one without animation
       // second one because the first one is a clone of the last one
-      if (activeIndex >= paddedChildrenArray.length - 1) {
+      if (activeIndex >= paddedLength - 1) {
         goToPage(1)
       }
       // if we are at the first index we need to switch to the next to last one without animation
       // next to last one because the last one is a clone of the first one
       if (activeIndex <= 0.01) {
-        goToPage(paddedChildrenArray.length - 2, 0)
+        goToPage(paddedLength - 2, 0)
       }
     },
-    [childrenArray.length, goToPage, paddedChildrenArray.length, slideWidth, scrollValue],
+    [goToPage, paddedLength, slideWidth, scrollValue],
   )
 
   return useMemo(
