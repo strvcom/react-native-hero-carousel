@@ -134,6 +134,7 @@ The context provider that must wrap your carousel components. **All carousel con
 | `disableInfiniteScroll` | `boolean`                                  | `false`      | Disable infinite scrolling (shows first/last slide boundaries)                      |
 | `autoScrollAnimation`   | `(to: number, duration: number) => number` | `withTiming` | Custom animation function for auto-scroll transitions                               |
 | `renderWindow`          | `number`                                   | all slides   | Slides kept mounted on each side of the current one; for long carousels             |
+| `centerSlide`           | `boolean`                                  | `false`      | Centre the current slide when `slideWidth` is narrower, so neighbours peek in       |
 | `children`              | `React.ReactNode`                          | Required     | Carousel content (should contain HeroCarousel component)                            |
 
 #### `HeroCarousel`
@@ -354,6 +355,18 @@ Different carousel configurations using the compound pattern:
   autoScrollAnimation={(to, duration) => withSpring(to, { damping: 15 })}
 >
   <HeroCarousel>{slides}</HeroCarousel>
+</HeroCarousel.Provider>
+
+// Centred slides with the neighbours peeking in on both sides.
+// Put the gap between slides inside each slide (half on each side), so the content stays centred.
+<HeroCarousel.Provider slideWidth={300} centerSlide disableInfiniteScroll disableAutoScroll>
+  <HeroCarousel>
+    {slides.map((slide) => (
+      <View key={slide.id} style={{ paddingHorizontal: 6 }}>
+        <Slide {...slide} />
+      </View>
+    ))}
+  </HeroCarousel>
 </HeroCarousel.Provider>
 ```
 
