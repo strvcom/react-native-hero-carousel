@@ -1,10 +1,10 @@
 import { View } from 'react-native'
 import { ItemContext } from '../../context/ItemContext'
 import { useAutoScroll } from '../../hooks/useAutoScroll'
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { useManualScroll } from '../../hooks/useManualScroll'
 
-export const HeroCarouselSlide = ({
+export const HeroCarouselSlide = memo(function HeroCarouselSlide({
   children,
   width,
   index,
@@ -18,7 +18,7 @@ export const HeroCarouselSlide = ({
   total: number
   runAutoScroll: ReturnType<typeof useAutoScroll>['runAutoScroll']
   goToPage: ReturnType<typeof useManualScroll>['goToPage']
-}) => {
+}) {
   return (
     <View style={{ flex: 1, width, minWidth: width }}>
       <ItemContext.Provider
@@ -31,4 +31,4 @@ export const HeroCarouselSlide = ({
       </ItemContext.Provider>
     </View>
   )
-}
+})
