@@ -1,3 +1,16 @@
+# 0.1.16 (Sat Oct 10 2026)
+
+#### 🐛 Bug Fix
+
+- feat: add centerSlide to centre narrower slides with their neighbours peeking in [#31](https://github.com/strvcom/react-native-hero-carousel/pull/31) (petr.konecny@strv.com [@gneutzling](https://github.com/gneutzling))
+
+#### Authors: 2
+
+- Gabriel Neutzling ([@gneutzling](https://github.com/gneutzling))
+- Petr Konecny ([@petrkonecny2](https://github.com/petrkonecny2))
+
+---
+
 # 0.1.15 (Sat Oct 10 2026)
 
 #### 🐛 Bug Fix
