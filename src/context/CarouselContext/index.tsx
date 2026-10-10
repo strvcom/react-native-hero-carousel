@@ -41,6 +41,8 @@ type ContextProps = {
   autoScrollAnimation?: (to: number, duration: number) => number
   /** Slides kept mounted on each side of the current one. Mounts every slide when omitted. */
   renderWindow?: number
+  /** Centres the current slide when `slideWidth` is narrower than the carousel, so its neighbours peek in on both sides. */
+  centerSlide?: boolean
 }
 
 export const CarouselContextProvider = ({
@@ -51,6 +53,7 @@ export const CarouselContextProvider = ({
   disableAutoScroll = false,
   autoScrollAnimation = DEFAULT_ANIMATION,
   renderWindow,
+  centerSlide = false,
   ...rest
 }: ContextProps) => {
   const userInteracted = useUserInteracted()
@@ -73,6 +76,7 @@ export const CarouselContextProvider = ({
           disableAutoScroll,
           autoScrollAnimation,
           renderWindow,
+          centerSlide,
         }),
         [
           manualScroll,
@@ -83,6 +87,7 @@ export const CarouselContextProvider = ({
           disableAutoScroll,
           autoScrollAnimation,
           renderWindow,
+          centerSlide,
         ],
       )}
     >

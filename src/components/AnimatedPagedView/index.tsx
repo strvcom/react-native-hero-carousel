@@ -29,7 +29,10 @@ export const AnimatedPagedView = forwardRef<AnimatedPagedScrollViewRef, Animated
   (props, ref) => {
     const translateX = useSharedValue(0)
     const context = useSharedValue({ x: 0 })
-    const { slideWidth } = useCarouselContext()
+    const { slideWidth, centerSlide } = useCarouselContext()
+    // Starts the row at the carousel's middle, less half a slide. Layout resolves the 50% against the
+    // carousel's own width, so the current slide is centred from the first frame.
+    const centerStyle = centerSlide ? { left: '50%' as const, marginLeft: -slideWidth / 2 } : null
     const childrenArray = React.Children.toArray(props.children)
     // Worklets must not capture `props`: it holds React elements, which can't be copied to the UI thread.
     const { onScroll, onScrollBeginDrag } = props
@@ -70,7 +73,7 @@ export const AnimatedPagedView = forwardRef<AnimatedPagedScrollViewRef, Animated
       return {
         transform: [{ translateX: -clampedTranslateX }],
       }
-    }, [])
+    }, [clampValue])
 
     useAnimatedReaction(
       () => translateX.value,
@@ -93,8 +96,8 @@ export const AnimatedPagedView = forwardRef<AnimatedPagedScrollViewRef, Animated
 
     return (
       <GestureDetector gesture={gesture}>
-        <Animated.View style={[styles.container]}>
-          <Animated.View style={[styles.contentContainer, animatedStyle]}>
+        <Animated.View style={styles.container}>
+          <Animated.View style={[styles.contentContainer, centerStyle, animatedStyle]}>
             {props.children}
           </Animated.View>
         </Animated.View>
