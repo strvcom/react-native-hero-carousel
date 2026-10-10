@@ -1,3 +1,27 @@
+# 0.1.15 (Sat Oct 10 2026)
+
+#### 🐛 Bug Fix
+
+- fix: support reanimated 4 and add renderWindow for long carousels [#32](https://github.com/strvcom/react-native-hero-carousel/pull/32) (petr.konecny@strv.com)
+
+#### Authors: 1
+
+- Petr Konecny ([@petrkonecny2](https://github.com/petrkonecny2))
+
+---
+
+# 0.1.14 (Sat Oct 10 2026)
+
+#### 🐛 Bug Fix
+
+- ci: drop the unused expo setup, move to node 22 and publish with the built-in token [#33](https://github.com/strvcom/react-native-hero-carousel/pull/33) (petr.konecny@strv.com)
+
+#### Authors: 1
+
+- Petr Konecny ([@petrkonecny2](https://github.com/petrkonecny2))
+
+---
+
 # 0.1.11 (Wed Jan 07 2026)
 
 #### 🐛 Bug Fix
