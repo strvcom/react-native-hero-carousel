@@ -1,5 +1,5 @@
 import { useAnimatedReaction } from 'react-native-reanimated'
-import { useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import { AnimatedPagedScrollViewRef, AnimatedPagedView } from './index'
 import { customRound } from '../../utils/round'
 import { ROUNDING_PRECISION } from '../HeroCarousel/index.preset'
@@ -22,6 +22,9 @@ export const HeroCarouselAdapter = ({
     [],
   )
 
+  // Stable, so the pager's memoized gesture isn't rebuilt on every render.
+  const handleScrollBeginDrag = useCallback(() => setUserInteracted(true), [setUserInteracted])
+
   const handleScroll = (value: number) => {
     'worklet'
     const activeIndex = customRound(value / slideWidth, ROUNDING_PRECISION)
@@ -32,9 +35,7 @@ export const HeroCarouselAdapter = ({
   return (
     <AnimatedPagedView
       ref={scrollViewRef}
-      onScrollBeginDrag={() => {
-        setUserInteracted(true)
-      }}
+      onScrollBeginDrag={handleScrollBeginDrag}
       onScroll={handleScroll}
     >
       {children}
