@@ -39,6 +39,8 @@ type ContextProps = {
   interval?: number | ((index: number) => number)
   disableAutoScroll?: boolean
   autoScrollAnimation?: (to: number, duration: number) => number
+  /** Slides kept mounted on each side of the current one. Mounts every slide when omitted. */
+  renderWindow?: number
 }
 
 export const CarouselContextProvider = ({
@@ -48,6 +50,7 @@ export const CarouselContextProvider = ({
   interval = DEFAULT_INTERVAL,
   disableAutoScroll = false,
   autoScrollAnimation = DEFAULT_ANIMATION,
+  renderWindow,
   ...rest
 }: ContextProps) => {
   const userInteracted = useUserInteracted()
@@ -69,6 +72,7 @@ export const CarouselContextProvider = ({
           interval,
           disableAutoScroll,
           autoScrollAnimation,
+          renderWindow,
         }),
         [
           manualScroll,
@@ -78,6 +82,7 @@ export const CarouselContextProvider = ({
           interval,
           disableAutoScroll,
           autoScrollAnimation,
+          renderWindow,
         ],
       )}
     >

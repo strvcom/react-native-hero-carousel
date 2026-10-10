@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { runOnJS, useAnimatedReaction } from 'react-native-reanimated'
 
 import { CarouselContextProvider, useCarouselContext } from '../../context/CarouselContext'
 import { HeroCarouselSlide } from '../HeroCarouselSlide'
@@ -7,7 +8,7 @@ import { useAutoScroll } from '../../hooks/useAutoScroll'
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll'
 import { DEFAULT_INTERVAL } from './index.preset'
 import { ItemAnimatedView } from '../ItemAnimatedView'
-import { useWindowDimensions, View } from 'react-native'
+import { isInRenderWindow } from '../../utils/isInRenderWindow'
 
 export type HeroCarouselProps = {
   children: React.ReactNode[]
@@ -25,6 +26,7 @@ const HeroCarousel = ({ children }: HeroCarouselProps) => {
     interval,
     disableAutoScroll,
     autoScrollAnimation,
+    renderWindow,
   } = useCarouselContext()
   const { paddedChildrenArray } = useInfiniteScroll({
     children,
@@ -33,7 +35,16 @@ const HeroCarousel = ({ children }: HeroCarouselProps) => {
     scrollValue,
     disabled: disableInfiniteScroll,
   })
-  const { width: windowWidth } = useWindowDimensions()
+
+  // Follows the page React-side only when the rounded page changes, not on every frame.
+  const [activeIndex, setActiveIndex] = useState(() => Math.round(scrollValue.value))
+
+  useAnimatedReaction(
+    () => Math.round(scrollValue.value),
+    (index, previous) => {
+      if (index !== previous) runOnJS(setActiveIndex)(index)
+    },
+  )
 
   const autoScrollEnabled = !userInteracted
 
@@ -51,7 +62,7 @@ const HeroCarousel = ({ children }: HeroCarouselProps) => {
   })
 
   return (
-    <View style={{ flex: 1, marginLeft: (windowWidth - slideWidth) / 2 }}>
+    <>
       <HeroCarouselAdapter
         manualScrollValue={manualScrollValue}
         onScroll={(activeIndex: number) => {
@@ -68,11 +79,20 @@ const HeroCarousel = ({ children }: HeroCarouselProps) => {
             runAutoScroll={runAutoScroll}
             goToPage={goToPage}
           >
-            {child}
+            {isInRenderWindow({
+              index,
+              activeIndex,
+              slideCount: children.length,
+              renderWindow,
+              isInfinite: !disableInfiniteScroll,
+            })
+              ? child
+              : // An empty slot of the same width keeps every slide's position.
+                null}
           </HeroCarouselSlide>
         ))}
       </HeroCarouselAdapter>
-    </View>
+    </>
   )
 }
 
