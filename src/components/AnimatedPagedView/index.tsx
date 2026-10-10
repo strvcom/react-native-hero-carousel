@@ -31,20 +31,23 @@ export const AnimatedPagedView = forwardRef<AnimatedPagedScrollViewRef, Animated
     const context = useSharedValue({ x: 0 })
     const { slideWidth } = useCarouselContext()
     const childrenArray = React.Children.toArray(props.children)
+    // Worklets must not capture `props`: it holds React elements, which can't be copied to the UI thread.
+    const { onScroll, onScrollBeginDrag } = props
+    const slideCount = childrenArray.length
 
     const clampValue = useCallback(
       (value: number) => {
         'worklet'
-        return clamp(value, 0, (childrenArray.length - 1) * slideWidth)
+        return clamp(value, 0, (slideCount - 1) * slideWidth)
       },
-      [childrenArray.length, slideWidth],
+      [slideCount, slideWidth],
     )
 
     const gesture = Gesture.Pan()
       .minDistance(MIN_DISTANCE_THRESHOLD)
       .onStart(() => {
         context.value = { x: translateX.value }
-        runOnJS(props.onScrollBeginDrag)()
+        runOnJS(onScrollBeginDrag)()
       })
       .onUpdate((event) => {
         translateX.value = clampValue(context.value.x - event.translationX)
@@ -72,9 +75,9 @@ export const AnimatedPagedView = forwardRef<AnimatedPagedScrollViewRef, Animated
     useAnimatedReaction(
       () => translateX.value,
       (value) => {
-        props.onScroll?.(value)
+        onScroll?.(value)
       },
-      [props.onScroll],
+      [onScroll],
     )
 
     useImperativeHandle(
