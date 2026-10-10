@@ -300,4 +300,30 @@ describe('interpolateInsideCarousel', () => {
     })
     expect(result).toBe(1)
   })
+
+  describe('without infinite scroll', () => {
+    // Three real slides and no clones, so the ends don't mirror each other.
+    const values = { valueBefore: 0, thisValue: 1, valueAfter: 0 }
+
+    it('keeps the first slide at the side value while the second is current', () => {
+      expect(interpolateInsideCarousel(1, 0, 3, values, false)).toBe(0)
+    })
+
+    it('keeps the second slide at the side value while the last is current', () => {
+      expect(interpolateInsideCarousel(2, 1, 3, values, false)).toBe(0)
+    })
+
+    it('keeps the last slide at the side value while the second is current', () => {
+      expect(interpolateInsideCarousel(1, 2, 3, values, false)).toBe(0)
+    })
+
+    it('gives the current slide its own value', () => {
+      expect(interpolateInsideCarousel(0, 0, 3, values, false)).toBe(1)
+      expect(interpolateInsideCarousel(2, 2, 3, values, false)).toBe(1)
+    })
+
+    it('interpolates halfway between slides', () => {
+      expect(interpolateInsideCarousel(0.5, 0, 3, values, false)).toBe(0.5)
+    })
+  })
 })

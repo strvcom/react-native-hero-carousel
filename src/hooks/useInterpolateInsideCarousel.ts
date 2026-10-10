@@ -8,9 +8,15 @@ export const useInterpolateInsideCarousel = (values: {
   valueAfter: number
   offset?: number
 }) => {
-  const { scrollValue } = useCarouselContext()
+  const { scrollValue, disableInfiniteScroll } = useCarouselContext()
   const { index, total } = useAutoCarouselSlideIndex()
   return useDerivedValue(() => {
-    return interpolateInsideCarousel(scrollValue.value, index, total, values)
-  }, [scrollValue, values])
+    return interpolateInsideCarousel(
+      scrollValue.value,
+      index,
+      total,
+      values,
+      !disableInfiniteScroll,
+    )
+  }, [scrollValue, values, disableInfiniteScroll])
 }

@@ -10,6 +10,9 @@ export const interpolateInsideCarousel = (
     valueAfter: number
     offset?: number
   },
+  // With infinite scroll the first and last slides are clones, so a slide also counts as current
+  // while its clone is.
+  isInfinite = true,
 ) => {
   'worklet'
   const { valueBefore, thisValue, valueAfter, offset = 0 } = values
@@ -27,6 +30,7 @@ export const interpolateInsideCarousel = (
   }
 
   const getAdjustedIndex = (slideIndex: number) => {
+    if (!isInfinite) return slideIndex
     if (slideIndex === 0) return Math.max(totalLength - 2, 0)
     if (slideIndex === totalLength - 1) return 1
     if (slideIndex === 1) return totalLength - 1
