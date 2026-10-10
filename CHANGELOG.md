@@ -1,3 +1,15 @@
+# 0.1.17 (Sat Oct 10 2026)
+
+#### 🐛 Bug Fix
+
+- fix: interpolate without mirroring the ends when infinite scroll is off [#34](https://github.com/strvcom/react-native-hero-carousel/pull/34) (petr.konecny@strv.com)
+
+#### Authors: 1
+
+- Petr Konecny ([@petrkonecny2](https://github.com/petrkonecny2))
+
+---
+
 # 0.1.16 (Sat Oct 10 2026)
 
 #### 🐛 Bug Fix
