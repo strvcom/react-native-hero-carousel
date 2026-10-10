@@ -1,5 +1,4 @@
-import React, { forwardRef, useCallback, useImperativeHandle, useState } from 'react'
-import { Dimensions, type LayoutChangeEvent } from 'react-native'
+import React, { forwardRef, useCallback, useImperativeHandle } from 'react'
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -31,10 +30,9 @@ export const AnimatedPagedView = forwardRef<AnimatedPagedScrollViewRef, Animated
     const translateX = useSharedValue(0)
     const context = useSharedValue({ x: 0 })
     const { slideWidth, centerSlide } = useCarouselContext()
-    // The window's width is the best guess until the carousel has been measured.
-    const [containerWidth, setContainerWidth] = useState(() => Dimensions.get('window').width)
-    // Centring shifts the whole row, so the neighbours peek in on both sides of the current slide.
-    const centerOffset = centerSlide ? Math.max(0, (containerWidth - slideWidth) / 2) : 0
+    // Starts the row at the carousel's middle, less half a slide. Layout resolves the 50% against the
+    // carousel's own width, so the current slide is centred from the first frame.
+    const centerStyle = centerSlide ? { left: '50%' as const, marginLeft: -slideWidth / 2 } : null
     const childrenArray = React.Children.toArray(props.children)
     // Worklets must not capture `props`: it holds React elements, which can't be copied to the UI thread.
     const { onScroll, onScrollBeginDrag } = props
@@ -73,9 +71,9 @@ export const AnimatedPagedView = forwardRef<AnimatedPagedScrollViewRef, Animated
     const animatedStyle = useAnimatedStyle(() => {
       const clampedTranslateX = clampValue(translateX.value)
       return {
-        transform: [{ translateX: centerOffset - clampedTranslateX }],
+        transform: [{ translateX: -clampedTranslateX }],
       }
-    }, [clampValue, centerOffset])
+    }, [clampValue])
 
     useAnimatedReaction(
       () => translateX.value,
@@ -98,11 +96,8 @@ export const AnimatedPagedView = forwardRef<AnimatedPagedScrollViewRef, Animated
 
     return (
       <GestureDetector gesture={gesture}>
-        <Animated.View
-          style={styles.container}
-          onLayout={(event: LayoutChangeEvent) => setContainerWidth(event.nativeEvent.layout.width)}
-        >
-          <Animated.View style={[styles.contentContainer, animatedStyle]}>
+        <Animated.View style={styles.container}>
+          <Animated.View style={[styles.contentContainer, centerStyle, animatedStyle]}>
             {props.children}
           </Animated.View>
         </Animated.View>
